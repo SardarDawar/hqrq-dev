@@ -1,0 +1,63 @@
+@font-face {
+    font-family: bFontRegular;
+    src: url('../fonts/Roboto/Roboto-Regular.ttf');     /* 400 */ 
+}
+
+@font-face {
+    font-family: bFontMedium;
+    src: url('../fonts/Roboto/Roboto-Medium.ttf');      /* 500 */
+}
+
+@font-face {
+    font-family: bFontBold;
+    src: url('../fonts/Roboto/Roboto-Bold.ttf');        /* 700 */
+}
+
+@font-face {
+    font-family: bFontLight;
+    src: url('../fonts/Roboto/Roboto-Light.ttf');       /* 300 */
+}
+
+:root {
+    --base-font-light: bFontLight, sans-serif;          /* 300 */
+    --base-font-regular: bFontRegular, sans-serif;      /* 400 */
+    --base-font-medium: bFontMedium, sans-serif;        /* 500 */
+    --base-font-bold: bFontBold, sans-serif;            /* 700 */
+
+    --base-bg: #ffffff;
+}   
+
+
+body {
+    margin: 0;
+    padding: 0;
+
+    height: 100vh;
+    width: 100vw;
+    
+    max-height: 100vh;
+    max-width: 100vw;
+
+    overflow: hidden;
+
+    font-family: var(--base-font-regular);
+    font-size: 18px;                                    /* most common */
+    color: #000000;
+}
+
+body * {
+    transition: all 100ms ease-in-out;                  /* default */
+}
+
+.body-wrap {
+    display: flex;
+    flex-direction: row;
+
+    height: 100%;
+    overflow: hidden;
+}
+
+.body-wrap > * {
+    height: 100%;
+    overflow: auto;
+}
