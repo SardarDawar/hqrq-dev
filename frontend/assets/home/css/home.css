@@ -10,6 +10,7 @@
 .sidebar.left {
     width: var(--home-sidebar-left-width);
     /* border: 1px solid red; */
+    overflow-x: hidden;
 }
 
 .sidebar.left.collapsed {
@@ -42,8 +43,8 @@
 }
 
 .logo-ico-big {
-    width: 272px;
-    height: 80px;
+    width: auto;
+    height: 100px;
 }
 
 .logo-ico-min {
