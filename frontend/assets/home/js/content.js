@@ -28,3 +28,41 @@ pg1_sdbrR_content = `
     </ul>
 `.trim()
 
+pg2_sdbrR_header = `
+    Suggestions
+`.trim()
+pg2_sdbrR_content = `
+    <p>
+    Select the closest category to your project.  What you are trying to create may be a sub-category - click and you will see the subtypes to help you select.  Your selection will potentially impact:
+    </p>
+    <ul>
+        <li>- the method used for the remainder of the document creation process.</li>
+        <li>- the primary tense used in your document.  For example, a business proposal relates to the future.</li>
+        <li>- the way in which key terms and inputs are interpreted by the HyperQuestions Ai Engine.</li>
+    </ul>
+`.trim()
+
+
+// pg2 visch sidebar stuff
+
+pg2_visch1_header = `
+
+`.trim()
+pg2_visch1_content = `
+
+`.trim()
+
+const pg2_visch_help_dict = {
+    'pg2visch1' : [pg2_visch1_header, pg2_visch1_content],
+    'pg2visch2' : [pg2_visch1_header, pg2_visch1_content],
+}
+
+
+
+
+
+
+
+
+
+

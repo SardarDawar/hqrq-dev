@@ -1,50 +1,60 @@
 
-var speach_voices = null;
-var speach_state = false;
-var speach_voice_inx = null;
-const speach_voice_lang = "en-US";
+var speech_voices = null;
+var speech_state = false;
+var speech_voice_inx = null;
+const speech_voice_lang = "en-US";
 
 
 setTimeout(() => {
-    speach_voices = window.speechSynthesis.getVoices();
+    speech_voices = window.speechSynthesis.getVoices();
 }, 50);
 
 if(window.speechSynthesis.onvoiceschanged !== undefined)
 {
     window.speechSynthesis.onvoiceschanged = () => {
-        speach_voices = window.speechSynthesis.getVoices();
-        if (speach_voices)
+        speech_voices = window.speechSynthesis.getVoices();
+        if (speech_voices)
         {
-            for(var i=0; i<speach_voices.length; i++)
+            for(var i=0; i<speech_voices.length; i++)
             {
-                if(speach_voices[i].lang === speach_voice_lang) speach_voice_inx = i;
+                if(speech_voices[i].lang === speech_voice_lang) speech_voice_inx = i;
             }
         }
     }
 }
 
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+};
+
 function TextToVoice(text) {
+    if (!text) return;
+
     var utterThis = new SpeechSynthesisUtterance(text);
-    if (speach_voices && speach_voice_inx)
+    if (speech_voices && speech_voice_inx)
     {
-        utterThis.voice = speach_voices[speach_voice_inx];
+        utterThis.voice = speech_voices[speech_voice_inx];
     }
     utterThis.lang = "en-US";
     utterThis.rate = 0.85;
     // utterThis.pitch = 0.5;
-    if (!speach_state)
+    if (!speech_state)
     {
-        speach_state = true;
+        speech_state = true;
         utterThis.onend = () => {
-            speach_state = false;
+            speech_state = false;
         }
         window.speechSynthesis.speak(utterThis);
     }
 };
 
+const start_beep = document.getElementById("beep");
 
 function VoiceToText(field) {
-    var start_beep = document.getElementById("beep");
+    if (!field) return;
+
     if (window.hasOwnProperty("webkitSpeechRecognition")) {
         var recognition = new window.webkitSpeechRecognition();
     }
@@ -54,22 +64,22 @@ function VoiceToText(field) {
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = "en-US";
-    recognition.start();
     recognition.onstart = function() {
         start_beep.play();
     }
     recognition.onresult = function(event) {
-        var speech = ""+event.results[0][0].transcript;
-        var user_name = toTitleCase(speech)
-        $(field).val(user_name);
+        const speech = ""+event.results[0][0].transcript;
+        const speech_cased = toTitleCase(speech)
+        $(field).val(speech_cased);
         recognition.stop();
     }
     recognition.onerror = function(event) {
-        var err_msg = ""+event.error;
-        $(field).val(err_msg);
+        const err_msg = ""+event.error;
+        console.log(err_msg)
         recognition.stop();
     }
     recognition.onend = function() {
         start_beep.play();
     }
+    recognition.start();
 };

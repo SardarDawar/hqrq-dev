@@ -27,6 +27,15 @@ accSpeakers.forEach(el => {
     }
 });
 
+const accMics = document.querySelectorAll(".accessibility .acc-mic")
+
+accMics.forEach(el => {
+    const field = document.getElementById(el.dataset.fieldid);
+    el.onclick = () => {
+        VoiceToText(field);        
+    }
+});
+
 const mainContent = document.querySelector(".main-content");
 
 const btnLeftSidebarShowHide = document.getElementById("ls_show_hide");
@@ -105,9 +114,6 @@ setRightSidebarContent = (h_html, c_html) => {
     }
 }
 
-const btnCreateProject = document.getElementById("create_new_project");
-const btnBack_CreateProjectPage_1_Name = document.getElementById("btn_back_crprojName");
-
 disable_btnOpt = (btn) => {
     if (!btn.classList.contains("sel")) btn.classList.add("sel");
 }
@@ -115,6 +121,12 @@ disable_btnOpt = (btn) => {
 enable_btnOpt = (btn) => {
     if (btn.classList.contains("sel")) btn.classList.remove("sel");    
 }
+
+const btnCreateProject = document.getElementById("create_new_project");
+const btnBack_CreateProjectPage_1_Name = document.getElementById("btn_back_crprojName");
+const btnNext_CreateProjectPage_1_Name = document.getElementById("btn_next_crprojName");
+const btnBack_CreateProjectPage_2_DocType = document.getElementById("btn_back_crprojDocType");
+const btnNext_CreateProjectPage_2_DocType = document.getElementById("btn_next_crprojDocType");
 
 btnCreateProject.onclick = () => {
     disable_btnOpt(btnCreateProject)
@@ -132,4 +144,45 @@ btnBack_CreateProjectPage_1_Name.onclick = () => {
     setRightSidebarContent(pg0_sdbrR_header, pg0_sdbrR_content)
 }
 
-// btnCreateProject.click()
+btnNext_CreateProjectPage_1_Name.onclick = () => {
+    hidePage('.page-wrap.pg1-wrap', 'left')
+    showPage('.page-wrap.pg2-wrap')
+    setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
+}
+
+btnBack_CreateProjectPage_2_DocType.onclick = () => {
+    hidePage('.page-wrap.pg2-wrap', 'right')
+    showPage('.page-wrap.pg1-wrap')
+    setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
+}
+
+btnCreateProject.click()
+btnNext_CreateProjectPage_1_Name.click()
+
+// page 2 visual choices
+pg2vischs = document.querySelectorAll(".pg2-visch > *")
+
+clearAllVischsSel = (list, except) => {
+    if (except) {
+        list.forEach(el => {
+            if (el !== except) {
+                if (el.classList.contains("sel")) el.classList.remove("sel")
+            }
+        })
+    } else {
+        list.forEach(el => {
+            if (el.classList.contains("sel")) el.classList.remove("sel")
+        })
+    }
+}
+
+pg2vischs.forEach(el => {    
+    el.onclick = () => {
+        if (el.classList.contains("sel")) {
+            clearAllVischsSel(pg2vischs);
+        } else {
+            clearAllVischsSel(pg2vischs, el);
+            el.classList.add("sel")
+        }
+    }
+})
