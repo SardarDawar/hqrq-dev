@@ -147,7 +147,19 @@ btnBack_CreateProjectPage_1_Name.onclick = () => {
 btnNext_CreateProjectPage_1_Name.onclick = () => {
     hidePage('.page-wrap.pg1-wrap', 'left')
     showPage('.page-wrap.pg2-wrap')
-    setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
+    var pg2_selection_check = false;
+    pg2vischs.forEach(el => {    
+        if (el.classList.contains("sel")) {
+            console.log("what")
+            pg2_selection_check = true;
+            const el_id = el.getAttribute("id");
+            if (el_id in pg2_visch_help_dict) {
+                setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
+            }            
+        }
+    })
+    // set this only if no option on pg2 has been selected
+    if (!pg2_selection_check) setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
 }
 
 btnBack_CreateProjectPage_2_DocType.onclick = () => {
