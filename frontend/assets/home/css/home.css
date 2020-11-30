@@ -256,10 +256,8 @@ p {
     min-width: var(--home-sidebar-right-width);
     height: 100vh;
     min-height: 100vh;
-}
 
-.sidebar.right .side-wrap-wrap {
-    transition: transform 500ms ease-in-out;
+    transition: background 200ms ease-in-out, transform 500ms ease-in-out;
 }
 
 .sidebar.right.closed .side-wrap-wrap {
