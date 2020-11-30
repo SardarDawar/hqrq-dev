@@ -156,9 +156,6 @@ btnBack_CreateProjectPage_2_DocType.onclick = () => {
     setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
 }
 
-btnCreateProject.click()
-btnNext_CreateProjectPage_1_Name.click()
-
 // page 2 visual choices
 pg2vischs = document.querySelectorAll(".pg2-visch > *")
 
@@ -180,9 +177,14 @@ pg2vischs.forEach(el => {
     el.onclick = () => {
         if (el.classList.contains("sel")) {
             clearAllVischsSel(pg2vischs);
+            setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
         } else {
             clearAllVischsSel(pg2vischs, el);
             el.classList.add("sel")
+            const el_id = el.getAttribute("id");
+            if (el_id in pg2_visch_help_dict) {
+                setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
+            }
         }
     }
 })
