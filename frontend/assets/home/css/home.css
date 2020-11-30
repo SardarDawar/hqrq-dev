@@ -271,7 +271,7 @@ p {
 }
 
 
-.sidebar.right:hover {
+.sidebar.right .side-wrap-wrap:hover {
     background: #D8D7D7;
 }
 
