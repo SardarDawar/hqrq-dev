@@ -86,11 +86,14 @@ hidePage = (sel, dir) => {
     else if (dir === 'right') $(sel).css('transform', 'translateX(100%').css('opacity', '0')
     else $(sel).css('transform', 'translateX(-100%').css('opacity', '0')
 
-    setTimeout(function() {$(sel).addClass('hidden')}, 500)    
+    setTimeout(function() {
+        $(sel).addClass('hidden')
+        $(sel).hide()
+    }, 500)    
 }
 
 showPage = (sel, dir) => {
-    $(sel).removeClass('hidden').css('transform', 'translateX(0%)').css('opacity', '1')
+    $(sel).removeClass('hidden').show().css('transform', 'translateX(0%)').css('opacity', '1')
 }
 
 const sdbrR_header = sdbrR.querySelector(".side-header");
@@ -98,6 +101,30 @@ const $sdbrR_header = $('.sidebar.right .side-header')
 
 const sdbrR_content = sdbrR.querySelector(".side-content");
 const $sdbrR_content = $('.sidebar.right .side-content')
+
+
+
+setRightSidebarSecondaryContent = (page_sel, h_html, c_html) => {
+
+    const sdbrRsecondary_header = document.querySelector(`${page_sel} .sidebar-right-secondary .side-header`);
+    const $sdbrRsecondary_header = $(`${page_sel} .sidebar-right-secondary .side-header`)
+
+    const sdbrRsecondary_content = document.querySelector(`${page_sel} .sidebar-right-secondary .side-content`);
+    const $sdbrRsecondary_content = $(`${page_sel} .sidebar-right-secondary .side-content`)
+
+    if (sdbrRsecondary_header.innerHTML !== h_html) {
+        $sdbrRsecondary_header.fadeOut(400, ()=> {
+            sdbrRsecondary_header.innerHTML = h_html
+            $sdbrRsecondary_header.fadeIn(300)
+        })
+    }
+    if (sdbrRsecondary_content.innerHTML !== c_html) {
+        $sdbrRsecondary_content.fadeOut(400, ()=> {
+            sdbrRsecondary_content.innerHTML = c_html
+            $sdbrRsecondary_content.fadeIn(300)
+        })
+    }
+}
 
 setRightSidebarContent = (h_html, c_html) => {
     if (sdbrR_header.innerHTML !== h_html) {
@@ -133,6 +160,7 @@ btnCreateProject.onclick = () => {
     collapseLeftSidebar()
     hidePage('.page-wrap.pg0-wrap')
     showPage('.page-wrap.pg1-wrap')
+    setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content)
     setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
 }
 
@@ -141,6 +169,7 @@ btnBack_CreateProjectPage_1_Name.onclick = () => {
     expandLeftSidebar()
     hidePage('.page-wrap.pg1-wrap', 'right')
     showPage('.page-wrap.pg0-wrap')
+    setRightSidebarSecondaryContent('.page-wrap.pg0-wrap', pg0_sdbrR_header, pg0_sdbrR_content)
     setRightSidebarContent(pg0_sdbrR_header, pg0_sdbrR_content)
 }
 
@@ -150,21 +179,26 @@ btnNext_CreateProjectPage_1_Name.onclick = () => {
     var pg2_selection_check = false;
     pg2vischs.forEach(el => {    
         if (el.classList.contains("sel")) {
-            console.log("what")
             pg2_selection_check = true;
             const el_id = el.getAttribute("id");
             if (el_id in pg2_visch_help_dict) {
+                setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
                 setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
             }            
         }
     })
     // set this only if no option on pg2 has been selected
-    if (!pg2_selection_check) setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
+    if (!pg2_selection_check) 
+    {
+        setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content)
+        setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
+    }
 }
 
 btnBack_CreateProjectPage_2_DocType.onclick = () => {
     hidePage('.page-wrap.pg2-wrap', 'right')
     showPage('.page-wrap.pg1-wrap')
+    setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content)
     setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
 }
 
@@ -189,12 +223,14 @@ pg2vischs.forEach(el => {
     el.onclick = () => {
         if (el.classList.contains("sel")) {
             clearAllVischsSel(pg2vischs);
+            setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content)
             setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
         } else {
             clearAllVischsSel(pg2vischs, el);
             el.classList.add("sel")
             const el_id = el.getAttribute("id");
             if (el_id in pg2_visch_help_dict) {
+                setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
                 setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
             }
         }

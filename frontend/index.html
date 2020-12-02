@@ -11,9 +11,14 @@
     
     <!-- page includes -->
     <link rel="stylesheet" href="assets/home/css/home.css">
-    <audio id="beep"><source src="assets/common/sounds/beep.mp3" type="audio/mpeg"></audio>
+    <link rel="stylesheet" href="assets/home/css/accessiblity.css">
+    <link rel="stylesheet" href="assets/home/css/fields.css">
+    <link rel="stylesheet" href="assets/home/css/page.css">
+    <link rel="stylesheet" href="assets/home/css/scale.css">
     <!-- page includes -->
     
+    <audio id="beep"><source src="assets/common/sounds/beep.mp3" type="audio/mpeg"></audio>
+
 </head>
 <body>
     
@@ -107,8 +112,6 @@
 
         </div>
         <!-- sidebar:left end -->
-        
-        
 
         <!-- center window start -->
         <div class="main-win">
@@ -138,9 +141,24 @@
                         <div class="pg0-instr" id="pg0-acc-speak-field">Select option in the left panel</div>
                     </div>
                     <hr class="sep">
+
+                    <div class="sidebar-right-secondary">
+                        <div class="side-wrap">
+                            <!-- pg0 right sidebar -->
+                            <div class="side-header">Suggestions</div>
+                            <div class="side-content">
+                                <ul class="list-big">
+                                    <li>- Use the microphone icon to dictate your answer and speed up the process.</li>
+                                    <li>- Use the speaker icon to listen to questions and answers.</li>
+                                    <li>- The question mark icon provides popup information with further assistance.</li>
+                                    <li>- Keep your answers brief and focused on the topic.</li>  
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="page-wrap pg1-wrap page-center hidden">
+                <div class="page-wrap pg1-wrap page-center hidden" style="transform: translateX(100%); opacity: 0; display: none;">
                     <div class="top-text" id="pg1-acc-speak-field" value="Enter a name for your new project.">What would you like to call your new project?</div>
                     <hr class="sep">
                     <div class="pg1-content">
@@ -169,9 +187,11 @@
                         <button type="button" class="btn btn-dark cust-button" id="btn_back_crprojName">Back</button>
                         <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_crprojName">Next</button>
                     </div>
+
+                    <div class="sidebar-right-secondary"><div class="side-wrap"><div class="side-header"></div><div class="side-content"></div></div></div>
                 </div>
 
-                <div class="page-wrap pg2-wrap page-center hidden">
+                <div class="page-wrap pg2-wrap page-center hidden" style="transform: translateX(100%); opacity: 0; display: none;">
                     <div class="pg2-question">
                         <div class="top-text" id="pg2-acc-speak-field">Select your Document Type</div>
                         <div class="accessibility">
@@ -272,6 +292,8 @@
                         <button type="button" class="btn btn-dark cust-button" id="btn_back_crprojDocType">Back</button>
                         <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_crprojDocType">Next</button>
                     </div>
+                    
+                    <div class="sidebar-right-secondary"><div class="side-wrap"><div class="side-header"></div><div class="side-content"></div></div></div>
                 </div>
 
             </div>
@@ -300,6 +322,8 @@
             </div>
         </div>
         <!-- sidebar:right end -->
+
+
         
     </span>
     
