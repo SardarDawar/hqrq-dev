@@ -52,8 +52,8 @@ function TextToVoice(text) {
 
 const start_beep = document.getElementById("beep");
 
-function VoiceToText(field) {
-    if (!field) return;
+function VoiceToText(field, callback) {
+    if (!field && !callback) return;
 
     if (window.hasOwnProperty("webkitSpeechRecognition")) {
         var recognition = new window.webkitSpeechRecognition();
@@ -70,8 +70,9 @@ function VoiceToText(field) {
     recognition.onresult = function(event) {
         const speech = ""+event.results[0][0].transcript;
         const speech_cased = toTitleCase(speech)
-        $(field).val(speech_cased);
         recognition.stop();
+        if (field) $(field).val(speech_cased);
+        if (callback) callback(speech);
     }
     recognition.onerror = function(event) {
         const err_msg = ""+event.error;
