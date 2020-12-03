@@ -172,7 +172,16 @@
         
     }
     
-    
+    .opt, .opt-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .sidebar.left > .app-side-nav > .logo > img {
+        width: 80vw;
+        height: auto;
+        max-width: 324.08px;
+    }
     
     .sidebar.left.collapsed {
         transform: translateY(0);
