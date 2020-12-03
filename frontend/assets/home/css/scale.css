@@ -216,12 +216,15 @@
         transform: translateX(-380px);              
     } */
 
-    .pg0-question, .pg1-question {
+    .pg0-question, .pg1-question, .pg2-question {
         flex-direction: column;
     }
 
     .pg0-question > *, .pg1-question > * {
         width: 100%;
+    }
+    .pg2-question > .top-text {
+        margin-bottom: 5px;
     }
 
     .accessibility {
@@ -231,4 +234,12 @@
     .accessibility > *:first-child {
         margin-left: auto;
     }
+    
+    button.cust-button {
+        padding-left: 4vw;
+        padding-right: 4vw;
+
+        min-width: unset;
+    }
+
 }
