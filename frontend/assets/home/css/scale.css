@@ -172,11 +172,10 @@
         
     }
     
-    .opt, .opt-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .sidebar.left .opt-text {
+        font-size: 16px;
     }
+    
     .sidebar.left > .app-side-nav > .logo > img {
         width: 80vw;
         height: auto;
