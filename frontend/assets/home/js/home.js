@@ -72,6 +72,7 @@ accMics.forEach(el => {
 });
 
 const mainContent = document.querySelector(".main-content");
+const mainWin = document.querySelector(".main-win");
 
 const btnLeftSidebarShowHide = document.getElementById("ls_show_hide");
 
@@ -124,12 +125,27 @@ hidePage = (sel, dir) => {
     setTimeout(function() {
         $(sel).addClass('hidden')
         $(sel).hide()
-    }, 500)    
+    }, 500)  
+}
+
+fixMainWinHeight = (sel) => {
+    setTimeout(()=> {
+        // console.log($(sel).height())
+        $('.main-win').css('min-height', `${$(sel).height()}px`)
+        $('.main-win').css('max-height', `${$(sel).height()}px`)
+
+    }, 500)
 }
 
 showPage = (sel, dir) => {
+    $('.body-wrap')[0].scrollTop = 0
+    
     $(sel).removeClass('hidden').show().css('transform', 'translateX(0%)').css('opacity', '1')
+    
+    fixMainWinHeight(sel);
 }
+
+fixMainWinHeight('.page-wrap.pg0-wrap');
 
 const sdbrR_header = sdbrR.querySelector(".side-header");
 const $sdbrR_header = $('.sidebar.right .side-header')
@@ -159,6 +175,8 @@ setRightSidebarSecondaryContent = (page_sel, h_html, c_html) => {
             $sdbrRsecondary_content.fadeIn(300)
         })
     }
+
+    fixMainWinHeight(page_sel);
 }
 
 setRightSidebarContent = (h_html, c_html) => {
