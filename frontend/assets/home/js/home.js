@@ -138,6 +138,10 @@ fixMainWinHeight = (sel) => {
             
         }, 500)
     }
+    else {
+        $('.main-win').css('min-height', `unset`)
+        $('.main-win').css('max-height', `unset`)
+    }
 }
 
 fixMainWinHeightImmediate = (sel) => {
@@ -149,6 +153,10 @@ fixMainWinHeightImmediate = (sel) => {
             $('.main-win').css('max-height', `${$(sel).height()}px`)
     
         }, 200)
+    }
+    else {
+        $('.main-win').css('min-height', `unset`)
+        $('.main-win').css('max-height', `unset`)
     }
 }
 
