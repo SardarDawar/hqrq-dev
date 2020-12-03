@@ -129,15 +129,40 @@ hidePage = (sel, dir) => {
 }
 
 fixMainWinHeight = (sel) => {
-    setTimeout(()=> {
-        // console.log($(sel).height())
-        $('.main-win').css('min-height', `${$(sel).height()}px`)
-        $('.main-win').css('max-height', `${$(sel).height()}px`)
+    if (window.innerWidth <= 750)
+    {
+        setTimeout(()=> {
+            // console.log($(sel).height())
+            $('.main-win').css('min-height', `${$(sel).height()}px`)
+            $('.main-win').css('max-height', `${$(sel).height()}px`)
+            
+        }, 500)
+    }
+}
 
-    }, 500)
+fixMainWinHeightImmediate = (sel) => {
+    if (window.innerWidth <= 750)
+    {
+        setTimeout(()=> {
+            // console.log($(sel).height())
+            $('.main-win').css('min-height', `${$(sel).height()}px`)
+            $('.main-win').css('max-height', `${$(sel).height()}px`)
+    
+        }, 200)
+    }
+}
+
+var curr_page_sel = '.page-wrap.pg0-wrap'
+
+fixMainWinHeight(curr_page_sel);
+
+window.onresize = () => {
+    fixMainWinHeightImmediate(curr_page_sel);
 }
 
 showPage = (sel, dir) => {
+    curr_page_sel = sel;
+
     $('.body-wrap')[0].scrollTop = 0
     
     $(sel).removeClass('hidden').show().css('transform', 'translateX(0%)').css('opacity', '1')
@@ -145,7 +170,6 @@ showPage = (sel, dir) => {
     fixMainWinHeight(sel);
 }
 
-fixMainWinHeight('.page-wrap.pg0-wrap');
 
 const sdbrR_header = sdbrR.querySelector(".side-header");
 const $sdbrR_header = $('.sidebar.right .side-header')
