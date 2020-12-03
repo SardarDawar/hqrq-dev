@@ -215,4 +215,20 @@
     .sidebar.left.collapsed:not(.show) > .app-side-button {
         transform: translateX(-380px);              
     } */
+
+    .pg0-question, .pg1-question {
+        flex-direction: column;
+    }
+
+    .pg0-question > *, .pg1-question > * {
+        width: 100%;
+    }
+
+    .accessibility {
+        display: flex;
+        align-items: center;
+    }
+    .accessibility > *:first-child {
+        margin-left: auto;
+    }
 }
