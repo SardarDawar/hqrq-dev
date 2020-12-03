@@ -2,7 +2,7 @@
     --home-sidebar-left-width: 380px;
     --home-sidebar-left-collapsed-width: 67px;
 
-    --home-sidebar-right-width: 20vw;
+    --home-sidebar-right-width: 25vw;
 }
 
 
@@ -362,12 +362,12 @@ p {
 }
 
 .main-content {
-    margin-right: 6vw;
-    margin-left: 6vw;
+
     width: 100%;
     display: flex;
     overflow-x: hidden;
     position: relative;
+    justify-content: center;
 }
 
 .page-wrap.page-center {
@@ -375,9 +375,8 @@ p {
 }
 
 .page-wrap {
-    width: 100%;
+    width: 90%;
     position: absolute;
-    
 
     transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
 }
@@ -389,8 +388,8 @@ p {
 }
 
 .main-content.small {
-    margin-right: 4.5vw;
-    margin-left: 4.5vw;
+    /* margin-right: 4.5vw; */
+    /* margin-left: 4.5vw; */
 }
 
 .main-content.center {

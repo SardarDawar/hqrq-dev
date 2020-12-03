@@ -258,4 +258,8 @@
     {
         margin-top: 8vh;
     }
+
+    .page-wrap {
+        width: 99%;
+    }
 }
