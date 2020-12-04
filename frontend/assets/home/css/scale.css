@@ -261,5 +261,8 @@
 
     .page-wrap {
         width: 99%;
+
+        padding-right: 0.4vw;
+        padding-left: 0.4vw;
     }
 }
