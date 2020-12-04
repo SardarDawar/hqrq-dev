@@ -256,7 +256,7 @@
     }
     .page-wrap.pg0-wrap .sidebar-right-secondary
     {
-        margin-top: 8vh;
+        margin-top: calc(6vh + 30px);
     }
 
     .page-wrap {
