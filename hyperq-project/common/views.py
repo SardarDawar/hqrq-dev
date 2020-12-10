@@ -50,3 +50,6 @@ def handler500(request):
         'error' : TEXT_ENG__ERR_500,
     }
     return render(request, 'common/error.html', context)
+
+def notificationView(request, message):
+    return render(request, 'common/notification.html', {'message': message})
