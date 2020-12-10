@@ -5,6 +5,7 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# import secret key
 try:
     from common.secrets import HQ_SECRET_KEY
 except (ModuleNotFoundError, ImportError):
@@ -15,6 +16,12 @@ except (ModuleNotFoundError, ImportError):
     with open(secrets_file, secrets_file_flag) as secrets_fp:
         secrets_fp.write(f"\nHQ_SECRET_KEY = '{HQ_SECRET_KEY}'\n")
 
+# import smtp credentials
+try:
+    from common.secrets import HQ_EMAIL_HOST_USER, HQ_EMAIL_HOST_PASSWORD
+except (ModuleNotFoundError, ImportError):
+    HQ_EMAIL_HOST_USER = ''
+    HQ_EMAIL_HOST_PASSWORD = ''
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -153,5 +160,5 @@ EMAIL_BACKEND =         'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST =            'smtp.gmail.com'
 EMAIL_PORT =            587
 EMAIL_USE_TLS =         True
-EMAIL_HOST_USER =       ''
-EMAIL_HOST_PASSWORD =   ''
+EMAIL_HOST_USER =       HQ_EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD =   HQ_EMAIL_HOST_PASSWORD
