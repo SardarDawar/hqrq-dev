@@ -26,6 +26,8 @@ venv.bak/
 !.vscode/extensions.json 
 .history
 
+# self
+.gitignore
 
 # local files
 *env.ps1
