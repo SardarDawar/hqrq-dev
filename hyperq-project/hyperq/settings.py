@@ -1,14 +1,19 @@
 import os
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 try:
     from common.secrets import HQ_SECRET_KEY
 except (ModuleNotFoundError, ImportError):
-    HQ_SECRET_KEY = 'placeholder_key'
-
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+    HQ_SECRET_KEY = get_random_secret_key()
+    # store this key to new secrets file
+    secrets_file = os.path.join(BASE_DIR, 'common', 'secrets.py')
+    secrets_file_flag = 'a' if os.path.exists(secrets_file) else 'w'
+    with open(secrets_file, secrets_file_flag) as secrets_fp:
+        secrets_fp.write(f"\nHQ_SECRET_KEY = '{HQ_SECRET_KEY}'\n")
 
 
 # Quick-start development settings - unsuitable for production
