@@ -1,6 +1,12 @@
 import os
 from pathlib import Path
 
+try:
+    from common.secrets import HQ_SECRET_KEY
+except (ModuleNotFoundError, ImportError):
+    HQ_SECRET_KEY = 'placeholder_key'
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-r_2ve7n5$c_ctv13@wz4ql*vocw%fj7uzapd&+s*%x48vmlrh'
+SECRET_KEY = HQ_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,7 +89,8 @@ WSGI_APPLICATION = 'hyperq.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

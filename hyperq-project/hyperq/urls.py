@@ -4,6 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 import django.views.defaults as default_views
 
+print(settings.SECRET_KEY)
+
 # main url patterns
 urlpatterns = [
 
