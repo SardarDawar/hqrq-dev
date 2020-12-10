@@ -1,0 +1,53 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% load extra_tags %}
+
+{% block site_title %}
+    Login - {{site_settings.app_name}}
+{% endblock %}
+
+{% block extra_fonts %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'user/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/scale.css' %}">
+{% endblock %}
+
+<!-- body content -->
+{% block sidebar_left %}
+    {% with sdbr_pg_sel='notification' %}
+        {% include "users/sidebar.left.min.html" %}
+    {% endwith %}
+{% endblock %}
+
+{% block main_window %}
+    <!-- center window start -->
+    <div class="main-win">
+        <div class="main-content small">
+
+            <div class="page-wrap pg0-wrap">
+                <div class="top-text">Success!</div>
+                <hr class="sep">
+                <div class="pg0-content">
+                    <div class="pg0-instr" id="pg0-acc-speak-field">
+                        Your password has been successfully reset                       
+                    </div>
+                </div>
+                <hr class="sep">
+                <br><br><br><br>
+            </div>
+
+        </div>
+    </div>
+    <!-- center window end -->
+{% endblock %}
+
+{% block sidebar_right %}
+{% endblock %}
+<!-- end body content -->
+
+{% block extra_js %}
+<script src="{% static 'user/js/base.js' %}" type="text/javascript" defer></script>
+{% endblock %}

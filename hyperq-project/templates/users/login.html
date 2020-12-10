@@ -1,0 +1,104 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% load extra_tags %}
+
+{% block site_title %}
+    Login - {{site_settings.app_name}}
+{% endblock %}
+
+{% block extra_fonts %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'user/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'user/css/login.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/scale.css' %}">
+{% endblock %}
+
+<!-- body content -->
+{% block sidebar_left %}
+    {% with sdbr_pg_sel='login' %}
+        {% include "users/sidebar.left.min.html" %}
+    {% endwith %}
+{% endblock %}
+
+{% block main_window %}
+    <!-- center window start -->
+    <div class="main-win">
+        <div class="main-content small">
+
+            <div class="page-wrap pg0-wrap">
+                <div class="top-text">Login</div>
+                <hr class="sep">
+                <div class="pg0-content">
+                    <div class="pg0-instr" id="pg0-acc-speak-field">Enter your username and password to log in.</div>
+                    <br>
+
+                    <div class="main main-login">
+
+                        <div class="login-form-wrap">
+                            <div class="login-form">                
+                
+                                <div class="container">
+                                    <form autocomplete="off">
+                                        {% csrf_token %}
+                                        <div class="inp-wrap username-box">
+                                            <input autocomplete="chrome-off" class="input-username" type="text" name="username" required="">
+                                            <label class="label-username">USERNAME</label>
+                                            <span></span>
+                                        </div>
+                                        <br>
+                                        <div class="inp-wrap password-box">
+                                            <input autocomplete="chrome-off" class="input-password" type="password" name="password" required="">
+                                            <label class="label-password">PASSWORD</label>
+                                            <span></span>
+                                        </div>
+                
+                                        <div class="out-wrap">
+
+                                            <div class="more-options">
+                                                <a class="small" onclick="window.location.href='{% url 'password_reset' %}'">Forgot Password?</a>
+                                            </div>
+
+                                                <button type="submit" value="LOG IN" name="" class="login-btn enabled"> 
+                                                    <div class="login-btn-text">LOG IN</div>
+                                                    <div class="login-btn-loader loader" hidden=true></div>
+                                                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="login-tick svg-inline--fa fa-check fa-w-16 fa-9x"><path fill="currentColor" d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z" class=""></path></svg>
+                                                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" class="login-cross svg-inline--fa fa-times fa-w-11 fa-9x"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" class=""></path></svg>
+                    
+                                                </button>
+                                        </div>
+                                        <div class="message-box text-muted" style="display: none;">
+                                            No Message
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                <hr class="sep">
+                <br><br>
+            </div>
+
+        </div>
+    </div>
+    <!-- center window end -->
+{% endblock %}
+
+{% block sidebar_right %}
+{% endblock %}
+<!-- end body content -->
+
+{% block extra_js %}
+<script>
+    {% with next_pg=request.GET|get_dict_item:'next' %}
+        const url_next = {% if next_pg %}"{{ next_pg }}"{% else %}"/"{% endif %}
+    {% endwith %}
+</script>
+<script src="{% static 'user/js/base.js' %}" type="text/javascript" defer></script>
+<script src="{% static 'user/js/login.js' %}" type="text/javascript" defer></script>
+{% endblock %}

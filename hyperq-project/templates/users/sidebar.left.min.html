@@ -1,0 +1,93 @@
+{% load static %}
+{% load extra_tags %}
+
+<!-- sidebar:left start -->
+<div class="sidebar left">
+
+    <div class="app-side-nav">
+        <div class="logo">
+            <img class="logo-ico-big" src="{% static 'common/icons/logo-full-2.png' %}" alt="Logo">
+        </div>
+
+        <hr class="sep sep-big">
+        
+        {% if not request.user.is_authenticated %}
+
+        {% with next_pg=request.GET|get_dict_item:'next' %}
+
+        <div class="opt {% ifequal sdbr_pg_sel 'login' %}sel{% endifequal %} opt-text-svg sidebar-left-opt-voice" onclick="window.location.href='{% url 'login' %}{% if next_pg %}?next={{next_pg}}{% endif %}'">
+            <svg class="opt-svg" width="20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sign-in-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-9x"><path fill="currentColor" d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z" class=""></path></svg>
+            <p class="opt-text sidebar-left-voice-text">Login</p>
+        </div>
+        
+        <hr class="sep sep-big">
+
+        <div class="opt {% ifequal sdbr_pg_sel 'register' %}sel{% endifequal %} opt-text-svg sidebar-left-opt-voice" onclick="window.location.href='{% url 'register' %}{% if next_pg %}?next={{next_pg}}{% endif %}'">
+            <svg class="opt-svg" width="20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-user-plus fa-w-20 fa-9x"><path fill="currentColor" d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" class=""></path></svg>
+            <p class="opt-text sidebar-left-voice-text">Register</p>
+        </div>
+        
+        {% endwith %}
+
+        {% endif %}
+
+        <hr class="sep sep-big">
+
+        <div class="opt-dropdown-wrap {% ifequal sdbr_pg_sel 'more' %}sel sel-force{% endifequal %}">
+
+            <div class="opt opt-text-svg sidebar-left-opt-voice">
+                <svg class="opt-svg" width="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="15.4297" y1="8.43054" x2="0.81151" y2="8.43054" stroke="black" stroke-width="2"/><line x1="8.30859" y1="0.933838" x2="8.30859" y2="15.552" stroke="black" stroke-width="2"/></svg>
+                <p class="opt-text sidebar-left-voice-text">More</p>
+            </div>
+
+            <div class="opt-dropdown">
+
+                <div class="opt {% ifequal sdbr_pg_sel_sub 'about' %}sel{% endifequal %} opt-dropdown-opt opt-text-svg" onclick="window.location.href='{% url 'about' %}'">
+                    <svg class="opt-svg" width="20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="info-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-info-circle fa-w-16 fa-9x"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" class=""></path></svg>
+                    <span class="opt-text-col">
+                        <p class="opt-text-col-1">About</p> 
+                    </span>
+                </div>
+
+                <hr class="sep sep-sm">
+
+                <div class="opt {% ifequal sdbr_pg_sel_sub 'faq' %}sel{% endifequal %} opt-dropdown-opt opt-text-svg" onclick="window.location.href='{% url 'faq' %}'">
+                    <svg class="opt-svg" width="20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="question-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-question-circle fa-w-16 fa-9x"><path fill="currentColor" d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zM262.655 90c-54.497 0-89.255 22.957-116.549 63.758-3.536 5.286-2.353 12.415 2.715 16.258l34.699 26.31c5.205 3.947 12.621 3.008 16.665-2.122 17.864-22.658 30.113-35.797 57.303-35.797 20.429 0 45.698 13.148 45.698 32.958 0 14.976-12.363 22.667-32.534 33.976C247.128 238.528 216 254.941 216 296v4c0 6.627 5.373 12 12 12h56c6.627 0 12-5.373 12-12v-1.333c0-28.462 83.186-29.647 83.186-106.667 0-58.002-60.165-102-116.531-102zM256 338c-25.365 0-46 20.635-46 46 0 25.364 20.635 46 46 46s46-20.636 46-46c0-25.365-20.635-46-46-46z" class=""></path></svg>
+                    <span class="opt-text-col">
+                        <p class="opt-text-col-1">FAQ</p> 
+                    </span>
+                </div>
+
+                <hr class="sep sep-sm">
+
+                <div class="opt {% ifequal sdbr_pg_sel_sub 'support' %}sel{% endifequal %} opt-dropdown-opt opt-text-svg" onclick="window.location.href='{% url 'support' %}'">
+                    <span class="opt-text-col ml-0">
+                        <p class="opt-text-col-1">Support</p> 
+                    </span>
+                </div>
+
+                <hr class="sep sep-sm">
+
+                <div class="opt {% ifequal sdbr_pg_sel_sub 'policy' %}sel{% endifequal %} opt-dropdown-opt opt-text-svg" onclick="window.location.href='{% url 'policy' %}'">
+                    <span class="opt-text-col ml-0">
+                        <p class="opt-text-col-1">Policy</p> 
+                    </span>
+                </div>
+
+                <hr class="sep sep-sm">
+            </div>
+
+            <hr class="sep sep-big drop-sep">
+
+        </div>
+
+    </div>
+
+    <div class="app-side-button" style="background: transparent;">
+        <div class="logo">
+        </div>
+    </div>
+
+
+</div>
+<!-- sidebar:left end -->

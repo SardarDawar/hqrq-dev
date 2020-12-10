@@ -1,0 +1,59 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% block site_favicon %}
+        <link rel="icon" href="{% static 'common/icons/favicon.svg' %}" type="image/ico" />
+        {% endblock %}
+
+        {% block base_fonts %}
+        {% endblock %}
+
+        {% block extra_fonts %}
+        {% endblock %}
+
+        <title>{% block site_title %}{{site_settings.app_name}}{% endblock %}</title>
+
+        {% block base_css %}
+        <link rel="stylesheet" href="{% static 'common/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'common/css/base.css' %}">
+        {% endblock %}
+
+        {% block extra_css %}
+        {% endblock %}
+
+        {% block extra_includes %}
+        {% endblock %}
+
+    </head>
+
+    <body>
+
+        <span class="body-wrap">
+
+            {% block sidebar_left %}
+            {% endblock %}
+
+            {% block main_window %}
+            {% endblock %}
+
+            {% block sidebar_right %}
+            {% endblock %}
+
+        </span>
+
+
+        {% block base_js %}
+        <script src="{% static 'common/js/jquery-3.5.1.min.js' %}" type="text/javascript" defer></script>
+        <script src="{% static 'common/js/bootstrap.bundle.min.js' %}" type="text/javascript" defer></script>
+        <script src="{% static 'common/js/base.js' %}" type="text/javascript" defer></script>
+        {% endblock %}
+
+        {% block extra_js %}
+        {% endblock %}
+        
+    </body>
+</html>
