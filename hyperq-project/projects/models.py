@@ -7,6 +7,7 @@ from .vars import ( PROJ_STAGE_CHOICES, PROJ_STAGE_DEFAULT, PROJ_STATUS_CHOICES,
                     PROJ_TYPE_CHOICES, PROJ_TYPE_DEFAULT, PROJ_SUBTYPE_CHOICES, PROJ_SUBTYPE_CHOICES_SEL, PROJ_SUBTYPE_DEFAULT,
                     PROJ_DOCSIZE_CHOICES, PROJ_DOCSIZE_DEFAULT, 
                     PROJ_TOPIC_CHOICES, PROJ_TOPIC_DEFAULT, )
+from .content import PROJ_TYPE_SVGS
 
 class Project(models.Model):
 
@@ -49,6 +50,9 @@ class Project(models.Model):
 
     def setupBaseProperties(self, update_stage=True):
         setupProjectBaseProperties(self, update_stage=True)
+
+    def getProjectTypeSVG(self):
+        return PROJ_TYPE_SVGS[self.doc_type]
 
 class Property(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="props")

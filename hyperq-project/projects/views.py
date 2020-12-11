@@ -61,7 +61,7 @@ def project(request, slug):
     elif project.stage == PROJ_STAGE_BASECAMP:
         return projectBasecampView(request, project)
 
-    return notificationView(request, NOTIF__FAILED_LOAD)
+    return notificationView(request, NOTIF__FAILED_LOAD, getProjectPageExtraContext(project))
 
 def projectInitialQuestionsView(request, project):
     for n, q in PROJ_INIT_QUESTIONS_FLOW.items():
@@ -76,7 +76,7 @@ def projectInitialQuestionsView(request, project):
                 try:
                     prop = project.props.get(name=p)
                 except Property.DoesNotExist:
-                    return notificationView(request, NOTIF__FAILED_LOAD)
+                    return notificationView(request, NOTIF__FAILED_LOAD, getProjectPageExtraContext(project))
                 if not prop.response:
                     return projectPropertyView(request, project, prop)
 
@@ -89,6 +89,7 @@ def projectInitialQuestionsView(request, project):
 def projectSubTypeView(request, project):
     context = {
         'project': project,
+        'page_project': True,
         'sidebar_initial_collapsed': True,
         'CHOICE_HEADING': getChoiceHeading_doc_subtype(project),
         'CHOICES': PROJ_SUBTYPE_CHOICES_SEL[project.doc_type],
@@ -107,6 +108,7 @@ def projectSubTypeView(request, project):
 def projectDocTopicView(request, project):
     context = {
         'project': project,
+        'page_project': True,
         'sidebar_initial_collapsed': True,
         'CHOICE_HEADING': getChoiceHeading_doc_topic(project),
         'CHOICES': PROJ_TOPIC_CHOICES,
@@ -124,6 +126,7 @@ def projectDocTopicView(request, project):
 def projectDocLenView(request, project):
     context = {
         'project': project,
+        'page_project': True,
         'sidebar_initial_collapsed': True,
         'CHOICE_HEADING': getChoiceHeading_doc_len(project),
         'CHOICES': PROJ_DOCSIZE_CHOICES,
@@ -141,6 +144,7 @@ def projectDocLenView(request, project):
 def projectPropertyView(request, project, prop):
     context = {
         'project': project,
+        'page_project': True,
         'sidebar_initial_collapsed': True,
         'QUESTION_TEXT': getPropQuestionText(project, prop.name),
         'QUESTION_LEADIN': getPropQuestionLeadIn(project, prop.name),
@@ -157,6 +161,7 @@ def projectPropertyView(request, project, prop):
 def projectBasecampView(request, project):
     context = {
         'project': project,
+        'page_project': True,
         'sidebar_initial_collapsed': True,
         'TOP_TEXT': getDocBasecampTopText(project),
         'SUB_TEXT': getDocBasecampSubText(project),
@@ -235,3 +240,9 @@ def projectUpdateView(request, slug, attr):
     
     # cannot 'GET' to this page
     raise SuspiciousOperation
+
+def getProjectPageExtraContext(project):
+    return {
+        'project': project,
+        'page_project': True,
+    }

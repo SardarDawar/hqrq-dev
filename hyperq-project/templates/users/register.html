@@ -11,8 +11,8 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
-<link rel="stylesheet" href="{% static 'user/css/base.css' %}">
-<link rel="stylesheet" href="{% static 'user/css/login.css' %}">
+<link rel="stylesheet" href="{% static 'users/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'users/css/login.css' %}">
 <link rel="stylesheet" href="{% static 'home/css/scale.css' %}">
 {% endblock %}
 
@@ -132,6 +132,6 @@
         const url_next = {% if next_pg %}"{{ next_pg }}"{% else %}"/"{% endif %}
     {% endwith %}
 </script>
-<script src="{% static 'user/js/base.js' %}" type="text/javascript" defer></script>
-<script src="{% static 'user/js/register.js' %}" type="text/javascript" defer></script>
+<script src="{% static 'users/js/base.js' %}" type="text/javascript" defer></script>
+<script src="{% static 'users/js/register.js' %}" type="text/javascript" defer></script>
 {% endblock %}

@@ -21,7 +21,6 @@ fixMainWinHeight = (sel) => {
     if (window.innerWidth <= 750)
     {
         setTimeout(()=> {
-            // console.log($(sel).height())
             $('.main-win').css('min-height', `${$(sel).height()}px`)
             $('.main-win').css('max-height', `${$(sel).height()}px`)
             
@@ -30,14 +29,18 @@ fixMainWinHeight = (sel) => {
     else {
         $('.main-win').css('min-height', `unset`)
         $('.main-win').css('max-height', `unset`)
+        setTimeout(()=> {
+            $('.main-win').css('min-height', `unset`)
+            $('.main-win').css('max-height', `unset`)
+    
+        }, 550)
     }
 }
 
 fixMainWinHeightImmediate = (sel) => {
     if (window.innerWidth <= 750)
     {
-        setTimeout(()=> {
-            // console.log($(sel).height())
+        setTimeout(() => {
             $('.main-win').css('min-height', `${$(sel).height()}px`)
             $('.main-win').css('max-height', `${$(sel).height()}px`)
     
@@ -46,6 +49,11 @@ fixMainWinHeightImmediate = (sel) => {
     else {
         $('.main-win').css('min-height', `unset`)
         $('.main-win').css('max-height', `unset`)
+        setTimeout(() => {
+            $('.main-win').css('min-height', `unset`)
+            $('.main-win').css('max-height', `unset`)
+    
+        }, 250)
     }
 }
 
@@ -56,3 +64,18 @@ fixMainWinHeightImmediate(curr_page_sel);
 window.onresize = () => {
     fixMainWinHeightImmediate(curr_page_sel);
 }
+
+
+const btnLeftSidebarShowHide = document.getElementById("ls_show_hide");
+
+
+toggleLeftSidebar = () => {
+    if (!sdbrL.classList.contains("sm-collapsed")) sdbrL.classList.add("sm-collapsed");   // this class must be present for this functionality
+    if (sdbrL.classList.contains("show")) { 
+        sdbrL.classList.remove("show");
+    } else {
+        sdbrL.classList.add("show");
+    }
+}
+
+btnLeftSidebarShowHide.onclick = toggleLeftSidebar

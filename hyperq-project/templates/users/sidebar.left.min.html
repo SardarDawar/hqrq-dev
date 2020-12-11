@@ -2,12 +2,11 @@
 {% load extra_tags %}
 
 <!-- sidebar:left start -->
-<div class="sidebar left">
+<div class="sidebar left sm-collapsed">
 
     <div class="app-side-nav">
-        <div class="logo">
-            <img class="logo-ico-big" src="{% static 'common/icons/logo-full-2.png' %}" alt="Logo">
-        </div>
+
+        {% include "common/logo.lg.html" %}
 
         <hr class="sep sep-big">
         
@@ -29,9 +28,65 @@
         
         {% endwith %}
 
-        {% endif %}
+        <hr class="sep sep-big">
+
+        {% else %}
+
+
+        {% if page_project %}        
+        <div class="opt-text-svg opt opt-proj sel">
+            {{ project.getProjectTypeSVG|safe }}
+            <span class="opt-text-col">
+                <p class="opt-text-col-1">{{ project.title | truncatechars:35 }}</p> 
+                <p class="opt-text-col-2">{{ project.dt_create|date:"j M Y" }}</p> 
+            </span>
+            <!-- <svg class="svg-right" width="20" aria-hidden="true" focusable="false" data-prefix="far" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-ellipsis-h fa-w-16 fa-9x"><path fill="currentColor" d="M304 256c0 26.5-21.5 48-48 48s-48-21.5-48-48 21.5-48 48-48 48 21.5 48 48zm120-48c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48zm-336 0c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48z" class=""></path></svg> -->
+        </div>
 
         <hr class="sep sep-big">
+        {% endif %}
+
+
+        <div class="opt sidebar-left-opt-voice">
+            <p class="opt-text sidebar-left-voice-text">Library</p>
+        </div>
+
+        <hr class="sep sep-big">
+
+        <div class="opt-dropdown-wrap">
+
+            <div class="opt sidebar-left-opt-voice">
+                <p class="opt-text sidebar-left-voice-text">Account</p>
+            </div>
+
+            <div class="opt-dropdown">
+
+                <div class="opt-dropdown-opt opt-text text-muted small">
+                    {{ request.user.get_full_name }}
+                </div>
+
+                <hr class="sep sep-sm">
+
+                <div class="opt opt-dropdown-opt opt-text">
+                    My Account
+                </div>
+
+                <hr class="sep sep-sm">
+
+                <div class="opt opt-dropdown-opt opt-text" onclick="window.location.href='{% url 'logout' %}?next={{request.path}}'">
+                    Logout
+                </div>
+
+                <hr class="sep sep-sm">
+
+            </div>
+
+            <hr class="sep sep-big drop-sep">
+
+        </div>
+
+
+        {% endif %}
 
         <div class="opt-dropdown-wrap {% ifequal sdbr_pg_sel 'more' %}sel sel-force{% endifequal %}">
 
@@ -82,9 +137,16 @@
         </div>
 
     </div>
-
+    
+    <!--     
     <div class="app-side-button" style="background: transparent;">
         <div class="logo">
+        </div>
+    </div> -->
+
+    <div class="app-side-button" id="ls_show_hide">
+        <div class="logo">
+            <img class="logo-ico-min" src="{% static 'common/icons/logo-min.svg' %}" alt="Logo">
         </div>
     </div>
 

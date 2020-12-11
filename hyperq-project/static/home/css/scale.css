@@ -213,6 +213,13 @@
         padding-bottom: 0px;
     }
 
+    .sidebar.left.collapsed > .app-side-button .logo-ico-min {
+        transition: transform 200ms ease-in-out;
+    }
+    .sidebar.left.collapsed.show > .app-side-button .logo-ico-min {
+        transform: rotateZ(90deg);
+    }
+
     .sidebar.left.collapsed:not(.show) {
         height: 67px;
         max-height: 67px;
@@ -287,6 +294,65 @@
         padding-left: 0.4vw;
     }
 }
+
+
+
+
+
+
+
+/* below this width the SM left sidebar collapses horizontally (to top) */
+@media (max-width: 750px) {
+    
+    
+    
+    .sidebar.left .app-side-nav {        
+        padding-bottom: 40px;
+        border-bottom: 1px solid #F2F2F2;
+        transition: transform 500ms ease-in-out, opacity 500ms ease-in-out, height 500ms ease-in-out;
+        
+    }
+    
+    .sidebar.left .opt-text {
+        font-size: 16px;
+    }
+
+    .sidebar.left > .app-side-nav > .logo > img {
+        width: 80vw;
+        height: auto;
+        max-width: 324.08px;
+    }
+    
+    .sidebar.left.sm-collapsed {
+        transform: translateY(0);
+    }
+    
+    .sidebar.left.sm-collapsed:not(.show) > .app-side-nav {
+        height: 0;
+        opacity: 0;
+        padding-bottom: 0px;
+    }
+
+    .sidebar.left.sm-collapsed > .app-side-button .logo-ico-min {
+        transition: transform 200ms ease-in-out;
+    }
+    .sidebar.left.sm-collapsed.show > .app-side-button .logo-ico-min {
+        transform: rotateZ(90deg);
+    }
+
+    .sidebar.left.sm-collapsed:not(.show) {
+        height: 67px;
+        max-height: 67px;
+        overflow: hidden;
+    }
+
+    
+
+}
+
+
+
+
 
 @media (max-width: 1220px) {
     .pg0-wrap .accessibility {

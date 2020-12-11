@@ -61,5 +61,10 @@ def handler500(request):
     }
     return render(request, 'common/error.html', context)
 
-def notificationView(request, message):
-    return render(request, 'common/notification.html', {'message': message})
+def notificationView(request, message, extra_context=None):
+    context = {
+        'message': message
+    }
+    if extra_context:
+        context.update(extra_context)
+    return render(request, 'common/notification.html', context)

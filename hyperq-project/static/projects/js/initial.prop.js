@@ -158,7 +158,6 @@ fixMainWinHeight = (sel) => {
     if (window.innerWidth <= 750)
     {
         setTimeout(()=> {
-            // console.log($(sel).height())
             $('.main-win').css('min-height', `${$(sel).height()}px`)
             $('.main-win').css('max-height', `${$(sel).height()}px`)
             
@@ -167,14 +166,18 @@ fixMainWinHeight = (sel) => {
     else {
         $('.main-win').css('min-height', `unset`)
         $('.main-win').css('max-height', `unset`)
+        setTimeout(()=> {
+            $('.main-win').css('min-height', `unset`)
+            $('.main-win').css('max-height', `unset`)
+    
+        }, 550)
     }
 }
 
 fixMainWinHeightImmediate = (sel) => {
     if (window.innerWidth <= 750)
     {
-        setTimeout(()=> {
-            // console.log($(sel).height())
+        setTimeout(() => {
             $('.main-win').css('min-height', `${$(sel).height()}px`)
             $('.main-win').css('max-height', `${$(sel).height()}px`)
     
@@ -183,6 +186,11 @@ fixMainWinHeightImmediate = (sel) => {
     else {
         $('.main-win').css('min-height', `unset`)
         $('.main-win').css('max-height', `unset`)
+        setTimeout(() => {
+            $('.main-win').css('min-height', `unset`)
+            $('.main-win').css('max-height', `unset`)
+    
+        }, 250)
     }
 }
 

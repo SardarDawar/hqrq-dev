@@ -1,4 +1,5 @@
 from django import template
+from projects.params import COUNT_MAX_RECENT_PROJECTS
 
 register = template.Library()
 
@@ -35,4 +36,6 @@ def subtract(value, arg):
 def subtract_and_cool_number(value, arg, num_decimals=1):
     return cool_number(value-arg, num_decimals)
 
-
+@register.filter
+def get_user_recent_projects(user):
+    return user.projects.all()[:COUNT_MAX_RECENT_PROJECTS]

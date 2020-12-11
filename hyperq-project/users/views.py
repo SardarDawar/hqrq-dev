@@ -160,7 +160,7 @@ def register(request):
             data['error_message'] = ' '.join(e.messages)
             data['error_field'] = 'first_name'
             return JsonResponse(data)
-        if any((c in invalid_name_chars) for c in username):
+        if any((c in invalid_name_chars) for c in first_name):
             data['message'] = 'failure'
             data['error_message'] = "Name may contain only letters, numbers, and '-' character."
             data['error_field'] = 'first_name'
@@ -172,7 +172,7 @@ def register(request):
             data['error_message'] = ' '.join(e.messages)
             data['error_field'] = 'last_name'
             return JsonResponse(data)
-        if any((c in invalid_name_chars) for c in username):
+        if any((c in invalid_name_chars) for c in last_name):
             data['message'] = 'failure'
             data['error_message'] = "Name may contain only letters, numbers, and '-' character."
             data['error_field'] = 'last_name'

@@ -4,12 +4,17 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Profile
+from django.conf import settings
 
 @receiver(post_save, sender=User)
 def CreateProfile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        if settings.DEBUG:
+            Profile.objects.create(user=instance, email_verified=True)
+        else:
+            Profile.objects.create(user=instance)
 
+# not necessary to save the profile each time (for now)
 # @receiver(post_save, sender=User)
 # def SaveProfile(sender, instance, **kwargs):
 #     instance.profile.save()
