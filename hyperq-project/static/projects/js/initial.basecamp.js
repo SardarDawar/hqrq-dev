@@ -5,45 +5,23 @@
 // ####################################
 
 const btnCreateProject = document.getElementById("create_new_project");
-const btnBack_CreateProjectPage_1_Name = document.getElementById("btn_back_crprojName");
-const btnNext_CreateProjectPage_1_Name = document.getElementById("btn_next_crprojName");
-const btnBack_CreateProjectPage_2_DocType = document.getElementById("btn_back_crprojDocType");
-const btnNext_CreateProjectPage_2_DocType = document.getElementById("btn_next_crprojDocType");
+const btnNext_UpdateProject = document.getElementById("btn_next_updproj");
+
+btnCreateProject.onclick = () => {
+    disable_btnOpt(btnCreateProject)
+    window.location.href = url_projCreate
+}
 
 // form logic
-var field_docType = null;
 
-const field_projName = document.getElementById('pg1_field_project_name');
+const form_projectUpdate = document.getElementById("project_update_form");
 
-btnNext_CreateProjectPage_1_Name.disabled = true;
-btnNext_CreateProjectPage_2_DocType.disabled = true;
 
-const form_projectCreation = document.getElementById("project_creation_form");
-const formInp_title = document.getElementById("projFormInp-title");
-const formInp_doc_type = document.getElementById("projFormInp-doc_type");
-
-checkUpdateProjNameNextButton = (speech) => {
-    const val = field_projName.value.trim();
-    if (val.length === 0) btnNext_CreateProjectPage_1_Name.disabled = true;
-    else btnNext_CreateProjectPage_1_Name.disabled = false;
+btnNext_UpdateProject.onclick = () => {
+    form_projectUpdate.submit();
 }
 
-field_projName.addEventListener('input' , checkUpdateProjNameNextButton)
-
-btnNext_CreateProjectPage_2_DocType.onclick = () => {
-    const projName = field_projName.value.trim();
-    const projDocType = field_docType;
-    if (!projName || !projDocType || projName.length === 0 || projDocType.length === 0) {
-        btnNext_CreateProjectPage_2_DocType.disabled = true;
-        return;
-    }
-
-    formInp_title.value = projName;
-    formInp_doc_type.value = projDocType;
-    form_projectCreation.submit();
-}
-
-// end form logic 
+// form logic end
 
 const sdbrL = document.querySelector(".sidebar.left")
 const sdbrL_ddws = document.querySelectorAll(".opt-dropdown-wrap")
@@ -106,7 +84,7 @@ accMics.forEach(el => {
     } else {
         const field = document.getElementById(el.dataset.fieldid);
         el.onclick = () => {
-            VoiceToText(field, checkUpdateProjNameNextButton);        
+            VoiceToText(field);        
         }
     }
 });
@@ -157,17 +135,6 @@ expandLeftSidebar = () => {
     showRightSidebar();
 }
 
-hidePage = (sel, dir) => {
-    if (dir === 'left') $(sel).css('transform', 'translateX(-100%').css('opacity', '0')
-    else if (dir === 'right') $(sel).css('transform', 'translateX(100%').css('opacity', '0')
-    else $(sel).css('transform', 'translateX(-100%').css('opacity', '0')
-
-    setTimeout(function() {
-        $(sel).addClass('hidden')
-        $(sel).hide()
-    }, 500)  
-}
-
 fixMainWinHeight = (sel) => {
     if (window.innerWidth <= 750)
     {
@@ -200,16 +167,6 @@ fixMainWinHeightImmediate = (sel) => {
     }
 }
 
-showPage = (sel, dir) => {
-    curr_page_sel = sel;
-
-    $('.body-wrap')[0].scrollTop = 0
-    
-    $(sel).removeClass('hidden').show().css('transform', 'translateX(0%)').css('opacity', '1')
-    
-    fixMainWinHeight(sel);
-}
-
 
 const sdbrR_header = sdbrR.querySelector(".side-header");
 const $sdbrR_header = $('.sidebar.right .side-header')
@@ -228,10 +185,10 @@ setRightSidebarSecondaryContent = (page_sel, h_html, c_html, no_animation) => {
     const $sdbrRsecondary_content = $(`${page_sel} .sidebar-right-secondary .side-content`)
 
     if (no_animation) {
-        sdbrRsecondary_header.innerHTML = h_html
+        if (h_html) sdbrRsecondary_header.innerHTML = h_html
         sdbrRsecondary_content.innerHTML = c_html
     } else {
-        if (sdbrRsecondary_header.innerHTML !== h_html) {
+        if (h_html && sdbrRsecondary_header.innerHTML !== h_html) {
             $sdbrRsecondary_header.fadeOut(400, ()=> {
                 sdbrRsecondary_header.innerHTML = h_html
                 $sdbrRsecondary_header.fadeIn(300)
@@ -250,10 +207,10 @@ setRightSidebarSecondaryContent = (page_sel, h_html, c_html, no_animation) => {
 
 setRightSidebarContent = (h_html, c_html, no_animation) => {
     if (no_animation) {
-        sdbrR_header.innerHTML = h_html
+        if (h_html) sdbrR_header.innerHTML = h_html
         sdbrR_content.innerHTML = c_html
     } else {
-        if (sdbrR_header.innerHTML !== h_html) {
+        if (h_html && sdbrR_header.innerHTML !== h_html) {
             $sdbrR_header.fadeOut(400, ()=> {
                 sdbrR_header.innerHTML = h_html
                 $sdbrR_header.fadeIn(300)
@@ -277,105 +234,15 @@ enable_btnOpt = (btn) => {
 }
 
 // initially
-setRightSidebarSecondaryContent('.page-wrap.pg0-wrap', pg0_sdbrR_header, pg0_sdbrR_content, true)
-setRightSidebarContent(pg0_sdbrR_header, pg0_sdbrR_content, true)
+setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content, true)
+setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content, true)
 
-var curr_page_sel = '.page-wrap.pg0-wrap'
+var curr_page_sel = '.page-wrap.pg1-wrap'
 
 fixMainWinHeightImmediate(curr_page_sel);
 
 window.onresize = () => {
     fixMainWinHeightImmediate(curr_page_sel);
 }
-
-btnCreateProject.onclick = () => {
-    disable_btnOpt(btnCreateProject)
-    collapseLeftSidebar()
-    hidePage('.page-wrap.pg0-wrap')
-    showPage('.page-wrap.pg1-wrap')
-    setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content)
-    setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
-}
-
-if (initilShowProjectCreationPage) btnCreateProject.click();
-
-btnBack_CreateProjectPage_1_Name.onclick = () => {
-    enable_btnOpt(btnCreateProject)
-    expandLeftSidebar()
-    hidePage('.page-wrap.pg1-wrap', 'right')
-    showPage('.page-wrap.pg0-wrap')
-    setRightSidebarSecondaryContent('.page-wrap.pg0-wrap', pg0_sdbrR_header, pg0_sdbrR_content)
-    setRightSidebarContent(pg0_sdbrR_header, pg0_sdbrR_content)
-}
-
-btnNext_CreateProjectPage_1_Name.onclick = () => {
-    hidePage('.page-wrap.pg1-wrap', 'left')
-    showPage('.page-wrap.pg2-wrap')
-    var pg2_selection_check = false;
-    pg2vischs.forEach(el => {    
-        if (el.classList.contains("sel")) {
-            pg2_selection_check = true;
-            const el_id = el.getAttribute("id");
-            if (el_id in pg2_visch_help_dict) {
-                setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
-                setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
-            }            
-        }
-    })
-    // set this only if no option on pg2 has been selected
-    if (!pg2_selection_check) 
-    {
-        setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content)
-        setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
-    }
-}
-
-btnBack_CreateProjectPage_2_DocType.onclick = () => {
-    hidePage('.page-wrap.pg2-wrap', 'right')
-    showPage('.page-wrap.pg1-wrap')
-    setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content)
-    setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
-}
-
-// page 2 visual choices
-pg2vischs = document.querySelectorAll(".pg2-visch > *")
-
-clearAllVischsSel = (list, except) => {
-    if (except) {
-        list.forEach(el => {
-            if (el !== except) {
-                if (el.classList.contains("sel")) el.classList.remove("sel")
-            }
-        })
-    } else {
-        list.forEach(el => {
-            if (el.classList.contains("sel")) el.classList.remove("sel")
-        })
-    }
-}
-
-
-
-pg2vischs.forEach(el => {    
-    el.onclick = () => {
-        if (el.classList.contains("sel")) {
-            clearAllVischsSel(pg2vischs);
-            field_docType = null;
-            setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content)
-            setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
-        } else {
-            clearAllVischsSel(pg2vischs, el);
-            el.classList.add("sel")
-            field_docType = el.getAttribute("optval");
-            const el_id = el.getAttribute("id");
-            if (el_id in pg2_visch_help_dict) {
-                setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
-                setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
-            }
-        }
-        if (field_docType) btnNext_CreateProjectPage_2_DocType.disabled = false;
-        else btnNext_CreateProjectPage_2_DocType.disabled = true;
-    }
-})
 
 

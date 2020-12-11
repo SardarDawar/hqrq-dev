@@ -39,6 +39,14 @@
 {% endblock %}
 <!-- end body content -->
 
+{% block hidden_content %}
+<form action="{% url 'project-create' %}" method="POST" id="project_creation_form">
+    {% csrf_token %}
+    <input type="text" value="" name="title" id="projFormInp-title">
+    <input type="text" value="" name="doc_type" id="projFormInp-doc_type">
+</form>
+{% endblock %}
+
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js" defer></script>
 <script src="{% static 'common/js/text-voice.js' %}" type="text/javascript" defer></script>
@@ -48,7 +56,10 @@
     const user_lastName = "{{ request.user.last_name }}";
     const user_fullName = "{{ request.user.get_full_name }}";
     const user_email = "{{ request.user.email }}";
+    // urls
+    const url_projCreate = "{% url 'project-create' %}";
+    const initilShowProjectCreationPage = {% if action == 'create' %}true{% else %}false{% endif %};
 </script>
-<script src="{% static 'home/js/content.js' %}" type="text/javascript" defer></script>
+{% include "common/home.pages/content.html" %}
 <script src="{% static 'home/js/home.js' %}" type="text/javascript" defer></script>
 {% endblock %}

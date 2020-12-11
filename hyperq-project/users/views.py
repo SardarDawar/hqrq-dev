@@ -22,7 +22,6 @@ from .models import Profile
 from .tokens import emailVerificationToken
 from common.utils import send_html_email_async, validator_name, validator_username
 
-
 def sendAccountVerificationEmail(username=None):
     user = None
     # get user from db
@@ -41,7 +40,6 @@ def sendAccountVerificationEmail(username=None):
         'token':emailVerificationToken.make_token(user),
     }) 
     send_html_email_async(mail_subject, message, [email])
-
 
 def profile(request, username):
     user = get_object_or_404(User, username=username)    

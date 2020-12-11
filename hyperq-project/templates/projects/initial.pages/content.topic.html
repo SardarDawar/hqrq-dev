@@ -1,0 +1,51 @@
+{% load extra_tags %}
+
+<script type="text/javascript">
+const sdbrR_header_fixed = true;
+
+pg2_sdbrR_header = `
+    <span class="side-header-icon">
+        {{ PROJECT_SVG|safe }}
+    </span>    
+    <span class="side-header-text" style="display: flex; flex-direction: column">
+        <span style="margin-top: 15px;">{{PROJECT_TYPE}}</span>
+        <span style="font-size:18px; align-self:flex-end; padding-top: 10px">{{PROJECT_SUBTYPE}}</span>
+    </span>
+`.trim()
+pg2_sdbrR_content = `
+    <div class="side-header high-gap" style="padding-top:70px">Suggestions</div>
+    <div style="padding-top: 15px">
+        <p>
+            Choose the category of subject that you would like to cover in your document.
+        <p>
+        <p>
+            The category helps the HyperQuestions AI engine better understand the sort of primary subject you are seeking to cover. 
+        </p>  
+    </div>  
+`.trim()
+
+// pg2 visch sidebar stuff
+
+var pg2_visch_help_dict = {}
+
+{% for opt in CHOICES %}
+
+    pg2_visch{{ forloop.counter }}_content = `
+
+    <div class="side-header high-gap" style="padding-top:70px; font-size:20px">{{ opt.1 }}</div>
+    <div class="side-content-info-categ-wrap" style="padding-top:0">
+        <div class="side-info-categ">
+            <div class="info-categ-content" style="line-height: 30px;">
+                {{ SIDEBAR_DESCRPTIONS|get_dict_item:opt.0 }}
+            </div>
+        </div>
+    </div>
+
+
+`.trim()
+
+pg2_visch_help_dict['pg2visch{{ forloop.counter }}'] = [null, pg2_visch{{ forloop.counter }}_content]
+
+{% endfor %}
+
+</script>

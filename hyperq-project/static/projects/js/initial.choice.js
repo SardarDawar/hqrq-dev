@@ -4,46 +4,6 @@
 //
 // ####################################
 
-const btnCreateProject = document.getElementById("create_new_project");
-const btnBack_CreateProjectPage_1_Name = document.getElementById("btn_back_crprojName");
-const btnNext_CreateProjectPage_1_Name = document.getElementById("btn_next_crprojName");
-const btnBack_CreateProjectPage_2_DocType = document.getElementById("btn_back_crprojDocType");
-const btnNext_CreateProjectPage_2_DocType = document.getElementById("btn_next_crprojDocType");
-
-// form logic
-var field_docType = null;
-
-const field_projName = document.getElementById('pg1_field_project_name');
-
-btnNext_CreateProjectPage_1_Name.disabled = true;
-btnNext_CreateProjectPage_2_DocType.disabled = true;
-
-const form_projectCreation = document.getElementById("project_creation_form");
-const formInp_title = document.getElementById("projFormInp-title");
-const formInp_doc_type = document.getElementById("projFormInp-doc_type");
-
-checkUpdateProjNameNextButton = (speech) => {
-    const val = field_projName.value.trim();
-    if (val.length === 0) btnNext_CreateProjectPage_1_Name.disabled = true;
-    else btnNext_CreateProjectPage_1_Name.disabled = false;
-}
-
-field_projName.addEventListener('input' , checkUpdateProjNameNextButton)
-
-btnNext_CreateProjectPage_2_DocType.onclick = () => {
-    const projName = field_projName.value.trim();
-    const projDocType = field_docType;
-    if (!projName || !projDocType || projName.length === 0 || projDocType.length === 0) {
-        btnNext_CreateProjectPage_2_DocType.disabled = true;
-        return;
-    }
-
-    formInp_title.value = projName;
-    formInp_doc_type.value = projDocType;
-    form_projectCreation.submit();
-}
-
-// end form logic 
 
 const sdbrL = document.querySelector(".sidebar.left")
 const sdbrL_ddws = document.querySelectorAll(".opt-dropdown-wrap")
@@ -106,7 +66,7 @@ accMics.forEach(el => {
     } else {
         const field = document.getElementById(el.dataset.fieldid);
         el.onclick = () => {
-            VoiceToText(field, checkUpdateProjNameNextButton);        
+            VoiceToText(field);        
         }
     }
 });
@@ -157,17 +117,6 @@ expandLeftSidebar = () => {
     showRightSidebar();
 }
 
-hidePage = (sel, dir) => {
-    if (dir === 'left') $(sel).css('transform', 'translateX(-100%').css('opacity', '0')
-    else if (dir === 'right') $(sel).css('transform', 'translateX(100%').css('opacity', '0')
-    else $(sel).css('transform', 'translateX(-100%').css('opacity', '0')
-
-    setTimeout(function() {
-        $(sel).addClass('hidden')
-        $(sel).hide()
-    }, 500)  
-}
-
 fixMainWinHeight = (sel) => {
     if (window.innerWidth <= 750)
     {
@@ -200,16 +149,6 @@ fixMainWinHeightImmediate = (sel) => {
     }
 }
 
-showPage = (sel, dir) => {
-    curr_page_sel = sel;
-
-    $('.body-wrap')[0].scrollTop = 0
-    
-    $(sel).removeClass('hidden').show().css('transform', 'translateX(0%)').css('opacity', '1')
-    
-    fixMainWinHeight(sel);
-}
-
 
 const sdbrR_header = sdbrR.querySelector(".side-header");
 const $sdbrR_header = $('.sidebar.right .side-header')
@@ -219,7 +158,7 @@ const $sdbrR_content = $('.sidebar.right .side-content')
 
 
 
-setRightSidebarSecondaryContent = (page_sel, h_html, c_html, no_animation) => {
+setRightSidebarSecondaryContent = (page_sel, h_html, c_html, no_animation, initial) => {
 
     const sdbrRsecondary_header = document.querySelector(`${page_sel} .sidebar-right-secondary .side-header`);
     const $sdbrRsecondary_header = $(`${page_sel} .sidebar-right-secondary .side-header`)
@@ -228,10 +167,10 @@ setRightSidebarSecondaryContent = (page_sel, h_html, c_html, no_animation) => {
     const $sdbrRsecondary_content = $(`${page_sel} .sidebar-right-secondary .side-content`)
 
     if (no_animation) {
-        sdbrRsecondary_header.innerHTML = h_html
+        if (h_html && (!sdbrR_header_fixed || initial)) sdbrRsecondary_header.innerHTML = h_html
         sdbrRsecondary_content.innerHTML = c_html
     } else {
-        if (sdbrRsecondary_header.innerHTML !== h_html) {
+        if (h_html && (!sdbrR_header_fixed || initial) && sdbrRsecondary_header.innerHTML !== h_html) {
             $sdbrRsecondary_header.fadeOut(400, ()=> {
                 sdbrRsecondary_header.innerHTML = h_html
                 $sdbrRsecondary_header.fadeIn(300)
@@ -248,12 +187,12 @@ setRightSidebarSecondaryContent = (page_sel, h_html, c_html, no_animation) => {
     fixMainWinHeight(page_sel);
 }
 
-setRightSidebarContent = (h_html, c_html, no_animation) => {
+setRightSidebarContent = (h_html, c_html, no_animation, initial) => {
     if (no_animation) {
-        sdbrR_header.innerHTML = h_html
+        if (h_html && (!sdbrR_header_fixed || initial)) sdbrR_header.innerHTML = h_html
         sdbrR_content.innerHTML = c_html
     } else {
-        if (sdbrR_header.innerHTML !== h_html) {
+        if (h_html && (!sdbrR_header_fixed || initial) && sdbrR_header.innerHTML !== h_html) {
             $sdbrR_header.fadeOut(400, ()=> {
                 sdbrR_header.innerHTML = h_html
                 $sdbrR_header.fadeIn(300)
@@ -277,10 +216,10 @@ enable_btnOpt = (btn) => {
 }
 
 // initially
-setRightSidebarSecondaryContent('.page-wrap.pg0-wrap', pg0_sdbrR_header, pg0_sdbrR_content, true)
-setRightSidebarContent(pg0_sdbrR_header, pg0_sdbrR_content, true)
+setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content, true, true)
+setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content, true, true)
 
-var curr_page_sel = '.page-wrap.pg0-wrap'
+var curr_page_sel = '.page-wrap.pg2-wrap'
 
 fixMainWinHeightImmediate(curr_page_sel);
 
@@ -288,53 +227,12 @@ window.onresize = () => {
     fixMainWinHeightImmediate(curr_page_sel);
 }
 
+const btnCreateProject = document.getElementById("create_new_project");
+const btnNext_UpdateProject = document.getElementById("btn_next_updproj");
+
 btnCreateProject.onclick = () => {
     disable_btnOpt(btnCreateProject)
-    collapseLeftSidebar()
-    hidePage('.page-wrap.pg0-wrap')
-    showPage('.page-wrap.pg1-wrap')
-    setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content)
-    setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
-}
-
-if (initilShowProjectCreationPage) btnCreateProject.click();
-
-btnBack_CreateProjectPage_1_Name.onclick = () => {
-    enable_btnOpt(btnCreateProject)
-    expandLeftSidebar()
-    hidePage('.page-wrap.pg1-wrap', 'right')
-    showPage('.page-wrap.pg0-wrap')
-    setRightSidebarSecondaryContent('.page-wrap.pg0-wrap', pg0_sdbrR_header, pg0_sdbrR_content)
-    setRightSidebarContent(pg0_sdbrR_header, pg0_sdbrR_content)
-}
-
-btnNext_CreateProjectPage_1_Name.onclick = () => {
-    hidePage('.page-wrap.pg1-wrap', 'left')
-    showPage('.page-wrap.pg2-wrap')
-    var pg2_selection_check = false;
-    pg2vischs.forEach(el => {    
-        if (el.classList.contains("sel")) {
-            pg2_selection_check = true;
-            const el_id = el.getAttribute("id");
-            if (el_id in pg2_visch_help_dict) {
-                setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
-                setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
-            }            
-        }
-    })
-    // set this only if no option on pg2 has been selected
-    if (!pg2_selection_check) 
-    {
-        setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content)
-        setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
-    }
-}
-
-btnBack_CreateProjectPage_2_DocType.onclick = () => {
-    hidePage('.page-wrap.pg2-wrap', 'right')
-    showPage('.page-wrap.pg1-wrap')
-    setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content)
-    setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content)
+    window.location.href = url_projCreate
 }
 
 // page 2 visual choices
@@ -354,28 +252,45 @@ clearAllVischsSel = (list, except) => {
     }
 }
 
-
+var field_projupd = null;
 
 pg2vischs.forEach(el => {    
     el.onclick = () => {
         if (el.classList.contains("sel")) {
             clearAllVischsSel(pg2vischs);
-            field_docType = null;
+            field_projupd = null;
             setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content)
             setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content)
         } else {
             clearAllVischsSel(pg2vischs, el);
             el.classList.add("sel")
-            field_docType = el.getAttribute("optval");
+            field_projupd = el.getAttribute("optval");
             const el_id = el.getAttribute("id");
             if (el_id in pg2_visch_help_dict) {
                 setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
                 setRightSidebarContent(pg2_visch_help_dict[el_id][0], pg2_visch_help_dict[el_id][1])
             }
         }
-        if (field_docType) btnNext_CreateProjectPage_2_DocType.disabled = false;
-        else btnNext_CreateProjectPage_2_DocType.disabled = true;
+        if (field_projupd) btnNext_UpdateProject.disabled = false;
+        else btnNext_UpdateProject.disabled = true;
     }
 })
 
 
+// form logic
+
+btnNext_UpdateProject.disabled = true;
+
+const form_projectUpdate = document.getElementById("project_update_form");
+const formInp_upd = document.getElementById("projFormInp-upd");
+
+btnNext_UpdateProject.onclick = () => {
+    const projUpd = field_projupd;
+    if (!projUpd || projUpd.length === 0) {
+        btnNext_UpdateProject.disabled = true;
+        return;
+    }
+
+    formInp_upd.value = projUpd;
+    form_projectUpdate.submit();
+}

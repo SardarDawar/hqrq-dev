@@ -265,7 +265,10 @@ p {
     margin-bottom: 3.5vh;
     margin-left: 2.5vw;
     margin-right: 2.5vw;
+}
 
+.side-wrap, .side-wrap * {
+    transition: none;
 }
 
 .side-wrap .side-header {

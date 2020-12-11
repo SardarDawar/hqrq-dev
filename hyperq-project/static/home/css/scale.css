@@ -64,6 +64,10 @@
         padding-top: 10px;
     }
 
+    .side-header.high-gap {
+        padding-top: 0px !important;
+    }
+
     .pg2-visch {
         justify-content: center;
     }
@@ -115,6 +119,10 @@
     
     .sidebar.left.collapsed:not(.show) > .app-side-button {
         transform: translateX(-380px);              /*negative --home-sidebar-left-width*/
+    }
+
+    .page-wrap .top-text:not(.full) {
+        max-width: calc(100% - 150px);
     }
 }
 

@@ -1,0 +1,32 @@
+{% load extra_tags %}
+
+<script type="text/javascript">
+const sdbrR_header_fixed = true;
+
+pg1_sdbrR_header = `
+    <span class="side-header-icon">
+        {{ PROJECT_SVG|safe }}
+    </span>    
+    <span class="side-header-text" style="display: flex; flex-direction: column">
+        <span style="margin-top: 15px;">{{PROJECT_TYPE}}</span>
+        <span style="font-size:18px; align-self:flex-end; padding-top: 10px">{{PROJECT_SUBTYPE}}</span>
+    </span>
+`.trim()
+pg1_sdbrR_content = `
+    <div class="side-header high-gap" style="padding-top:70px"="">Suggestions</div>
+    <div style="padding-top: 15px">
+        <p>
+            Before we move on, we need to check that everything is in order and expressed correctly.  Please read the content on the left and if there are any issues go back to correct your responses before moving foward from here.
+        </p>
+        <p>
+            Progressing beyond this point will lock in these responses and you won’t be able to change them again during the process.
+        </p>
+        <p>
+            Of course, you will be able to make edits in the final document, but just make sure you are happy with what you have entered.
+        </p>
+        
+    </div>  
+`.trim()
+
+
+</script>

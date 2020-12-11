@@ -1,0 +1,111 @@
+{% load extra_tags %}
+
+<script type="text/javascript">
+const sdbrR_header_fixed = true;
+
+pg1_sdbrR_header = `
+    <span class="side-header-icon">
+        {{ PROJECT_SVG|safe }}
+    </span>    
+    <span class="side-header-text" style="display: flex; flex-direction: column">
+        <span style="margin-top: 15px;">{{PROJECT_TYPE}}</span>
+        <span style="font-size:18px; align-self:flex-end; padding-top: 10px">{{PROJECT_SUBTYPE}}</span>
+    </span>
+`.trim()
+pg1_sdbrR_content = `
+    <div class="side-header high-gap" style="padding-top:70px"="">Suggestions</div>
+    <div style="padding-top: 15px">
+        
+        {% if PROP_NAME == 'PROP_TARGET_READER' %}
+        
+            <p>
+                Considering and defining your “target reader” is one of the most critical steps in creating a great document that builds a bridge between your message and your intended outcome. 
+            </p>
+            <p>
+                Some example answers include: 
+            </p>   
+            <ul style="padding-top: 0px; margin-bottom: 1.3rem">
+                <li>- investors</li>
+                <li>- the board of directors</li>
+                <li>- staff in the Human Resources Division</li>
+                <li>- website visitors who searched for XYZ</li>    
+            </ul>
+                
+            <p>
+                Please don’t use one of the above unless it is the right answer in your situation.
+            </p>
+
+        {% elif PROP_NAME == 'PROP_TOPIC_NAME' %}
+
+            <p>
+                Consider that the name used here will appear in the document, so choose a name that will read well in the context of a sentence.  
+            </p>
+            <p>
+                This name is effectively the core topic for your document and you will see it come up quite often. You will have the option to come-back and change the name once you have seen it used in the next few pages.  
+            </p>
+            <p>
+                After a few more questions, you will soon reach ”Document Basecamp”, once you proceed past that page, you will no longer be able to return and edit these answers.  
+            </p>
+            <p>
+                Click the ? icon for more tips.
+            </p>
+
+        {% elif PROP_NAME == 'PROP_TOPIC_IMPACT' %}
+            
+            <p>
+                Understanding who is most impacted by your subject lets us understand the relationships involved in your document.  
+            </p>
+            <p>
+                This helps the HyperQuestions AI engine to add value to the process and ensures you are presenting information about the impacts of the subject.  
+            </p>
+            <p>
+                Note: This could also be your target reader. If it is also your target reader then enter the name.
+            </p>
+
+        {% elif PROP_NAME == 'PROP_TARGET_IMPRESSION' %}
+            
+            <p>
+                The action or impression is the ultimate outcome you wish to achieve as a result of producing this document. 
+            </p>
+            <p>
+                It could relate to: 
+            </p>
+            
+            <ul style="padding-top: 0px; margin-bottom: 1.3rem">
+                <li>- an action by the target reader</li>
+                <li>- a new level of understanding</li>
+                <li>- empathy or a feeling about your topic</li>
+            </ul>
+            <p>
+              Be specific if possible, as ultimately your document will be oriented around achieving this goal. 
+            </p>
+            <p>
+                Try to list only one primary goal.  
+                If you have a few, try to summarise them to a higher-level goal.
+            </p>
+
+
+        {% elif PROP_NAME == 'PROP_TOPIC_CAUSE' %}
+            
+            <p>
+                This is the person, organisation or thing that is having an impact on the achievement of your document goal or objective. 
+            </p>
+            <p>
+                Some sample answers include: 
+            </p>
+            <ul style="padding-top: 0px; margin-bottom: 1.3rem">
+                <li>- Web Development</li>
+                <li>- Swiss Bank Policy</li>
+                <li>- Human Resources team</li>
+            </ul>
+            <p>
+                Please don’t use the above and avoid using “Me”. If the answer is really you, then please use your name or your title in the context of the document (e.g. Director).
+            </p>
+
+        {% endif %}
+
+    </div>  
+`.trim()
+
+
+</script>
