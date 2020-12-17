@@ -1,6 +1,7 @@
 {% load extra_tags %}
 
 <script type="text/javascript">
+const sdbrR_header_fixed = false;
 
 pg0_sdbrR_header = `
     Suggestions
@@ -82,7 +83,7 @@ pg2_visch{{ forloop.counter }}_header = `
     </div>
 `.trim()
 
-pg2_visch_help_dict['pg2visch{{ forloop.counter }}'] = [pg2_visch{{ forloop.counter }}_header, pg2_visch{{ forloop.counter }}_content]
+pg2_visch_help_dict['pg2visch{{ forloop.counter }}'] = [{{ forloop.counter }}, pg2_visch{{ forloop.counter }}_header, pg2_visch{{ forloop.counter }}_content]
 
 {% endfor %}
 

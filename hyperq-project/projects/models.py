@@ -8,11 +8,12 @@ from .vars import ( PROJ_STAGE_CHOICES, PROJ_STAGE_DEFAULT, PROJ_STATUS_CHOICES,
                     PROJ_DOCSIZE_CHOICES, PROJ_DOCSIZE_DEFAULT, 
                     PROJ_TOPIC_CHOICES, PROJ_TOPIC_DEFAULT, )
 from .content import PROJ_TYPE_SVGS
+from django.conf import settings
 
 class Project(models.Model):
 
     # project attributes
-    creator = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="projects")
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="projects")
     title = models.CharField(max_length=500)
     
     # doc attributes

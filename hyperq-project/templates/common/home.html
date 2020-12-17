@@ -28,7 +28,7 @@
         <div class="main-content small">
             {% include "common/home.pages/pg0.welcome.html" %}
             {% include "common/home.pages/pg1.prcr.title.html" %}
-            {% include "common/home.pages/pg1.prcr.type.html" %}
+            {% include "common/home.pages/pg2.prcr.type.html" %}
         </div>
     </div>
     <!-- center window end -->
@@ -48,7 +48,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js" defer></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js" defer></script> -->
 <script src="{% static 'common/js/text-voice.js' %}" type="text/javascript" defer></script>
 <script>
     // page constants
@@ -61,5 +61,6 @@
     const initilShowProjectCreationPage = {% if action == 'create' %}true{% else %}false{% endif %};
 </script>
 {% include "common/home.pages/content.html" %}
+<script src="{% static 'common/js/accessibility.js' %}" type="text/javascript" defer></script>
 <script src="{% static 'home/js/home.js' %}" type="text/javascript" defer></script>
 {% endblock %}

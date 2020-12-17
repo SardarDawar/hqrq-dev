@@ -50,9 +50,16 @@
             {% endblock %}
         </span>
 
+        {% block base_extra_content %}
+            <!-- modals start -->
+            {% include "common/modals.html" %}
+            <!-- modals end -->
+        {% endblock %}
+
         {% block base_js %}
         <script src="{% static 'common/js/jquery-3.5.1.min.js' %}" type="text/javascript" defer></script>
         <script src="{% static 'common/js/bootstrap.bundle.min.js' %}" type="text/javascript" defer></script>
+        <script src="{% static 'common/js/modal.js' %}" type="text/javascript" defer></script>
         <script src="{% static 'common/js/base.js' %}" type="text/javascript" defer></script>
         {% endblock %}
 

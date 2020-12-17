@@ -33,8 +33,8 @@ pg2_visch{{ forloop.counter }}_header = `
         {{ PROJECT_SVG|safe }}
     </span>    
     <span class="side-header-text" style="display: flex; flex-direction: column">
-        <span style="margin-top: 15px;">{{PROJECT_TYPE}}</span>
-        <span style="font-size:18px; align-self:flex-end; padding-top: 10px">{{opt.1}}</span>
+        <span style="margin-top: 10px;">{{PROJECT_TYPE}}</span>
+        <span style="font-size:18px; align-self:flex-end; padding-top: 5px">{{opt.1}}</span>
     </span>
 
     `.trim()
@@ -55,7 +55,7 @@ pg2_visch{{ forloop.counter }}_header = `
     {% endif %}
 `.trim()
 
-pg2_visch_help_dict['pg2visch{{ forloop.counter }}'] = [pg2_visch{{ forloop.counter }}_header, pg2_visch{{ forloop.counter }}_content]
+pg2_visch_help_dict['pg2visch{{ forloop.counter }}'] = [{{ forloop.counter }}, pg2_visch{{ forloop.counter }}_header, pg2_visch{{ forloop.counter }}_content]
 
 {% endfor %}
 

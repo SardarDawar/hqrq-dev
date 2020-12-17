@@ -16,7 +16,7 @@
                 <hr class="sep">
                 <div class="pg1-content">
                     <div class="pg1-question">
-                        <div class="pg1-question-text">
+                        <div class="pg1-question-text along-access-text">
                             {{ QUESTION_LEADIN }}
                         </div>
                         <div class="accessibility">
@@ -32,18 +32,21 @@
                         </div>
                     </div>
                     <div class="pg1-fields">
-                        <input type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000">
+                        <input type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000" {% if curr_value %}value="{{ curr_value }}"{% endif %}>
                     </div>
                 </div>
                 <hr class="sep">
                 <div class="pg1-buttons">
+                    {% if BACK_URL %}
+                    <button type="button" class="btn btn-dark cust-button" id="btn_back_updproj" onclick="window.location.href='{% url BACK_URL project.slug BACK_URL_ATTR %}'">Back</button>
+                    {% endif %}
                     <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_updproj">Next</button>
                 </div>
                 
                 <div class="noshow" style="opacity: 0; position: absolute; top: 0; z-index: -100;">
                     {{ PROJECT_SVG|safe }}
                 </div>
-                <div class="sidebar-right-secondary"><div class="side-wrap"><div class="side-header"></div><div class="side-content"></div></div></div>
+                <div class="sidebar-right-secondary"><div class="side-wrap"><div class="side-id" style="display: none; width: 0; height: 0;"></div><div class="side-header"></div><div class="side-content"></div></div></div>
 
             </div>
             
@@ -57,12 +60,15 @@
 {% block hidden_content %}
 <form action="{% url FORM_URL_NAME project.slug FORM_URL_ATTR %}" method="POST" id="project_update_form">
     {% csrf_token %}
-    <input type="text" value="" name="{{FORM_INPUT_NAME}}" id="projFormInp-upd">
+    <input type="text" {% if curr_value %}value="{{ curr_value }}"{% endif %} name="{{FORM_INPUT_NAME}}" id="projFormInp-upd">
+    {% if FORCE_NEXT %}
+    <input type="checkbox" name="force_next" value="ForceNext" checked>
+    {% endif %}
 </form>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js" defer></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js" defer></script> -->
 <script src="{% static 'common/js/text-voice.js' %}" type="text/javascript" defer></script>
 <script>
     // page constants
@@ -71,7 +77,9 @@
     const user_fullName = "{{ request.user.get_full_name }}";
     const user_email = "{{ request.user.email }}";
     const url_projCreate = "{% url 'project-create' %}";
+    const proj_choice_curr_value = {% if curr_value %}"{{ curr_value }}"{% else %}null{% endif %};
 </script>
-{% include "projects/initial.pages/content.prop.html" %}
+{% include CONTENT_PAGE_PATH %}
+<script src="{% static 'common/js/accessibility.js' %}" type="text/javascript" defer></script>
 <script src="{% static 'projects/js/initial.prop.js' %}" type="text/javascript" defer></script>
 {% endblock %}

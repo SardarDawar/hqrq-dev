@@ -354,7 +354,7 @@
 
 
 
-@media (max-width: 1220px) {
+@media (max-width: 1230px) {
     .pg0-wrap .accessibility {
         display: flex;
         align-items: center;
@@ -369,5 +369,13 @@
 
     .pg0-question > * {
         width: 100%;
+    }
+}
+
+
+@media (min-width: 1231px) { 
+    .page-wrap .along-access-text {
+        max-width: calc(100% - 150px);
+        align-self: flex-start;
     }
 }

@@ -376,13 +376,28 @@ PROJ_BASE_PROPS = [
 ]
 
 # project initial questions flow
-INIT_Q_SUBTYPE = 'INIT_Q_SUBTYPE'
-INIT_Q_DOC_LEN = 'INIT_Q_LEN'
-INIT_Q_DOC_TOPIC = 'INIT_Q_TOPIC'
-INIT_Q_PROP = 'INIT_Q_PROP'
+INIT_Q_TITLE = 'INIT_Q_TITLE'       # attr
+INIT_Q_TYPE = 'INIT_Q_TYPE'         # attr
+INIT_Q_SUBTYPE = 'INIT_Q_SUBTYPE'   # attr
+INIT_Q_DOC_LEN = 'INIT_Q_LEN'       # attr
+INIT_Q_DOC_TOPIC = 'INIT_Q_TOPIC'   # attr
+INIT_Q_PROP = 'INIT_Q_PROP'         # props
 
+INIT_Q_ATTR_NAME_LIST = {
+    INIT_Q_TITLE: 'title',
+    INIT_Q_TYPE: 'doc_type',
+    INIT_Q_SUBTYPE: 'doc_subtype',
+    INIT_Q_DOC_LEN: 'doc_len',
+    INIT_Q_DOC_TOPIC: 'doc_topic',
+}
 
 PROJ_INIT_QUESTIONS_FLOW = {
+    '-2': {
+        'ID': INIT_Q_TITLE,
+    },
+    '-1': {
+        'ID': INIT_Q_TYPE,
+    },
     '0': {
         'ID': INIT_Q_SUBTYPE,
     },
@@ -408,3 +423,72 @@ PROJ_INIT_QUESTIONS_FLOW = {
         'ID': INIT_Q_DOC_LEN,
     },
 }
+
+PROJ_HOME_URLNAME = 'project'
+PROJ_UPD_ATTR_URLNAME = 'project-update'
+PROJ_UPD_PROP_URLNAME = 'project-prop-update'
+
+def getFlowBackUrlAttr(curr, stp=None):
+    burl = None
+    battr = None
+    for n, q in PROJ_INIT_QUESTIONS_FLOW.items():
+        if q['ID'] == INIT_Q_PROP:
+            for p in q['STEPS']:
+                if curr == INIT_Q_PROP and stp == p:
+                    return burl, battr
+                burl = PROJ_UPD_PROP_URLNAME
+                battr = p
+        else:
+            if q['ID'] == curr:
+                return burl, battr
+            burl = PROJ_UPD_ATTR_URLNAME
+            battr = INIT_Q_ATTR_NAME_LIST[q['ID']]
+    # return url for last step in flow
+    return burl, battr
+
+def getFlowNextUrlAttr(curr, stp=None):
+    found = False
+    for n, q in PROJ_INIT_QUESTIONS_FLOW.items():
+        if found:
+            if q['ID'] == INIT_Q_PROP:
+                return PROJ_UPD_PROP_URLNAME, q['STEPS'][0]
+            else:
+                return PROJ_UPD_ATTR_URLNAME, INIT_Q_ATTR_NAME_LIST[q['ID']]
+        if q['ID'] == curr:
+            if q['ID'] == INIT_Q_PROP:
+                for p in q['STEPS']:
+                    if found:
+                        return PROJ_UPD_PROP_URLNAME, p
+                    if p == stp:
+                        found = True
+            else:
+                found = True
+    return PROJ_HOME_URLNAME, None
+
+def getFlowNextNameStep(curr, stp=None):
+    found = False
+    for n, q in PROJ_INIT_QUESTIONS_FLOW.items():
+        if found:
+            return q['ID'], INIT_Q_ATTR_NAME_LIST[q['ID']]
+        if q['ID'] == curr:
+            if q['ID'] == INIT_Q_PROP:
+                for p in q['STEPS']:
+                    if found:
+                        return q['ID'], p
+                    if p == stp:
+                        found = True
+            else:
+                found = True
+    # probably should lead to basecamp
+    return PROJ_HOME_URLNAME, None
+
+INIT_Q_ATTR_INV_LIST = {
+    'title': INIT_Q_TITLE,
+    'doc_type': INIT_Q_TYPE,
+    'doc_subtype': INIT_Q_SUBTYPE,
+    'doc_len': INIT_Q_DOC_LEN,
+    'doc_topic': INIT_Q_DOC_TOPIC,
+}
+
+def getAttrName(attr_val):
+    return INIT_Q_ATTR_INV_LIST.get(attr_val, None)

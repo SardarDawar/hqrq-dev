@@ -3,11 +3,21 @@ var speech_voices = null;
 var speech_state = false;
 var speech_voice_inx = null;
 const speech_voice_lang = "en-US";
-
+const VOICE_TEXT_CASE_TITLE = "TITLE_CASE"
+const VOICE_TEXT_CASE_UPPER = "UPPER_CASE"
+const VOICE_TEXT_CASE_LOWER = "LOWER_CASE"
+const VOICE_TEXT_CASE_STANDARD = "STAND_CASE"
 
 setTimeout(() => {
     speech_voices = window.speechSynthesis.getVoices();
 }, 50);
+
+var speechTimeout;
+function speechTimer() {
+    window.speechSynthesis.pause();
+    window.speechSynthesis.resume();
+    speechTimeout = setTimeout(speechTimer, 10000);
+}
 
 if(window.speechSynthesis.onvoiceschanged !== undefined)
 {
@@ -42,17 +52,26 @@ function TextToVoice(text) {
     // utterThis.pitch = 0.5;
     if (!speech_state)
     {
+        speechTimeout = setTimeout(speechTimer, 10000);
         speech_state = true;
         utterThis.onend = () => {
             speech_state = false;
+            if (speechTimeout) clearTimeout(speechTimeout);
         }
+        console.log(utterThis)
         window.speechSynthesis.speak(utterThis);
+    }
+    else {
+        window.speechSynthesis.cancel();
+        if (speechTimeout) clearTimeout(speechTimeout);
     }
 };
 
 const start_beep = document.getElementById("beep");
 
-function VoiceToText(field, callback) {
+function VoiceToText(field, callback, text_case) {
+    if (!text_case) text_case = VOICE_TEXT_CASE_STANDARD;
+
     if (!field && !callback) return;
 
     if (window.hasOwnProperty("webkitSpeechRecognition")) {
@@ -69,9 +88,17 @@ function VoiceToText(field, callback) {
     }
     recognition.onresult = function(event) {
         const speech = ""+event.results[0][0].transcript;
-        const speech_cased = toTitleCase(speech)
+        var speech_cased = speech;
+        
+        if (text_case===VOICE_TEXT_CASE_TITLE) speech_cased = toTitleCase(speech)
+        else if (text_case===VOICE_TEXT_CASE_UPPER) speech_cased = speech.toUpperCase();
+        else if (text_case===VOICE_TEXT_CASE_LOWER) speech_cased = speech.toLowerCase();
+        
         recognition.stop();
-        if (field) $(field).val(speech_cased);
+        if (field) $(field).val(()=> {
+            if (!field.value) return speech_cased.trim()
+            else return `${field.value.trim()} ${speech_cased.trim()}`;
+        });
         if (callback) callback(speech);
     }
     recognition.onerror = function(event) {
@@ -83,4 +110,63 @@ function VoiceToText(field, callback) {
         start_beep.play();
     }
     recognition.start();
+};
+
+
+
+var speechUtteranceChunker = function (utt, settings, callback) {
+    settings = settings || {};
+    var newUtt;
+    var txt = (settings && settings.offset !== undefined ? utt.text.substring(settings.offset) : utt.text);
+    if (utt.voice && utt.voice.voiceURI === 'native') { // Not part of the spec
+        newUtt = utt;
+        newUtt.text = txt;
+        newUtt.addEventListener('end', function () {
+            if (speechUtteranceChunker.cancel) {
+                speechUtteranceChunker.cancel = false;
+            }
+            if (callback !== undefined) {
+                callback();
+            }
+        });
+    }
+    else {
+        var chunkLength = (settings && settings.chunkLength) || 160;
+        var pattRegex = new RegExp('^[\\s\\S]{' + Math.floor(chunkLength / 2) + ',' + chunkLength + '}[.!?,]{1}|^[\\s\\S]{1,' + chunkLength + '}$|^[\\s\\S]{1,' + chunkLength + '} ');
+        var chunkArr = txt.match(pattRegex);
+
+        if (chunkArr[0] === undefined || chunkArr[0].length <= 2) {
+            //call once all text has been spoken...
+            if (callback !== undefined) {
+                callback();
+            }
+            return;
+        }
+        var chunk = chunkArr[0];
+        newUtt = new SpeechSynthesisUtterance(chunk);
+        var x;
+        for (x in utt) {
+            if (utt.hasOwnProperty(x) && x !== 'text') {
+                newUtt[x] = utt[x];
+            }
+        }
+        newUtt.addEventListener('end', function () {
+            if (speechUtteranceChunker.cancel) {
+                speechUtteranceChunker.cancel = false;
+                return;
+            }
+            settings.offset = settings.offset || 0;
+            settings.offset += chunk.length - 1;
+            speechUtteranceChunker(utt, settings, callback);
+        });
+    }
+
+    if (settings.modifier) {
+        settings.modifier(newUtt);
+    }
+    console.log(newUtt); //IMPORTANT!! Do not remove: Logging the object out fixes some onend firing issues.
+    //placing the speak invocation inside a callback fixes ordering and onend issues.
+    setTimeout(function () {
+        speechSynthesis.speak(newUtt);
+    }, 0);
 };

@@ -5,34 +5,29 @@ var btnLoginLoader = document.querySelector(".login-btn-loader")
 var btnLoginTick = document.querySelector(".login-tick") 
 var btnLoginCross = document.querySelector(".login-cross") 
 
-var inpUser = document.querySelector(".input-username") 
+var inpEmail = document.querySelector('.input-email')
 var inpPass = document.querySelector(".input-password") 
 var url_login = '/login/';
 
-var labelUser = document.querySelector(".label-username") 
+var labelEmail = document.querySelector(".label-email")
 var labelPass = document.querySelector(".label-password") 
 
 const MINIMUM_PASSWORD_LENGTH = 8;
 const MAXIMUM_PASSWORD_LENGTH = 45;
-const MINIMUM_USERNAME_LENGTH = 3;
-const MAXIMUM_USERNAME_LENGTH = 20;
 
 btnLogin.addEventListener('click', listener_click_btnLogin);
-inpUser.value = ""
+inpEmail.value = ""
 inpPass.value = ""
 
-ValidateUsername = function (username) {
-    if (username.length < MINIMUM_USERNAME_LENGTH || username.length > MAXIMUM_USERNAME_LENGTH)
+ValidateEmail = function (email) 
+{
+    if (/\s/.test(email) || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) 
     {
-        showMessage(`Username must be between ${MINIMUM_USERNAME_LENGTH} and ${MAXIMUM_USERNAME_LENGTH} characters`)
+        // string contains some kind of whitespace or email structure invalid
+        showMessage('Invalid EMAIL address')
+        
         return false;
     }
-    else if (/\s/.test(username)) {
-        // string contains some kind of whitespace
-        showMessage('Invalid Username String')
-        return false;
-    }
-    // check for invalid chars
 
     return true;
 }
@@ -49,29 +44,31 @@ ValidatePassword = function (password) {
 
 function listener_click_btnLogin(e)
 {
-    inpUser.value = inpUser.value.trim()
-    if (inpUser.value.length === 0 || inpPass.value.length === 0)
+    inpEmail.value = inpEmail.value.trim()
+    if (inpEmail.value.length === 0 || inpPass.value.length === 0)
     {
         showMessage('Please Fill Out Both Fields')
     }
-    else if (!ValidateUsername(inpUser.value)) 
+    else if (!ValidateEmail(inpEmail.value)) 
     {
         e.preventDefault()
+        inpEmail.focus()
     }
     else if (!ValidatePassword(inpPass.value)) 
     {
         e.preventDefault()
+        inpPass.focus()
     }
     else 
     {
         e.preventDefault()
-        inpUser.disabled = true
+        inpEmail.disabled = true
         inpPass.disabled = true
 
         btnLogin.disabled = true;
         btnLogin.classList.remove('enabled')
 
-        labelUser.classList.add('label-disabled')
+        labelEmail.classList.add('label-disabled')
         labelPass.classList.add('label-disabled')
 
         btnLoginLoader.hidden = false;
@@ -89,7 +86,7 @@ function listener_click_btnLogin(e)
             type: 'POST',
             url: url_login,
             data: {
-                'username': inpUser.value,
+                'email': inpEmail.value,
                 'password': inpPass.value
             },
             success: function(data){
@@ -98,13 +95,13 @@ function listener_click_btnLogin(e)
             error: function(error){
                 console.log(error);
                 showMessage("An unknown error has occurred");
-                inpUser.disabled = false
+                inpEmail.disabled = false
                 inpPass.disabled = false
         
                 btnLogin.disabled = false;
                 btnLogin.classList.add('enabled')
         
-                labelUser.classList.remove('label-disabled')
+                labelEmail.classList.remove('label-disabled')
                 labelPass.classList.remove('label-disabled')
         
                 btnLoginLoader.hidden = true;
@@ -139,14 +136,14 @@ function handler_Login(data)
     }
     else if (data['message'] === 'failure')
     {
-        inpUser.disabled = false
+        inpEmail.disabled = false
         inpPass.disabled = false
 
-        inpUser.addEventListener("input", enableLoginButton);
+        inpEmail.addEventListener("input", enableLoginButton);
         inpPass.addEventListener("input", enableLoginButton);
 
 
-        labelUser.classList.remove('label-disabled')
+        labelEmail.classList.remove('label-disabled')
         labelPass.classList.remove('label-disabled')
 
         btnLoginLoader.hidden = true;
@@ -164,7 +161,7 @@ function enableLoginButton() {
     btnLogin.classList.add('enabled')
     btnLogin.style.cursor = "pointer"
 
-    inpUser.removeEventListener("input", enableLoginButton);
+    inpEmail.removeEventListener("input", enableLoginButton);
     inpPass.removeEventListener("input", enableLoginButton);
 
     btnLoginCross.style.visibility = "hidden"

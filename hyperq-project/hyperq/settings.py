@@ -50,11 +50,13 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django.contrib.humanize',
     # my apps
-    'common.apps.CommonConfig',
     'users.apps.UsersConfig',
+    'common.apps.CommonConfig',
     'projects.apps.ProjectsConfig',
     
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

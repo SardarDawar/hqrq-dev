@@ -45,13 +45,11 @@ function listener_input_inpEmail ()
 
 var inpFirstName = document.querySelector(".input-first_name") 
 var inpLastName = document.querySelector(".input-last_name") 
-var inpUser = document.querySelector(".input-username") 
 var inpPass1 = document.querySelector('.input-password-1')
 var inpPass2 = document.querySelector('.input-password-2')
 
 var inpFirstNameBox = document.querySelector(".inp-wrap.first_name-box") 
 var inpLastNameBox = document.querySelector(".inp-wrap.last_name-box") 
-var inpUserBox = document.querySelector('.inp-wrap.username-box')
 var inpPass1Box = document.querySelector('.inp-wrap.password-1-box')
 var inpPass2Box = document.querySelector('.inp-wrap.password-2-box')
 
@@ -84,7 +82,6 @@ function matchPasswords() {
 
 var labelFirstName = document.querySelector(".label-first_name") 
 var labelLastName = document.querySelector(".label-last_name") 
-var labelUser = document.querySelector(".label-username") 
 var labelPass1 = document.querySelector(".label-password-1")
 var labelPass2 = document.querySelector(".label-password-2") 
 
@@ -92,19 +89,17 @@ const MINIMUM_NAME_LENGTH = 1;
 const MAXIMUM_NAME_LENGTH = 25;
 const MINIMUM_PASSWORD_LENGTH = 8;
 const MAXIMUM_PASSWORD_LENGTH = 45;
-const MINIMUM_USERNAME_LENGTH = 3;
-const MAXIMUM_USERNAME_LENGTH = 20;
+// const MINIMUM_USERNAME_LENGTH = 3;
+// const MAXIMUM_USERNAME_LENGTH = 20;
 
 btnRegister.addEventListener('click', listener_click_btnRegister);
 inpFirstName.value = ""
 inpLastName.value = ""
-inpUser.value = ""
 inpPass1.value = ""
 inpPass2.value = ""
 
 inpFirstName.addEventListener('input' , listener_input_inpFirstName)
 inpLastName.addEventListener('input' , listener_input_inpLastName)
-inpUser.addEventListener('input' , listener_input_inpUser)
 inpPass1.addEventListener('input' , listener_input_inpPass1)
 
 function listener_input_inpFirstName ()
@@ -143,25 +138,6 @@ function listener_input_inpLastName ()
     }
 }
 
-
-function listener_input_inpUser ()
-{
-    var errorPreviously = inpUserBox.classList.contains('inp-error')
-    if (inpUser.value.length === 0)
-    {
-        if(errorPreviously) inpUserBox.classList.remove('inp-error')
-    }
-    else if (ValidateUsername(inpUser.value.trim(), false))
-    {   
-        if (errorPreviously)
-        inpUserBox.classList.remove('inp-error')
-    }
-    else if (!errorPreviously)
-    {
-        inpUserBox.classList.add('inp-error')
-    }
-}
-
 function listener_input_inpPass1()
 {
     var errorPreviously = inpPass1Box.classList.contains('inp-error')
@@ -180,13 +156,13 @@ function listener_input_inpPass1()
     }
 }
 
-ValidateName = function (username, bShowMsg=true) {
-    if (username.length < MINIMUM_NAME_LENGTH || username.length > MAXIMUM_NAME_LENGTH)
+ValidateName = function (name, bShowMsg=true) {
+    if (name.length < MINIMUM_NAME_LENGTH || name.length > MAXIMUM_NAME_LENGTH)
     {
-        if (bShowMsg) showMessage(`Name must be between ${MINIMUM_USERNAME_LENGTH} and ${MAXIMUM_USERNAME_LENGTH} characters`, 'error')
+        if (bShowMsg) showMessage(`Name must be between ${MINIMUM_NAME_LENGTH} and ${MAXIMUM_NAME_LENGTH} characters`, 'error')
         return false;
     }
-    else if (/\s/.test(username)) {
+    else if (/\s/.test(name)) {
         // string contains some kind of whitespace
         if(bShowMsg) showMessage('Invalid Name String', 'error')
         return false;
@@ -196,21 +172,21 @@ ValidateName = function (username, bShowMsg=true) {
     return true;
 }
 
-ValidateUsername = function (username, bShowMsg=true) {
-    if (username.length < MINIMUM_USERNAME_LENGTH || username.length > MAXIMUM_USERNAME_LENGTH)
-    {
-        if (bShowMsg) showMessage(`Username must be between ${MINIMUM_USERNAME_LENGTH} and ${MAXIMUM_USERNAME_LENGTH} characters`, 'error')
-        return false;
-    }
-    else if (/\s/.test(username)) {
-        // string contains some kind of whitespace
-        if(bShowMsg) showMessage('Invalid Username String', 'error')
-        return false;
-    }
-    // check for invalid chars
+// ValidateUsername = function (username, bShowMsg=true) {
+//     if (username.length < MINIMUM_USERNAME_LENGTH || username.length > MAXIMUM_USERNAME_LENGTH)
+//     {
+//         if (bShowMsg) showMessage(`Username must be between ${MINIMUM_USERNAME_LENGTH} and ${MAXIMUM_USERNAME_LENGTH} characters`, 'error')
+//         return false;
+//     }
+//     else if (/\s/.test(username)) {
+//         // string contains some kind of whitespace
+//         if(bShowMsg) showMessage('Invalid Username String', 'error')
+//         return false;
+//     }
+//     // check for invalid chars
 
-    return true;
-}
+//     return true;
+// }
 
 ValidatePassword = function (password, bShowMsg=true) {
     if (password.length < MINIMUM_PASSWORD_LENGTH || password.length > MAXIMUM_PASSWORD_LENGTH)
@@ -226,8 +202,8 @@ function listener_click_btnRegister(e)
 {
     inpFirstName.value = inpFirstName.value.trim()
     inpLastName.value = inpLastName.value.trim()
-    inpUser.value = inpUser.value.trim()
-    if (inpFirstName.value.length === 0 || inpLastName.value.length === 0 || inpEmail.value.length === 0 || inpUser.value.length === 0 || inpPass1.value.length === 0 || inpPass2.value.length === 0)
+    inpEmail.value = inpEmail.value.trim()
+    if (inpFirstName.value.length === 0 || inpLastName.value.length === 0 || inpEmail.value.length === 0 || inpPass1.value.length === 0 || inpPass2.value.length === 0)
     {
         showMessage('Please Fill Out All Fields')
     }
@@ -249,12 +225,6 @@ function listener_click_btnRegister(e)
         inpEmail.focus()
         if (!inpEmailBox.classList.contains('inp-error')) inpEmailBox.classList.add('inp-error')
     }
-    else if (!ValidateUsername(inpUser.value)) 
-    {
-        e.preventDefault()
-        inpUser.focus()
-        if (!inpUserBox.classList.contains('inp-error')) inpUserBox.classList.add('inp-error')
-    }
     else if (!ValidatePassword(inpPass1.value)) 
     {
         e.preventDefault()
@@ -274,7 +244,6 @@ function listener_click_btnRegister(e)
         inpFirstName.disabled = true
         inpLastName.disabled = true
         inpEmail.disabled = true
-        inpUser.disabled = true
         inpPass1.disabled = true
         inpPass2.disabled = true
 
@@ -284,7 +253,6 @@ function listener_click_btnRegister(e)
         labelFirstName.classList.add('label-disabled')
         labelLastName.classList.add('label-disabled')
         labelEmail.classList.add('label-disabled')
-        labelUser.classList.add('label-disabled')
         labelPass1.classList.add('label-disabled')
         labelPass2.classList.add('label-disabled')
 
@@ -306,7 +274,6 @@ function listener_click_btnRegister(e)
                 'first_name': inpFirstName.value,
                 'last_name': inpLastName.value,
                 'email': inpEmail.value,
-                'username': inpUser.value,
                 'password1': inpPass1.value,
                 'password2':inpPass2.value,
             },
@@ -320,7 +287,6 @@ function listener_click_btnRegister(e)
                 inpFirstName.disabled = false;
                 inpLastName.disabled = false;
                 inpEmail.disabled = false;
-                inpUser.disabled = false
                 inpPass1.disabled = false; 
                 inpPass2.disabled = false; 
                 
@@ -330,7 +296,6 @@ function listener_click_btnRegister(e)
                 labelFirstName.classList.remove('label-disabled')
                 labelLastName.classList.remove('label-disabled')
                 labelEmail.classList.remove('label-disabled')
-                labelUser.classList.remove('label-disabled')
                 labelPass1.classList.remove('label-disabled')
                 labelPass2.classList.remove('label-disabled')
                 
@@ -362,7 +327,7 @@ function handler_Register(data)
         btnRegisterTick.style.visibility = "visible"
         $('.login-tick').hide().fadeIn(200);
 
-        showMessage(`Account for \'${account['username']}\' successfully created. You are now being redirected to the login page.`)
+        showMessage(`Account for \'${account['email']}\' successfully created. You are now being redirected to the login page.`)
         setTimeout(redirectToLogin, 1000);
     }
     else if (data['message'] === 'failure')
@@ -370,21 +335,18 @@ function handler_Register(data)
         inpFirstName.disabled = false;
         inpLastName.disabled = false;
         inpEmail.disabled = false
-        inpUser.disabled = false
         inpPass1.disabled = false
         inpPass2.disabled = false
 
         inpFirstName.addEventListener("input", enableRegisterButton);
         inpLastName.addEventListener("input", enableRegisterButton);
         inpEmail.addEventListener("input", enableRegisterButton);
-        inpUser.addEventListener("input", enableRegisterButton);
         inpPass1.addEventListener("input", enableRegisterButton);
         inpPass2.addEventListener("input", enableRegisterButton);
 
         labelFirstName.classList.remove('label-disabled')
         labelLastName.classList.remove('label-disabled')
         labelEmail.classList.remove('label-disabled')
-        labelUser.classList.remove('label-disabled')
         labelPass1.classList.remove('label-disabled')
         labelPass2.classList.remove('label-disabled')
 
@@ -396,7 +358,6 @@ function handler_Register(data)
 
         showMessage(data['error_message'])
         if (data['error_field'] === 'email') inpEmailBox.classList.add('inp-error');
-        else if (data['error_field'] === 'username') inpUserBox.classList.add('inp-error');
         else if (data['error_field'] === 'password1') inpPass1Box.classList.add('inp-error');
         else if (data['error_field'] === 'password2') inpPass2Box.classList.add('inp-error');
         else if (data['error_field'] === 'first_name') inpFirstNameBox.classList.add('inp-error');
@@ -414,7 +375,6 @@ function enableRegisterButton(rmvEvntLstnr = true) {
         inpFirstName.removeEventListener("input", enableRegisterButton);
         inpLastName.removeEventListener("input", enableRegisterButton);
         inpEmail.removeEventListener("input", enableRegisterButton);
-        inpUser.removeEventListener("input", enableRegisterButton);
         inpPass1.removeEventListener("input", enableRegisterButton);
         inpPass2.removeEventListener("input", enableRegisterButton);
     }

@@ -32,7 +32,7 @@
                 <div class="top-text">Login</div>
                 <hr class="sep">
                 <div class="pg0-content">
-                    <div class="pg0-instr" id="pg0-acc-speak-field">Enter your username and password to log in.</div>
+                    <div class="pg0-instr" id="pg0-acc-speak-field">Enter your email and password to log in.</div>
                     <br>
 
                     <div class="main main-login">
@@ -43,9 +43,9 @@
                                 <div class="container">
                                     <form autocomplete="off">
                                         {% csrf_token %}
-                                        <div class="inp-wrap username-box">
-                                            <input autocomplete="chrome-off" class="input-username" type="text" name="username" required="">
-                                            <label class="label-username">USERNAME</label>
+                                        <div class="inp-wrap email-box">
+                                            <input autocomplete="chrome-off" class="input-email" type="email" name="email" required="">
+                                            <label class="label-email">EMAIL</label>
                                             <span></span>
                                         </div>
                                         <br>

@@ -3,7 +3,7 @@ from django.urls import path, re_path
 from .views import (home, about, faq, support, policy)
 from django.contrib.auth import views as auth_views
 from users.views import (deleteAccount_AJAX, emailVerify, login, register,
-                         settings, MyPasswordResetView)
+                         user_settings, MyPasswordResetView)
 
 # url patterns under ('')
 urlpatterns = [
@@ -21,7 +21,7 @@ urlpatterns = [
     path('register/', register, name='register'),
 
     # user/profile action urls
-    path('settings/', settings, name='settings'),
+    path('settings/', user_settings, name='settings'),
     path('settings/delete/', deleteAccount_AJAX, name="account-delete"),
     path('email_verify/<uidb64>/<token>/', emailVerify, name='email-verify'),
 
