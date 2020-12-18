@@ -354,9 +354,8 @@ def projectPropertyUpdate_AJAX(request):
             p.save()
             updated_list.append(p.name)
     # updated
-    updated = True
     data = {
-        'updated': updated,
+        'updated': True,
         'updated_list': updated_list,
         'responses_text': getDocBasecampResponsesList(project),
         'message': 'Successfully updated responses',

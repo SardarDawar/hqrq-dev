@@ -4,26 +4,6 @@
 //
 // ####################################
 
-function moveCursorToEndOfContenteditable(contentEditableElement)
-{
-    var range,selection;
-    if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
-    {
-        range = document.createRange();//Create a range (a range is a like the selection but invisible)
-        range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
-        range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-        selection = window.getSelection();//get the selection object (allows you to change selection)
-        selection.removeAllRanges();//remove any selections already made
-        selection.addRange(range);//make the range you have just created the visible selection
-    }
-    else if(document.selection)//IE 8 and lower
-    { 
-        range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
-        range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
-        range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-        range.select();//Select the range (make it the visible selection
-    }
-}
 
 const btnCreateProject = document.getElementById("create_new_project");
 const btnNext_UpdateProject = document.getElementById("btn_next_updproj");
@@ -58,16 +38,18 @@ window.onresize = () => {
     fixMainWinHeightImmediate(curr_page_sel);
 }
 
+const basecampMic = document.getElementById("basecamp-mic");
 
 // basecamp editable fields
-var befs = document.querySelectorAll(".bascamp-text .editable")
+var befs = document.querySelectorAll(".basecamp-text .editable")
 
 const btn_contentEdit = document.getElementById("contentEditButton")
 const contentEditOptions = document.getElementById("contentEditOptions")
 const btn_contentEdit_done = contentEditOptions.querySelector("#contentEditOption-done")
 const btn_contentEdit_cancel = contentEditOptions.querySelector("#contentEditOption-cancel")
 
-const bascampTextDiv = document.querySelector(".bascamp-text")
+const basecampTextDiv = document.querySelector(".basecamp-text")
+const $basecampTextDiv = $(basecampTextDiv)
 
 function ValidateResponseInputs(break_on_error) {
     var error = false;
@@ -97,7 +79,8 @@ function ValidateResponseInputs(break_on_error) {
 
 function initResponseFields() {
     var first = true;
-    befs = document.querySelectorAll(".bascamp-text .editable")
+    befs = document.querySelectorAll(".basecamp-text .editable")
+    unsetMicActiveVoiceToTextField(basecampMic)
     befs.forEach(el => {    
         if (!el.querySelector(".input-bef")) {
             const pname = el.getAttribute("pname")
@@ -109,18 +92,32 @@ function initResponseFields() {
             `
             const inp = document.getElementById(inpID)
             el.classList.add('editing')
+            inp.addEventListener('keydown' , (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                }
+            })
+            inp.addEventListener('keyup' , (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                }
+            })
+            inp.addEventListener("input", (e)=>{
+                ValidateResponseInputs();
+            })
+            inp.addEventListener("focus", (e)=>{
+                setMicActiveVoiceToTextField(basecampMic, inp)
+            })
             if (first) {
                 inp.focus()
                 moveCursorToEndOfContenteditable(inp)
                 first = false
             }
-            inp.addEventListener("input", ()=>{
-                ValidateResponseInputs();
-            })
         }
     })  
     if (!btn_contentEdit_done.classList.contains("disabled")) btn_contentEdit_done.classList.add("disabled")
     if (btn_contentEdit_cancel.classList.contains("disabled")) btn_contentEdit_cancel.classList.remove("disabled")
+    if (!basecampTextDiv.classList.contains("bscmp-editing")) basecampTextDiv.classList.add("bscmp-editing")
     $(btn_contentEdit).hide()
     $(contentEditOptions).show()
 }
@@ -137,6 +134,8 @@ editCancel = () => {
     })
     $(contentEditOptions).hide()
     $(btn_contentEdit).show()
+    if (basecampTextDiv.classList.contains("disabled")) basecampTextDiv.classList.remove("disabled")
+    if (basecampTextDiv.classList.contains("bscmp-editing")) basecampTextDiv.classList.remove("bscmp-editing")
 }
 
 editSubmit = () => {
@@ -147,6 +146,7 @@ editSubmit = () => {
 
     if (!btn_contentEdit_done.classList.contains("disabled")) btn_contentEdit_done.classList.add("disabled")
     if (!btn_contentEdit_cancel.classList.contains("disabled")) btn_contentEdit_cancel.classList.add("disabled")
+    if (!basecampTextDiv.classList.contains("disabled")) basecampTextDiv.classList.add("disabled")
 
     // collect all responses
     var responses = {}
@@ -176,17 +176,26 @@ editSubmit = () => {
         },
         success: function(data){
             if (data['updated']) {
-                bascampTextDiv.innerHTML = data["responses_text"]
-                $(contentEditOptions).hide()
-                $(btn_contentEdit).show()
+                const responses_text = data["responses_text"]
+                $basecampTextDiv.stop().fadeOut(300, ()=> {
+                    $basecampTextDiv.html(responses_text)
+                    $basecampTextDiv.fadeIn(300)
+                    if (basecampTextDiv.classList.contains("disabled")) basecampTextDiv.classList.remove("disabled")
+                    if (basecampTextDiv.classList.contains("bscmp-editing")) basecampTextDiv.classList.remove("bscmp-editing")
+                    $(contentEditOptions).hide()
+                    $(btn_contentEdit).show()
+                })
+
             } else {
                 // show error message
+                showMessage(data["message"])
                 editCancel();
             }
         },
         error: function(error){
             console.log(error);
             // show error message
+            showMessage("An unknown error has occurred")
             editCancel();
         }
     });
@@ -196,4 +205,17 @@ btn_contentEdit_cancel.onclick = editCancel
 btn_contentEdit_done.onclick = editSubmit
 
 
+const message_text_title = `Error\
+        <svg aria-hidden="true" width="33px" focusable="false" data-prefix="fad" data-icon="exclamation-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="error svg-inline--fa fa-exclamation-circle fa-w-16 fa-9x"><g class="fa-group"><path fill="currentColor" d="M256 8C119 8 8 119.08 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 376a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm38.24-238.41l-12.8 128A16 16 0 0 1 265.52 288h-19a16 16 0 0 1-15.92-14.41l-12.8-128A16 16 0 0 1 233.68 128h44.64a16 16 0 0 1 15.92 17.59z" class="fa-secondary"></path><path fill="currentColor" d="M278.32 128h-44.64a16 16 0 0 0-15.92 17.59l12.8 128A16 16 0 0 0 246.48 288h19a16 16 0 0 0 15.92-14.41l12.8-128A16 16 0 0 0 278.32 128zM256 320a32 32 0 1 0 32 32 32 32 0 0 0-32-32z" class="fa-primary"></path></g></svg>
+    `;        
+const message_text_subtitle = "";
+function showMessage(message, type)
+{
+    showInfoModal_info(message_text_title, message_text_subtitle, message, type)
+}
 
+
+// voice to text init
+accessibility_initMicsActiveVoiceToFieldText();
+setVoiceToText_FieldType('contenteditable');
+setVoiceToTextFieldCallback(ValidateResponseInputs)

@@ -402,6 +402,8 @@ p {
     position: absolute;
 
     transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
+
+    padding-bottom: 10px !important;
 }
 
 .page-wrap.hidden {
@@ -426,6 +428,7 @@ p {
     line-height: 45px;
     margin-left: 5px;
     margin-bottom: 10px;
+    word-break: break-word;
 }
 
 .main-content .sep {

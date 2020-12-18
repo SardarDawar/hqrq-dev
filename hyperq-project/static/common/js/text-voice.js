@@ -69,10 +69,28 @@ function TextToVoice(text) {
 
 const start_beep = document.getElementById("beep");
 
+var voiceToText_FieldType = 'input'
+
+setVoiceToText_FieldType = (type) => {
+    if (type === 'input' || type === 'contenteditable') {
+        voiceToText_FieldType = type
+    }
+}
+
 function VoiceToText(field, callback, text_case) {
+
     if (!text_case) text_case = VOICE_TEXT_CASE_STANDARD;
 
     if (!field && !callback) return;
+
+    if (field) {
+        field.focus()
+        if (voiceToText_FieldType === 'contenteditable') {
+            moveCursorToEndOfContenteditable(field)
+        } else {
+            moveCursorToEndOfInput(field);
+        }
+    }
 
     if (window.hasOwnProperty("webkitSpeechRecognition")) {
         var recognition = new window.webkitSpeechRecognition();
@@ -95,10 +113,19 @@ function VoiceToText(field, callback, text_case) {
         else if (text_case===VOICE_TEXT_CASE_LOWER) speech_cased = speech.toLowerCase();
         
         recognition.stop();
-        if (field) $(field).val(()=> {
-            if (!field.value) return speech_cased.trim()
-            else return `${field.value.trim()} ${speech_cased.trim()}`;
-        });
+        if (field) {
+            if (voiceToText_FieldType === 'contenteditable') {
+                if (!field.innerHTML) field.innerHTML = speech_cased.trim()
+                else field.innerHTML = `${field.innerHTML} ${speech_cased.trim()}`
+                moveCursorToEndOfContenteditable(field)
+            } else {
+                $(field).val(()=> {
+                    if (!field.value) return speech_cased.trim()
+                    else return `${field.value.trim()} ${speech_cased.trim()}`;
+                });
+                moveCursorToEndOfInput(field);
+            }
+        }
         if (callback) callback(speech);
     }
     recognition.onerror = function(event) {

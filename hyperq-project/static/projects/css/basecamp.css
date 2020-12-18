@@ -13,6 +13,12 @@
 .editable.editing {
     margin-left: 3px;
     margin-right: 3px;
+
+    line-height: 50px;
+}
+
+.basecamp-text.bscmp-editing p{
+    /* line-height: 50px !important; */
 }
 
 .editable .input-bef {
@@ -20,7 +26,9 @@
   font-family: inherit;
   font-size: inherit;
   padding: 6px 3px;
+
 }
+
 
 
 
@@ -32,14 +40,52 @@
     background-image: none;
 }
 
+.basecamp-text {
+    transition: none !important;
+    word-break: break-word;
+}
+
+.basecamp-text.disabled * {
+    color: #9fa3a793 !important;
+    cursor: default !important;
+    pointer-events: none;
+}
+
 #contentEditButton, #contentEditOptions > * {
-    font-family: var(--base-font-regular); 
-    font-size: 17px; 
-    color: #9FA3A7 !important; 
+    font-family: var(--base-font-regular);
+    font-size: 17px;
+    color: #9FA3A7 !important;
     cursor: pointer;
 }
 
 #contentEditOption-cancel.disabled, #contentEditOption-done.disabled {
     cursor: default !important;
     color: #9fa3a793 !important;
+    pointer-events: none;
+}
+
+.input-bef.form-control:not(.is-invalid):focus{
+    color:#495057;
+    background-color:#fff;
+    /* border-color:#80bdff; */
+    border-color:#383d42;
+    outline:0;
+    /* box-shadow:0 0 0 .2rem #007bff40 */
+    box-shadow: 0 0 0 .2rem #41424240
+}
+
+@media (max-width: 750px) {
+    .pg1-fields.edit-acc-options {
+        flex-direction: column;
+    }
+    #contentEditButton, #contentEditOptions {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+}
+
+@media (min-width: 751px) {
+    .pg1-fields .pg1-fields-heading{
+        max-width: calc(100% - 175px);
+    }
 }

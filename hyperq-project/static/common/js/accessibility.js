@@ -13,7 +13,11 @@ accSpeakers.forEach(el => {
     }
 });
 
-const accMics = document.querySelectorAll(".accessibility .acc-mic")
+// const accMics = document.querySelectorAll(".accessibility .acc-mic")
+const accMics = new Set([
+    ...document.querySelectorAll(".accessibility .acc-mic"),
+    ...document.querySelectorAll(".acsblty.acc-mic")
+])
 
 accMics.forEach(el => {
 
@@ -54,12 +58,39 @@ accMics.forEach(el => {
         const field = document.getElementById(el.dataset.fieldid);
         var textcase = null;
         if (field && field.hasAttribute("textcase")) textcase = field.getAttribute("textcase")
-        el.onclick = () => {
-            VoiceToText(field, voiceToTextFieldCallback, textcase);        
+        if (field) {
+            el.onclick = () => {
+                VoiceToText(field, voiceToTextFieldCallback, textcase);        
+            }
         }
     }
 });
 
+
+accessibility_initMicsActiveVoiceToFieldText = () => {
+    accMics.forEach(el => {
+        el.onclick = null;
+        el.onclick = () => {
+            const field = document.getElementById(el.dataset.fieldid);
+            var textcase = null;
+            if (field && field.hasAttribute("textcase")) textcase = field.getAttribute("textcase")
+            if (field) {
+                field.focus()
+                moveCursorToEndOfInput(field) 
+                VoiceToText(field, voiceToTextFieldCallback, textcase);
+            }        
+        }
+    });
+}
+
+unsetMicActiveVoiceToTextField = (mic_el) => {
+    if (mic_el.hasAttribute("data-fieldid")) mic_el.removeAttribute("data-fieldid")
+}
+
+setMicActiveVoiceToTextField = (mic_el, field, textcase) => {
+    mic_el.setAttribute("data-fieldid", `${field.id}`)
+    if (textcase) mic_el.setAttribute("textcase", `${textcase}`)
+}
 
 const accHelps = document.querySelectorAll(".accessibility .acc-help")
 

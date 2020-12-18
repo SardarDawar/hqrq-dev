@@ -39,3 +39,20 @@
 }
 
 
+
+.acsblty.acc-opt svg {
+    width: 20px;
+    height: 20px;
+    color: #c9c9c9;
+}
+
+.acsblty.acc-opt {
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    background: var(--base-bg);
+    padding: 0;
+
+    border-width: 0px;
+}
+
