@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from projects.vars import PROJ_TYPE_CHOICES
-from projects.content import PROJ_TYPE_SVGS, PROJ_TYPE_SUBTYPES, PROJ_TYPE_DESCRIPTIONS, PROJ_TYPE_OUTPUT_DETAILS
-
+from projects.content import (  PROJ_TYPE_SVGS, PROJ_TYPE_SUBTYPES, PROJ_TYPE_DESCRIPTIONS, PROJ_TYPE_OUTPUT_DETAILS,
+                                getTip_title, getTip_doc_type)
 TEXT_ENG__ERR_404 = "Page Not Found"
 TEXT_ENG__ERR_400 = "Bad Request"
 TEXT_ENG__ERR_403 = "Permission Denied"
@@ -17,6 +17,8 @@ def home(request):
         'PROJ_TYPE_SUBTYPES': PROJ_TYPE_SUBTYPES,
         'PROJ_TYPE_DESCRIPTIONS': PROJ_TYPE_DESCRIPTIONS,
         'PROJ_TYPE_OUTPUT_DETAILS': PROJ_TYPE_OUTPUT_DETAILS,
+        'TIP_PROJ_TITLE': getTip_title(),
+        'TIP_PROJ_TYPE': getTip_doc_type(),
         'action': action,
     }
     return render(request, 'common/home.html', context)

@@ -55,7 +55,6 @@ def profile(request):
     return render(request, 'users/profile.html', context)
 
 
-
 def login(request):
     if request.method == 'POST' and request.is_ajax():
         if request.user.is_authenticated:

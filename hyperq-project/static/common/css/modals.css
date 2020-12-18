@@ -1,0 +1,39 @@
+#infoModal #infoModalContent-text {
+    font-size: 1rem;
+}
+
+#infoModal #infoModalTitle {
+    font-size: 25px;
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+#infoModal #infoModalTitle svg {
+    margin-left: 10px;
+}
+
+#infoModal #infoModalTitle svg.info .fa-primary {
+    color: #007BFF;
+}
+
+#infoModal #infoModalTitle svg.error .fa-primary {
+    color: #DC3545;
+}
+
+#infoModal #infoModalTitle svg.info .fa-secondary, #infoModal #infoModalTitle svg.error .fa-secondary {
+    color: #9797973d;
+}
+
+
+#infoModal #infoModalContent-text p:first-of-type {
+    margin-top: 10px;
+}
+
+#infoModal #infoModalContent-text p:not(:last-of-type) {
+    margin-bottom: 15px;
+}
+
+#infoModal #infoModalContent-text p:last-of-type {
+    margin-bottom: 10px;
+}

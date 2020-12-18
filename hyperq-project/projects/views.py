@@ -15,9 +15,13 @@ from .content import (  PROJ_SUBTYPE_DESCRIPTIONS, PROJ_TYPE_LIST, PROJ_SUBTYPE_
                         getChoiceHeading_doc_subtype, getChoiceHeading_doc_topic, getChoiceHeading_doc_len,
                         getPropQuestionText, getPropQuestionLeadIn,
                         getDocBasecampTopText, getDocBasecampSubText, getDocBasecampResponsesList,
-                        getFlowBackUrlAttr, getFlowNextUrlAttr, getAttrName)
+                        getFlowBackUrlAttr, getFlowNextUrlAttr, getAttrName,
+                        getTip_title, getTip_doc_type, getTip_doc_sutype, getTip_doc_topic, getTip_doc_len,
+                        getTip_basecamp, getTip_prop)
 from .utils import defaultProjectSubtype
 from .models import Project, Property
+import json
+from django.db import transaction
 
 @login_required
 def projectCreate(request):
@@ -109,6 +113,7 @@ def projectTitleView(request, project, additional_context=None):
         'QUESTION_TEXT': "What would you like to call your new project?",
         'QUESTION_LEADIN': "The name of my document is...",
         'CONTENT_PAGE_PATH': "common/home.pages/content.html",
+        'PAGE_TIP': getTip_title(),
         'PROJ_TYPE_CHOICES': PROJ_TYPE_CHOICES,
         'PROJ_TYPE_SVGS': PROJ_TYPE_SVGS,
         'PROJ_TYPE_SUBTYPES': PROJ_TYPE_SUBTYPES,
@@ -134,6 +139,7 @@ def projectTypeView(request, project, additional_context=None):
         'CHOICES': PROJ_TYPE_CHOICES,
         'CHOICE_SVGS': PROJ_TYPE_SVGS,
         'CONTENT_PAGE_PATH': "common/home.pages/content.html",
+        'PAGE_TIP': getTip_doc_type(),
         'PROJ_TYPE_CHOICES': PROJ_TYPE_CHOICES,
         'PROJ_TYPE_SVGS': PROJ_TYPE_SVGS,
         'PROJ_TYPE_SUBTYPES': PROJ_TYPE_SUBTYPES,
@@ -160,6 +166,7 @@ def projectSubTypeView(request, project, additional_context=None):
         'PROJECT_TYPE': PROJ_TYPE_LIST[project.doc_type],
         'PROJECT_SVG': PROJ_TYPE_SVGS[project.doc_type],
         'CONTENT_PAGE_PATH': "projects/initial.pages/content.subtype.html",
+        'PAGE_TIP': getTip_doc_sutype(project),
         'SIDEBAR_TYPE': 'CATEGORY',
         'SIDEBAR_DESCRPTION_HEADING': 'Document Subtype Description:',
         'SIDEBAR_DESCRPTIONS': PROJ_SUBTYPE_DESCRIPTIONS[project.doc_type],
@@ -185,6 +192,7 @@ def projectDocTopicView(request, project, additional_context=None):
         'PROJECT_SUBTYPE': PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype],
         'PROJECT_SVG': PROJ_TYPE_SVGS[project.doc_type],
         'CONTENT_PAGE_PATH': "projects/initial.pages/content.topic.html",
+        'PAGE_TIP': getTip_doc_topic(),
         'SIDEBAR_DESCRPTIONS': PROJ_TOPIC_DESCRIPTIONS,
         'FORM_INPUT_NAME': 'doc_topic',
         'FORM_URL_NAME': 'project-update',
@@ -208,6 +216,7 @@ def projectDocLenView(request, project, additional_context=None):
         'PROJECT_SUBTYPE': PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype],
         'PROJECT_SVG': PROJ_TYPE_SVGS[project.doc_type],
         'CONTENT_PAGE_PATH': "projects/initial.pages/content.len.html",
+        'PAGE_TIP': getTip_doc_len(),
         'SIDEBAR_DESCRPTIONS': PROJ_DOCSIZE_DESCRIPTIONS,
         'FORM_INPUT_NAME': 'doc_len',
         'FORM_URL_NAME': 'project-update',
@@ -231,6 +240,7 @@ def projectPropertyView(request, project, prop, additional_context=None):
         'PROJECT_SUBTYPE': PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype],
         'PROJECT_SVG': PROJ_TYPE_SVGS[project.doc_type],
         'CONTENT_PAGE_PATH': "projects/initial.pages/content.prop.html",
+        'PAGE_TIP': getTip_prop(project, prop.name),
         'PROP_NAME': prop.name,
         'FORM_INPUT_NAME': prop.name,
         'FORM_URL_NAME': 'project-prop-update',
@@ -254,6 +264,7 @@ def projectBasecampView(request, project, additional_context=None):
         'PROJECT_TYPE': PROJ_TYPE_LIST[project.doc_type],
         'PROJECT_SUBTYPE': PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype],
         'PROJECT_SVG': PROJ_TYPE_SVGS[project.doc_type],
+        'PAGE_TIP': getTip_basecamp(),
         'FORM_INPUT_NAME': 'stage',
         'FORM_INPUT_VAL': PROJ_STAGE_STRUCTURING,
         'FORM_URL_NAME': 'project-update',
@@ -287,6 +298,7 @@ def projectPropertyUpdateView(request, slug, propname):
     if request.method == 'POST':
         prop_val = request.POST.get(propname, None)
         force_next = request.POST.get('force_next', None)
+        prop_val = prop_val.strip()
         if prop_val:
             prop.response = prop_val
             prop.save()
@@ -302,6 +314,54 @@ def projectPropertyUpdateView(request, slug, propname):
         return getFlowRender(request, project, INIT_Q_PROP, prop.name)
 
     raise SuspiciousOperation
+
+def projectPropertyUpdate_AJAX(request):
+    if not (request.method == 'POST' and request.is_ajax() and request.user.is_authenticated):
+        return JsonResponse({"updated": False, "message": "Not Authorized"})
+    
+    project_id = request.POST.get('project_id', None)
+    responses = request.POST.get('responses', None)
+    if not project_id or not responses:
+        return JsonResponse({"updated": False, "message": "Invalid Data"})
+    try:
+        project_id = int(project_id)
+        responses = json.loads(responses)
+    except ValueError:
+        return JsonResponse({"updated": False, "message": "Invalid Data"})
+    try:
+        project = Project.objects.get(id=project_id)
+    except Project.DoesNotExist:
+        return JsonResponse({"updated": False, "message": "Invalid Data"})
+    # test user email verification
+    # test if user has access to project (currently only the creator has access)
+    if not request.user.email_verified or project.creator != request.user:
+        return JsonResponse({"updated": False, "message": "Not Authorized"})
+    updated_props = []
+    for p, r in responses.items():
+        r = r.strip()
+        if not r:
+            return JsonResponse({"updated": False, "message": "Invalid Data"})
+        try:
+            prop = project.props.get(name=p)
+        except Property.DoesNotExist:
+            return JsonResponse({"updated": False, "message": "Invalid Data"})
+        if prop.response != r:
+            prop.response = r
+            updated_props.append(prop)
+    updated_list = []
+    with transaction.atomic():
+        for p in updated_props:
+            p.save()
+            updated_list.append(p.name)
+    # updated
+    updated = True
+    data = {
+        'updated': updated,
+        'updated_list': updated_list,
+        'responses_text': getDocBasecampResponsesList(project),
+        'message': 'Successfully updated responses',
+    }
+    return JsonResponse(data)
 
 def projectUpdateView(request, slug, attr):
     try:

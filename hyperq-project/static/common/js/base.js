@@ -75,7 +75,7 @@ toggleLeftSidebar = () => {
 if (btnLeftSidebarShowHide) btnLeftSidebarShowHide.onclick = toggleLeftSidebar
 
 collapseLeftSidebar = () => {
-    if (!sdbrL.classList.contains("collapsed") && !sdbrL.classList.contains("sm-collapsed")) sdbrL.classList.add("collapsed");    
+    if (!sdbrL.classList.contains("collapsed")) sdbrL.classList.add("collapsed");    
     if (mainContent.classList.contains("small")) mainContent.classList.remove("small");    
 
     if (sdbrL.classList.contains("show")) { 
@@ -85,7 +85,7 @@ collapseLeftSidebar = () => {
 }
 
 expandLeftSidebar = () => {
-    if (!sdbrL.classList.contains("collapsed") && !sdbrL.classList.contains("sm-collapsed")) sdbrL.classList.remove("collapsed");    
+    if (sdbrL.classList.contains("collapsed")) sdbrL.classList.remove("collapsed");    
     if (!mainContent.classList.contains("small")) mainContent.classList.add("small");
 
     if (sdbrL.classList.contains("show")) { 
@@ -202,10 +202,10 @@ if (sdbrR)
         }
     
         if (no_animation) {
-            if (update_header && h_html) sdbrRsecondary_header.innerHTML = h_html
+            if (update_header && h_html && h_html !== sdbrRsecondary_header.innerHTML) sdbrRsecondary_header.innerHTML = h_html
             if (c_html) sdbrRsecondary_content.innerHTML = c_html
         } else {
-            if (update_header && h_html) {
+            if (update_header && h_html && h_html !== sdbrRsecondary_header.innerHTML) {
                 $sdbrRsecondary_header.stop().fadeOut(100, ()=> {
                     $sdbrRsecondary_header.html(h_html)
                     $sdbrRsecondary_header.fadeIn(50)
@@ -242,10 +242,10 @@ if (sdbrR)
         }
         
         if (no_animation) {
-            if (update_header && h_html) sdbrR_header.innerHTML = h_html
+            if (update_header && h_html && h_html !== sdbrR_header.innerHTML) sdbrR_header.innerHTML = h_html
             if (c_html) sdbrR_content.innerHTML = c_html
         } else {
-            if (update_header && h_html) {
+            if (update_header && h_html && h_html !== sdbrR_header.innerHTML) {
                 $sdbrR_header.stop().fadeOut(100, ()=> {
                     $sdbrR_header.html(h_html)
                     $sdbrR_header.fadeIn(50)

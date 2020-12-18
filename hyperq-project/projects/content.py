@@ -297,7 +297,8 @@ def getDocBasecampResponsesList(project):
     detailedDoctypeSelected = PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower()
     detailedDoctypeExpression = q_what(detailedDoctypeSelected)
     dde = detailedDoctypeExpression[-1]
-    trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
+    prop_target_reader_response = project.props.get(name=PROP_TARGET_READER).response
+    trExp = q_what(prop_target_reader_response)[-1]
     subjectName = project.props.get(name=PROP_TOPIC_NAME).response
     subjectExpression = q_what(subjectName)
     subjectExpressionJoin = subjectExpression[-1]
@@ -307,16 +308,21 @@ def getDocBasecampResponsesList(project):
     if subjectExpressionWhat.find("are") == 0 :
         sEWPlural = "s"
     chosenDoctype = PROJ_TYPE_LIST[project.doc_type].lower()
-    actionOrImpression = project.props.get(name=PROP_TARGET_IMPRESSION).response
+    prop_target_impression_response = project.props.get(name=PROP_TARGET_IMPRESSION).response
+    actionOrImpression = prop_target_impression_response
     if actionOrImpression[0 : 1] == "to":
         actionOrImpression = actionOrImpression[2:]
     selectedOrientationText = getAutoOrientation()
-    affectedBy = q_what(project.props.get(name=PROP_TOPIC_IMPACT).response)
+    prop_topic_impact_reponse = project.props.get(name=PROP_TOPIC_IMPACT).response
+    affectedBy = q_what(prop_topic_impact_reponse)
     affectedByExpression = affectedBy[-1]
 
-    p11header = "The way I see it " + project.creator.first_name + ", is that you are looking to develop " + dde + " that will be read primarily by " + trExp + ".  \n" + subjectExpressionJoin.capitalize()[0] + subjectExpressionJoin[1:] + " " + subjectExpressionWhat + " the primary subject" + sEWPlural + "/topic" + sEWPlural +" that will be covered in this " + chosenDoctype + ".\nThe main goal of this document is for " + trExp + " to " + actionOrImpression + ".  "
-    p11body = "\nThis document will clearly and succinctly communicate how " + subjectName + " will impact " + selectedOrientationText + " on " + affectedByExpression + ".\n\nOk let's go."
-    return f'<p>{p11header}</p><p>{p11body}</p>'
+    p11header = f"The way I see it, {project.creator.first_name}, is that you are looking to develop {dde} that will be read primarily by <span class='editable' pname=\'{PROP_TARGET_READER}\' pvalue=\'{prop_target_reader_response}' tvalue=\'{trExp}\'>{trExp}</span>." 
+    p11header = p11header + f" <span class='editable' pname='{PROP_TOPIC_NAME}' pvalue='{subjectName}' tvalue='{subjectExpressionJoin.capitalize()[0]}{subjectExpressionJoin[1:]}'>{subjectExpressionJoin.capitalize()[0]}{subjectExpressionJoin[1:]}</span> {subjectExpressionWhat} the primary subject{sEWPlural}/topic{sEWPlural} that will be covered in this {chosenDoctype}." 
+    p11header = p11header + f" The main goal of this document is for {trExp} to <span class='editable' pname='{PROP_TARGET_IMPRESSION}' pvalue='{prop_target_impression_response}' tvalue='{actionOrImpression}'>{actionOrImpression}</span>."
+    
+    p11body = f"This document will clearly and succinctly communicate how {subjectName} will impact {selectedOrientationText} on <span class='editable' pname='{PROP_TOPIC_IMPACT}' pvalue='{prop_topic_impact_reponse}' tvalue=\'{affectedByExpression}\'>{affectedByExpression}</span>."
+    return f"<p>{p11header}</p><p>{p11body}</p><p>Ok let's go.</p>"
 
 
 pwoLists = [['Please select'],["impact","improve", "strengthen","progress", "develop", "elevate", "upgrade", "help", "assist", "enhance", "better", "advance", "refine", "amplify"],["impact", "diminish", "reduce", "lessen","minimise", "lower", "decrease", "disturb","impinge on","upset"],["impact", "change", "affect", "influence", "transform", "alter", "shift"]]
@@ -351,3 +357,50 @@ def getAutoOrientation():
                     lemm = el + "ing"
                 proposalWordsOutcomesPossibilities[el] .append(lemm)
     return primaryOrientation[selectedOrientation]
+
+# page tips
+def getTip_title():
+    return "<p>Name your project something that will help you identify it.</p>\
+            <p>Note that with Hyper Questions, we will use your name throughout your document so pick something that also reads well.</p>"
+
+def getTip_doc_type():
+    return "<p>Once you select an option, a description of this type and its output formats will be displayed – this will help you be sure you have picked the best option.</p>\
+            <p>Please consider carefully as each type may produce different outcomes – select one and see what it offers.</p>"
+
+def getTip_doc_sutype(project):
+    return "<p>These are sub-options associated with your selection of " + PROJ_TYPE_LIST[project.doc_type] + ".</p>\
+            <p>Once you select an option further information about its method and approach will be displayed.</p>"
+
+def getTip_doc_topic():
+    return "<p>Select your subject/topic type from the given table, try for a best-fit approach if your topic crosses several types.</p>"
+
+def getTip_doc_len():
+    return "<p>Document length is approximate and will be used to determine the number of topics and questions required.</p><p>Actual length is dependent on several factors including: document format, answer length and the number of skipped questions.</p>"
+
+def getTip_prop(project, p_name):
+    if p_name == PROP_TARGET_READER:
+        return "<p>This is your target reader – it can be an individual (e.g. Nicholas Tesla), a group (e.g. board of directors), a company (e.g. Microsoft), an industry or sector (e.g. manufacturing).</p>\
+                <p>Please use correct capitalisation and resist responses like 'everyone'... you may need to think specifically about who will be the target reader.</p>"
+    elif p_name == PROP_TOPIC_NAME:
+        return "<p>This is the main/primay subject in your document. Think carefully about this as it will impact everything you do from now on.</p>\
+                <p>You may not get it right at this time, and may need to come back and revise it once you see it presented in other contexts.</p>"
+    elif p_name == PROP_TOPIC_IMPACT:
+        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
+        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
+        subjectExpression = q_what(subjectName)
+        subjectExpressionJoin = subjectExpression[-1]
+        return f"<p>Think of this in the context of your document – what you are trying to say about {subjectExpressionJoin}.</p><p>This can be a: person, division within an organisation, organisation/entity, place, product concept etc.  It could also be the target reader of your document ({trExp}).</p><p>Try to separate from target reader if possible e.g. if target reader is board of a company, those affected could be the staff.</p>"
+    elif p_name == PROP_TARGET_IMPRESSION:
+        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
+        return "<p>Example: I would like " + trExp + " to... (buy our product, visit our website, make x decision, feel informed, become more engaged etc).</p>"
+    elif p_name == PROP_TOPIC_CAUSE:
+        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
+        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
+        subjectExpression = q_what(subjectName)
+        subjectExpressionJoin = subjectExpression[-1]
+        return "<p>This is ideally something or someone that is driving change in " + subjectExpressionJoin + ".</p><p>It could be a person, team (e.g. marketing), regulation, place, product concept etc.</p><p>If you really get stuck, don't worry just use " + trExp + ".</p>"
+    return ""
+
+def getTip_basecamp():
+    return "<p>Please take a moment to review your responses thus far - it will make the rest of this journey much easier.</p>\
+            <p>If you see any issues, go back to correct now (it will save time - even small issues such as like capitalisation).</p>"

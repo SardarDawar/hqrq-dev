@@ -17,7 +17,7 @@ ValidateEmail = function (email, bShowMsg=true)
     if (/\s/.test(email) || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) 
     {
         // string contains some kind of whitespace or email structure invalid
-        if (bShowMsg) showMessage('Invalid EMAIL address', 'error')
+        if (bShowMsg) showMessage('Invalid EMAIL address', 'error', true)
         
         return false;
     }
@@ -159,12 +159,12 @@ function listener_input_inpPass1()
 ValidateName = function (name, bShowMsg=true) {
     if (name.length < MINIMUM_NAME_LENGTH || name.length > MAXIMUM_NAME_LENGTH)
     {
-        if (bShowMsg) showMessage(`Name must be between ${MINIMUM_NAME_LENGTH} and ${MAXIMUM_NAME_LENGTH} characters`, 'error')
+        if (bShowMsg) showMessage(`Name must be between ${MINIMUM_NAME_LENGTH} and ${MAXIMUM_NAME_LENGTH} characters`, 'error', true)
         return false;
     }
     else if (/\s/.test(name)) {
         // string contains some kind of whitespace
-        if(bShowMsg) showMessage('Invalid Name String', 'error')
+        if(bShowMsg) showMessage('Invalid Name String', 'error', true)
         return false;
     }
     // check for invalid chars
@@ -175,12 +175,12 @@ ValidateName = function (name, bShowMsg=true) {
 // ValidateUsername = function (username, bShowMsg=true) {
 //     if (username.length < MINIMUM_USERNAME_LENGTH || username.length > MAXIMUM_USERNAME_LENGTH)
 //     {
-//         if (bShowMsg) showMessage(`Username must be between ${MINIMUM_USERNAME_LENGTH} and ${MAXIMUM_USERNAME_LENGTH} characters`, 'error')
+//         if (bShowMsg) showMessage(`Username must be between ${MINIMUM_USERNAME_LENGTH} and ${MAXIMUM_USERNAME_LENGTH} characters`, 'error', true)
 //         return false;
 //     }
 //     else if (/\s/.test(username)) {
 //         // string contains some kind of whitespace
-//         if(bShowMsg) showMessage('Invalid Username String', 'error')
+//         if(bShowMsg) showMessage('Invalid Username String', 'error', true)
 //         return false;
 //     }
 //     // check for invalid chars
@@ -191,7 +191,7 @@ ValidateName = function (name, bShowMsg=true) {
 ValidatePassword = function (password, bShowMsg=true) {
     if (password.length < MINIMUM_PASSWORD_LENGTH || password.length > MAXIMUM_PASSWORD_LENGTH)
     {
-        if (bShowMsg) showMessage(`Password must be between ${MINIMUM_PASSWORD_LENGTH} and ${MAXIMUM_PASSWORD_LENGTH} characters`, 'error')
+        if (bShowMsg) showMessage(`Password must be between ${MINIMUM_PASSWORD_LENGTH} and ${MAXIMUM_PASSWORD_LENGTH} characters`, 'error', true)
         return false;
     }
 
@@ -205,7 +205,7 @@ function listener_click_btnRegister(e)
     inpEmail.value = inpEmail.value.trim()
     if (inpFirstName.value.length === 0 || inpLastName.value.length === 0 || inpEmail.value.length === 0 || inpPass1.value.length === 0 || inpPass2.value.length === 0)
     {
-        showMessage('Please Fill Out All Fields')
+        showMessage('Please Fill Out All Fields', 'error', true)
     }
     else if (!ValidateName(inpFirstName.value)) 
     {
@@ -236,7 +236,7 @@ function listener_click_btnRegister(e)
         e.preventDefault()
         inpPass2.focus()
         if (!inpPass2.classList.contains('inp-error')) inpPass2.classList.add('inp-error')
-        showMessage('Passwords do not match', 'error')
+        showMessage('Passwords do not match', 'error', true)
     }
     else 
     {
@@ -260,7 +260,7 @@ function listener_click_btnRegister(e)
         btnRegisterText.hidden = true; 
         btnRegister.style.cursor = "default"
 
-        showMessage('Please Wait')
+        showMessage('Please Wait', 'info')
         $.ajax({
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -282,7 +282,7 @@ function listener_click_btnRegister(e)
             },
             error: function(error){
                 console.log(error);
-                showMessage("An unknown error has occurred");
+                showMessage("An unknown error has occurred", 'error', true);
                 
                 inpFirstName.disabled = false;
                 inpLastName.disabled = false;
@@ -327,7 +327,7 @@ function handler_Register(data)
         btnRegisterTick.style.visibility = "visible"
         $('.login-tick').hide().fadeIn(200);
 
-        showMessage(`Account for \'${account['email']}\' successfully created. You are now being redirected to the login page.`)
+        showMessage(`Account for \'${account['email']}\' successfully created. You are now being redirected to the login page.`, 'success')
         setTimeout(redirectToLogin, 1000);
     }
     else if (data['message'] === 'failure')
@@ -356,7 +356,7 @@ function handler_Register(data)
         btnRegisterCross.style.visibility = "visible"
         $('.login-cross').hide().fadeIn(200);
 
-        showMessage(data['error_message'])
+        showMessage(data['error_message'], 'error', true)
         if (data['error_field'] === 'email') inpEmailBox.classList.add('inp-error');
         else if (data['error_field'] === 'password1') inpPass1Box.classList.add('inp-error');
         else if (data['error_field'] === 'password2') inpPass2Box.classList.add('inp-error');
@@ -399,18 +399,39 @@ function redirectToLogin() {
     }
 }
 
-var messageBoxTransitionaing = false;
-function showMessage(message)
+var messageBoxTransitioning = false;
+const message_text_title = `Error\
+        <svg aria-hidden="true" width="33px" focusable="false" data-prefix="fad" data-icon="exclamation-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="error svg-inline--fa fa-exclamation-circle fa-w-16 fa-9x"><g class="fa-group"><path fill="currentColor" d="M256 8C119 8 8 119.08 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 376a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm38.24-238.41l-12.8 128A16 16 0 0 1 265.52 288h-19a16 16 0 0 1-15.92-14.41l-12.8-128A16 16 0 0 1 233.68 128h44.64a16 16 0 0 1 15.92 17.59z" class="fa-secondary"></path><path fill="currentColor" d="M278.32 128h-44.64a16 16 0 0 0-15.92 17.59l12.8 128A16 16 0 0 0 246.48 288h19a16 16 0 0 0 15.92-14.41l12.8-128A16 16 0 0 0 278.32 128zM256 320a32 32 0 1 0 32 32 32 32 0 0 0-32-32z" class="fa-primary"></path></g></svg>
+    `;        
+const message_text_subtitle = "";
+function showMessage(message, type, show_modal)
 {
+    if (show_modal) {
+        showInfoModal_info(message_text_title, message_text_subtitle, message, type) 
+    }
+
     if (message.trim() === messageBox.innerHTML.trim()) return;
-    if (messageBoxTransitionaing) setTimeout(() => {
-        showMessage(message);
+    if (messageBoxTransitioning) setTimeout(() => {
+        showMessage(message, type);
     }, 200)
     else {
+        setMessageBoxTextType(type)
         messageBox.innerHTML = message
-        messageBoxTransitionaing = true;
+        messageBoxTransitioning = true;
         $(messageBox).hide().fadeIn(200, ()=>{
-            messageBoxTransitionaing = false;
+            messageBoxTransitioning = false;
         });
+    }
+}
+
+setMessageBoxTextType = (type) => {
+    if (type === 'info') {
+        $(messageBox).attr("class", "message-box text-muted")
+    } else if (type === 'error') {
+        $(messageBox).attr("class", "message-box text-danger")
+    } else if (type === 'success') {
+        $(messageBox).attr("class", "message-box text-success")
+    } else {
+        $(messageBox).attr("class", "message-box text-muted")
     }
 }

@@ -2,6 +2,11 @@
 {% load static %}
 {% load extra_tags %}
 
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'projects/css/basecamp.css' %}">
+{% endblock %}
+
 <!-- body content -->
 
 {% block main_window %}
@@ -26,7 +31,7 @@
                             <button type="button" class="btn btn-light acc-opt acc-speak" data-fieldid="pg1-acc-speak-field">
                                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512" class="svg-inline--fa fa-volume fa-w-15 fa-9x"><path fill="currentColor" d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.53 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z" class=""></path></svg>
                             </button>
-                            <button type="button" class="btn btn-light acc-opt acc-help">
+                            <button type="button" class="btn btn-light acc-opt acc-help" data-helptext="{{ PAGE_TIP }}">
                                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="question" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="svg-inline--fa fa-question fa-w-12 fa-9x"><path fill="currentColor" d="M202.021 0C122.202 0 70.503 32.703 29.914 91.026c-7.363 10.58-5.093 25.086 5.178 32.874l43.138 32.709c10.373 7.865 25.132 6.026 33.253-4.148 25.049-31.381 43.63-49.449 82.757-49.449 30.764 0 68.816 19.799 68.816 49.631 0 22.552-18.617 34.134-48.993 51.164-35.423 19.86-82.299 44.576-82.299 106.405V320c0 13.255 10.745 24 24 24h72.471c13.255 0 24-10.745 24-24v-5.773c0-42.86 125.268-44.645 125.268-160.627C377.504 66.256 286.902 0 202.021 0zM192 373.459c-38.196 0-69.271 31.075-69.271 69.271 0 38.195 31.075 69.27 69.271 69.27s69.271-31.075 69.271-69.271-31.075-69.27-69.271-69.27z" class=""></path></svg>
                             </button>
                         </div>
@@ -39,8 +44,20 @@
                             <br><br>
                         </div>
                     </div>
-                    <div class="pg1-fields pt-4" style="font-family: var(--base-font-bold); font-size: 22px; color: #1a1a1a">
+                    <div class="pg1-fields pt-4" style="font-family: var(--base-font-bold); font-size: 22px; color: #1a1a1a; display: flex;">
                         {{ SUB_TEXT }}
+                        <div class="text-muted pl-4" id="contentEditButton" style="margin-left: auto;">
+                            Edit
+                        </div>
+                        <div id="contentEditOptions" style="display: none; margin-left: auto;">
+                            <span class="text-muted pl-4" id="contentEditOption-cancel">
+                                Cancel
+                            </span>
+                            <span class="text-muted pl-4" id="contentEditOption-done">
+                                Done
+                            </span>
+                        </div>
+
                     </div>
                     <style>
                         .pg1-fields.sepr p {
@@ -48,7 +65,7 @@
                             line-height: 30px;
                         }
                     </style>
-                    <div class="pg1-fields sepr">
+                    <div class="pg1-fields bascamp-text sepr">
                         {{ RESPONSES_LIST|safe }}
                     </div>
                 </div>
@@ -91,6 +108,8 @@
     const user_fullName = "{{ request.user.get_full_name }}";
     const user_email = "{{ request.user.email }}";
     const url_projCreate = "{% url 'project-create' %}";
+    const url_update_responses = "{% url 'api-project-prop-update' %}";
+    const project_id = "{{ project.id }}";
 </script>
 {% include "projects/initial.pages/content.basecamp.html" %}
 <script src="{% static 'common/js/accessibility.js' %}" type="text/javascript" defer></script>

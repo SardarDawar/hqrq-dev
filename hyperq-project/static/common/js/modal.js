@@ -6,7 +6,7 @@
 
 var infoModalCloseAction = null;
 
-function showInfoModal_info(title, subtext, content, closeAction) {
+function showInfoModal_info(title, subtext, content, type, closeAction) {
     $('body').css('overflow', 'hidden');
 
     if (title!==null) $('#infoModalTitle').html(title)
@@ -16,6 +16,7 @@ function showInfoModal_info(title, subtext, content, closeAction) {
     if (content!==null) $('#infoModalContent-text').html(content).show();
 
     infoModalCloseAction = closeAction;
+    if (type) setInfoModalType(type)
 
     $('#infoModal').modal('show')
     $('#infoModal').modal('handleUpdate')
@@ -29,6 +30,18 @@ function hideInfoModal() {
     }
 }
 
+function setInfoModalType(type) {
+    if (type === 'info') {
+        $('#infoModalClose').attr("class", "btn btn-primary")
+    } else if (type === 'error') {
+        $('#infoModalClose').attr("class", "btn btn-danger")
+    } else if (type === 'success') {
+        $('#infoModalClose').attr("class", "btn btn-success")
+    } else {
+        $('#infoModalClose').attr("class", "btn btn-secondary")
+    }
+} 
+
 $('#infoModal').on('hidden.bs.modal', function(){
     // enable only if other modals are not visible
     if(!$('#infoModal').hasClass('show'))
@@ -39,7 +52,7 @@ $('#infoModal').on('hidden.bs.modal', function(){
     $('#infoModalTitleSecondary').html('')
     $('#infoModalTitleSpecial').html("").hide()
     $('#infoModalContent-text').html('').hide()
-    $('#infoModalHeader-close').hide();
+    setInfoModalType();
 }).on('shown.bs.modal', function(){
     $('body').css('overflow', 'hidden');
 })
@@ -63,8 +76,3 @@ function showInfoModal_infoSpecial(special, content, closeAction) {
     $('#infoModal').modal('show')
     $('#infoModal').modal('handleUpdate')
 }
-
-
-// showInfoModal_info("Title", "", "Content", ()=>{
-//     console.log("Modal Closed");
-// })

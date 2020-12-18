@@ -1,0 +1,45 @@
+.editable {
+    color: #6b77a1;
+    text-shadow: 0 0 5px #dadada46;
+    padding: 6px 1px;
+}
+
+.editable:not(.editing):hover {
+    /* text-decoration: underline; */
+    border-radius: 5px;
+    background-color: #898b8f11;
+}
+
+.editable.editing {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.editable .input-bef {
+  /* border: 1px solid #ccc; */
+  font-family: inherit;
+  font-size: inherit;
+  padding: 6px 3px;
+}
+
+
+
+.input-bef.form-control {
+    display: inline;
+}
+
+.form-control.is-invalid{
+    background-image: none;
+}
+
+#contentEditButton, #contentEditOptions > * {
+    font-family: var(--base-font-regular); 
+    font-size: 17px; 
+    color: #9FA3A7 !important; 
+    cursor: pointer;
+}
+
+#contentEditOption-cancel.disabled, #contentEditOption-done.disabled {
+    cursor: default !important;
+    color: #9fa3a793 !important;
+}
