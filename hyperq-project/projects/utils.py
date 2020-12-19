@@ -13,6 +13,7 @@ def setupProjectBaseProperties(project, update_stage=True):
         project.props.all().delete()
         raise
     except Exception as e:
+        print(e)
         # rollback changes
         project.props.all().delete()
 

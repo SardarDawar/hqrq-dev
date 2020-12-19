@@ -25,6 +25,13 @@
     color: #9797973d;
 }
 
+#infoModal #infoModalTitle svg .fa-primary {
+    color: #6C757D;
+}
+
+#infoModal #infoModalTitle svg .fa-secondary {
+    color: #9797973d;
+}
 
 #infoModal #infoModalContent-text p:first-of-type {
     margin-top: 10px;
@@ -36,4 +43,23 @@
 
 #infoModal #infoModalContent-text p:last-of-type {
     margin-bottom: 10px;
+}
+
+
+
+/* colors */
+#infoModal #infoModalContent-text {
+    color: #343a40 !important;
+}
+
+#infoModal #infoModalTitle {
+    color: #6c757d!important;
+}
+
+#infoModal #infoModalClose {
+    background: #6c757d!important;
+}
+
+#infoModal #infoModalClose:hover {
+    background: #343a40!important;
 }

@@ -85,10 +85,11 @@ function initResponseFields() {
         if (!el.querySelector(".input-bef")) {
             const pname = el.getAttribute("pname")
             const pvalue = el.getAttribute("pvalue")
+            const evalue = el.getAttribute("evalue")
             const tvalue = el.getAttribute("tvalue")
             const inpID = `inp-bef-${pname}`    
             el.innerHTML = `
-                <span class="input-bef form-control" id="${inpID}" role="textbox" name="${pname}" contenteditable>${pvalue}</span>
+                <span class="input-bef form-control" id="${inpID}" role="textbox" name="${pname}" contenteditable>${evalue}</span>
             `
             const inp = document.getElementById(inpID)
             el.classList.add('editing')
@@ -128,6 +129,7 @@ editCancel = () => {
     befs.forEach(el => {  
         const pname = el.getAttribute("pname")
         const pvalue = el.getAttribute("pvalue")
+        const evalue = el.getAttribute("evalue")
         const tvalue = el.getAttribute("tvalue")
         el.innerHTML = tvalue
         el.classList.remove('editing')
@@ -153,6 +155,7 @@ editSubmit = () => {
     befs.forEach(el => { 
         const pname = el.getAttribute("pname")
         const pvalue = el.getAttribute("pvalue")
+        const evalue = el.getAttribute("evalue")
         const tvalue = el.getAttribute("tvalue")
         const inpID = `inp-bef-${pname}`
         const inp = document.getElementById(inpID)  
@@ -169,7 +172,7 @@ editSubmit = () => {
         }, 
 
         type: 'POST',
-        url: url_update_responses,
+        url: url_update_responses_exp,
         data: {
             'project_id': project_id,
             'responses': JSON.stringify(responses),
@@ -188,14 +191,14 @@ editSubmit = () => {
 
             } else {
                 // show error message
-                showMessage(data["message"])
+                showMessage(data["message"], 'error')
                 editCancel();
             }
         },
         error: function(error){
             console.log(error);
             // show error message
-            showMessage("An unknown error has occurred")
+            showMessage("An unknown error has occurred", 'error')
             editCancel();
         }
     });
@@ -206,12 +209,12 @@ btn_contentEdit_done.onclick = editSubmit
 
 
 const message_text_title = `Error\
-        <svg aria-hidden="true" width="33px" focusable="false" data-prefix="fad" data-icon="exclamation-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="error svg-inline--fa fa-exclamation-circle fa-w-16 fa-9x"><g class="fa-group"><path fill="currentColor" d="M256 8C119 8 8 119.08 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 376a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm38.24-238.41l-12.8 128A16 16 0 0 1 265.52 288h-19a16 16 0 0 1-15.92-14.41l-12.8-128A16 16 0 0 1 233.68 128h44.64a16 16 0 0 1 15.92 17.59z" class="fa-secondary"></path><path fill="currentColor" d="M278.32 128h-44.64a16 16 0 0 0-15.92 17.59l12.8 128A16 16 0 0 0 246.48 288h19a16 16 0 0 0 15.92-14.41l12.8-128A16 16 0 0 0 278.32 128zM256 320a32 32 0 1 0 32 32 32 32 0 0 0-32-32z" class="fa-primary"></path></g></svg>
+        <svg aria-hidden="true" width="33px" focusable="false" data-prefix="fad" data-icon="exclamation-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-exclamation-circle fa-w-16 fa-9x"><g class="fa-group"><path fill="currentColor" d="M256 8C119 8 8 119.08 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 376a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm38.24-238.41l-12.8 128A16 16 0 0 1 265.52 288h-19a16 16 0 0 1-15.92-14.41l-12.8-128A16 16 0 0 1 233.68 128h44.64a16 16 0 0 1 15.92 17.59z" class="fa-secondary"></path><path fill="currentColor" d="M278.32 128h-44.64a16 16 0 0 0-15.92 17.59l12.8 128A16 16 0 0 0 246.48 288h19a16 16 0 0 0 15.92-14.41l12.8-128A16 16 0 0 0 278.32 128zM256 320a32 32 0 1 0 32 32 32 32 0 0 0-32-32z" class="fa-primary"></path></g></svg>
     `;        
 const message_text_subtitle = "";
 function showMessage(message, type)
 {
-    showInfoModal_info(message_text_title, message_text_subtitle, message, type)
+    showInfoModal_info(message_text_title, message_text_subtitle, message, 'none')
 }
 
 

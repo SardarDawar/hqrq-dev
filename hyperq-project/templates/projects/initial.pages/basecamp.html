@@ -112,7 +112,7 @@
     const user_fullName = "{{ request.user.get_full_name }}";
     const user_email = "{{ request.user.email }}";
     const url_projCreate = "{% url 'project-create' %}";
-    const url_update_responses = "{% url 'api-project-prop-update' %}";
+    const url_update_responses_exp = "{% url 'api-project-prop-exp-update' %}";
     const project_id = "{{ project.id }}";
 </script>
 {% include "projects/initial.pages/content.basecamp.html" %}

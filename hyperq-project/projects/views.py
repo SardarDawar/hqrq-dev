@@ -300,8 +300,11 @@ def projectPropertyUpdateView(request, slug, propname):
         force_next = request.POST.get('force_next', None)
         prop_val = prop_val.strip()
         if prop_val:
-            prop.response = prop_val
-            prop.save()
+            if not prop.response:
+                prop.response = prop_val
+                prop.save()
+            elif prop_val.lower() != prop.response.lower():
+                prop.updateExpressedResponse(prop_val)
             if force_next:
                 nurl, nattr = getFlowNextUrlAttr(INIT_Q_PROP, prop.name)
                 return redirect(nurl, project.slug, nattr) if nattr else redirect(nurl, project.slug) 
@@ -336,23 +339,62 @@ def projectPropertyUpdate_AJAX(request):
     # test if user has access to project (currently only the creator has access)
     if not request.user.email_verified or project.creator != request.user:
         return JsonResponse({"updated": False, "message": "Not Authorized"})
-    updated_props = []
-    for p, r in responses.items():
-        r = r.strip()
-        if not r:
-            return JsonResponse({"updated": False, "message": "Invalid Data"})
-        try:
-            prop = project.props.get(name=p)
-        except Property.DoesNotExist:
-            return JsonResponse({"updated": False, "message": "Invalid Data"})
-        if prop.response != r:
-            prop.response = r
-            updated_props.append(prop)
     updated_list = []
     with transaction.atomic():
-        for p in updated_props:
-            p.save()
-            updated_list.append(p.name)
+        for p, r in responses.items():
+            r = r.strip()
+            if not r:
+                return JsonResponse({"updated": False, "message": "Invalid Data"})
+            try:
+                prop = project.props.get(name=p)
+            except Property.DoesNotExist:
+                return JsonResponse({"updated": False, "message": "Invalid Data"})
+            if prop.response_exp != r:
+                prop.updateExpressedResponse(r)
+                updated_list.append(p.name)
+    # updated
+    data = {
+        'updated': True,
+        'updated_list': updated_list,
+        'responses_text': getDocBasecampResponsesList(project),
+        'message': 'Successfully updated responses',
+    }
+    return JsonResponse(data)
+
+def projectPropertyExpUpdate_AJAX(request):
+    if not (request.method == 'POST' and request.is_ajax() and request.user.is_authenticated):
+        return JsonResponse({"updated": False, "message": "Not Authorized"})
+    
+    project_id = request.POST.get('project_id', None)
+    responses = request.POST.get('responses', None)
+    if not project_id or not responses:
+        return JsonResponse({"updated": False, "message": "Invalid Data"})
+    try:
+        project_id = int(project_id)
+        responses = json.loads(responses)
+    except ValueError:
+        return JsonResponse({"updated": False, "message": "Invalid Data"})
+    try:
+        project = Project.objects.get(id=project_id)
+    except Project.DoesNotExist:
+        return JsonResponse({"updated": False, "message": "Invalid Data"})
+    # test user email verification
+    # test if user has access to project (currently only the creator has access)
+    if not request.user.email_verified or project.creator != request.user:
+        return JsonResponse({"updated": False, "message": "Not Authorized"})
+    updated_list = []
+    with transaction.atomic():
+        for p, rexp in responses.items():
+            rexp = rexp.strip()
+            if not rexp:
+                return JsonResponse({"updated": False, "message": "Invalid Data"})
+            try:
+                prop = project.props.get(name=p)
+            except Property.DoesNotExist:
+                return JsonResponse({"updated": False, "message": "Invalid Data"})
+            if prop.response_exp != rexp:
+                prop.updateUnexpressedResponse(rexp)
+                updated_list.append(prop.name)
     # updated
     data = {
         'updated': True,

@@ -7,7 +7,7 @@ from .vars import ( PROJ_STAGE_CHOICES, PROJ_STAGE_DEFAULT, PROJ_STATUS_CHOICES,
                     PROJ_TYPE_CHOICES, PROJ_TYPE_DEFAULT, PROJ_SUBTYPE_CHOICES, PROJ_SUBTYPE_CHOICES_SEL, PROJ_SUBTYPE_DEFAULT,
                     PROJ_DOCSIZE_CHOICES, PROJ_DOCSIZE_DEFAULT, 
                     PROJ_TOPIC_CHOICES, PROJ_TOPIC_DEFAULT, )
-from .content import PROJ_TYPE_SVGS
+from .content import PROJ_TYPE_SVGS, getExpressedTerm, getUnexpressedTerm
 from django.conf import settings
 
 class Project(models.Model):
@@ -47,7 +47,7 @@ class Project(models.Model):
         return PROJ_SUBTYPE_CHOICES_SEL[self.doc_type]
     
     def __str__(self):
-        return f'[{self.creator.username}] {self.title}'
+        return f'[{self.creator.email}] {self.title}'
 
     def setupBaseProperties(self, update_stage=True):
         setupProjectBaseProperties(self, update_stage=True)
@@ -59,10 +59,39 @@ class Property(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="props")
     name = models.CharField(max_length=25)
     response = models.CharField(max_length=1000, null=True)
+    response_exp = models.CharField(max_length=1100, null=True)
 
     class Meta:
         verbose_name_plural = "Properties"
-        ordering = ['project__title', 'name']
+        ordering = ['-project__dt_create', 'name']
     
     def __str__(self):
         return f'[{self.project.title}] {self.name}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # store response_exp if not present (when response given for first time)
+        print(self.response)
+        if self.response and not self.response_exp: 
+            self.response_exp = getExpressedTerm(self.name, self.response)
+            self.save(update_fields=["response_exp"])
+
+    def updateUnexpressedResponse(self, exp_resp=None):
+        if not self.response_exp and not exp_resp: return
+        update_fields = []
+        if exp_resp:
+            self.response_exp = exp_resp
+            update_fields.append("response_exp")
+        self.response = getUnexpressedTerm(self.response_exp)
+        update_fields.append("response")
+        self.save(update_fields=update_fields)
+    
+    def updateExpressedResponse(self, resp=None):
+        if not self.response and not resp: return
+        update_fields = []
+        if resp:
+            self.response = resp
+            update_fields.append("response")
+        self.response_exp = getExpressedTerm(self.name, self.response)
+        update_fields.append("response_exp")
+        self.save(update_fields=update_fields)

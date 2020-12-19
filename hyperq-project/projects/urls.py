@@ -1,6 +1,7 @@
 
 from django.urls import path, re_path
-from .views import projectCreate, project, projectUpdateView, projectPropertyUpdateView, projectPropertyUpdate_AJAX
+from .views import (projectCreate, project, projectUpdateView, projectPropertyUpdateView, 
+                    projectPropertyUpdate_AJAX, projectPropertyExpUpdate_AJAX)
 
 # url patterns under ('p/')
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
 
     # api urls (projects)
     path('api/update/prop', projectPropertyUpdate_AJAX, name='api-project-prop-update'),
+    path('api/update/prop/exp', projectPropertyExpUpdate_AJAX, name='api-project-prop-exp-update'),
 ]

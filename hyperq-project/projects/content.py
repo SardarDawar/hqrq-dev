@@ -293,35 +293,40 @@ def getDocBasecampTopText(project):
 def getDocBasecampSubText(project):
     return PROJ_TYPE_LIST[project.doc_type] + " brief:"
 
-def getDocBasecampResponsesList(project):
-    detailedDoctypeSelected = PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower()
-    detailedDoctypeExpression = q_what(detailedDoctypeSelected)
-    dde = detailedDoctypeExpression[-1]
-    prop_target_reader_response = project.props.get(name=PROP_TARGET_READER).response
-    trExp = q_what(prop_target_reader_response)[-1]
-    subjectName = project.props.get(name=PROP_TOPIC_NAME).response
-    subjectExpression = q_what(subjectName)
-    subjectExpressionJoin = subjectExpression[-1]
-    subjectExpressionWhat = subjectExpression[2]
-    # subjectExpressionJoinLI = subjectExpression[4] if len(subjectExpression[4]) > 1 else subjectExpressionJoin
-    sEWPlural = ""
-    if subjectExpressionWhat.find("are") == 0 :
-        sEWPlural = "s"
-    chosenDoctype = PROJ_TYPE_LIST[project.doc_type].lower()
-    prop_target_impression_response = project.props.get(name=PROP_TARGET_IMPRESSION).response
-    actionOrImpression = prop_target_impression_response
-    if actionOrImpression[0 : 1] == "to":
-        actionOrImpression = actionOrImpression[2:]
-    selectedOrientationText = getAutoOrientation()
-    prop_topic_impact_reponse = project.props.get(name=PROP_TOPIC_IMPACT).response
-    affectedBy = q_what(prop_topic_impact_reponse)
-    affectedByExpression = affectedBy[-1]
+def genBasecampPropEditFieldHTML(prop, sentence_start=False):
+    if sentence_start:
+        return f"<span class='editable' pname=\'{prop.name}\' pvalue=\'{prop.response}' evalue=\'{prop.response_exp}\' tvalue=\'{prop.response_exp.capitalize()[0]}{prop.response_exp[1:]}\'>{prop.response_exp.capitalize()[0]}{prop.response_exp[1:]}</span>"
+    else:
+        return f"<span class='editable' pname=\'{prop.name}\' pvalue=\'{prop.response}' evalue=\'{prop.response_exp}\' tvalue=\'{prop.response_exp}\'>{prop.response_exp}</span>"
 
-    p11header = f"The way I see it, {project.creator.first_name}, is that you are looking to develop {dde} that will be read primarily by <span class='editable' pname=\'{PROP_TARGET_READER}\' pvalue=\'{prop_target_reader_response}' tvalue=\'{trExp}\'>{trExp}</span>." 
-    p11header = p11header + f" <span class='editable' pname='{PROP_TOPIC_NAME}' pvalue='{subjectName}' tvalue='{subjectExpressionJoin.capitalize()[0]}{subjectExpressionJoin[1:]}'>{subjectExpressionJoin.capitalize()[0]}{subjectExpressionJoin[1:]}</span> {subjectExpressionWhat} the primary subject{sEWPlural}/topic{sEWPlural} that will be covered in this {chosenDoctype}." 
-    p11header = p11header + f" The main goal of this document is for {trExp} to <span class='editable' pname='{PROP_TARGET_IMPRESSION}' pvalue='{prop_target_impression_response}' tvalue='{actionOrImpression}'>{actionOrImpression}</span>."
-    
-    p11body = f"This document will clearly and succinctly communicate how {subjectName} will impact {selectedOrientationText} on <span class='editable' pname='{PROP_TOPIC_IMPACT}' pvalue='{prop_topic_impact_reponse}' tvalue=\'{affectedByExpression}\'>{affectedByExpression}</span>."
+def getDocBasecampResponsesList(project):
+    # doc_type
+    chosenDoctype = PROJ_TYPE_LIST[project.doc_type].lower()
+    # doc_subtype expression
+    detailedDoctypeSelected = PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower()
+    dde = q_what(detailedDoctypeSelected)[-1]
+    # prop:PROP_TARGET_READER expression
+    prop_target_reader = project.props.get(name=PROP_TARGET_READER)
+    prop_target_reader_exp = prop_target_reader.response_exp
+    # prop:PROP_TOPIC_NAME expression
+    prop_topic_name = project.props.get(name=PROP_TOPIC_NAME)
+    prop_topic_name_response = prop_topic_name.response
+    # prop:PROP_TOPIC_NAME plurarity
+    subjectExpressionWhat = q_what(prop_topic_name_response)[2]
+    sEWPlural = ""
+    if subjectExpressionWhat.find("are") == 0:
+        sEWPlural = "s"
+    # prop:PROP_TARGET_IMPRESSION expression
+    prop_target_impression = project.props.get(name=PROP_TARGET_IMPRESSION)
+    # prop:PROP_TOPIC_IMPACT expression
+    prop_topic_impact = project.props.get(name=PROP_TOPIC_IMPACT)
+    # document orientation
+    selectedOrientationText = getAutoOrientation()
+    # basecamp responses text
+    p11header = f"The way I see it, {project.creator.first_name}, is that you are looking to develop {dde} that will be read primarily by {genBasecampPropEditFieldHTML(prop_target_reader)}." 
+    p11header = p11header + f" {genBasecampPropEditFieldHTML(prop_topic_name, True)} {subjectExpressionWhat} the primary subject{sEWPlural}/topic{sEWPlural} that will be covered in this {chosenDoctype}." 
+    p11header = p11header + f" The main goal of this document is for {prop_target_reader_exp} to {genBasecampPropEditFieldHTML(prop_target_impression)}."
+    p11body = f"This document will clearly and succinctly communicate how {prop_topic_name_response} will impact {selectedOrientationText} on {genBasecampPropEditFieldHTML(prop_topic_impact)}."
     return f"<p>{p11header}</p><p>{p11body}</p><p>Ok let's go.</p>"
 
 
@@ -404,3 +409,28 @@ def getTip_prop(project, p_name):
 def getTip_basecamp():
     return "<p>Please take a moment to review your responses thus far - it will make the rest of this journey much easier.</p>\
             <p>If you see any issues, go back to correct now (it will save time - even small issues such as like capitalisation).</p>"
+
+
+def getExpressedTerm(p_name, term):
+    if not term: return
+    term = term.strip()
+    if p_name == PROP_TARGET_READER:
+        return q_what(term)[-1]
+    elif p_name == PROP_TOPIC_NAME:
+        exp_term = q_what(term)[-1]
+        # return f"{exp_term.capitalize()[0]}{exp_term[1:]}"
+        return exp_term
+    elif p_name == PROP_TOPIC_IMPACT:
+        return q_what(term)[-1]
+    elif p_name == PROP_TARGET_IMPRESSION:
+        return term[2:] if term[0:1] == "to" else term
+    # elif p_name == PROP_TOPIC_CAUSE:
+    #     return term
+    return term
+
+ARTICLE_LIST = ["a", "an", "the"]
+
+def getUnexpressedTerm(exp_term):
+    exp_term = exp_term.strip()
+    exp_term_words = [x for x in exp_term.split(" ") if x.strip()]
+    return " ".join(exp_term_words[1:]) if exp_term_words[0] in ARTICLE_LIST else exp_term
