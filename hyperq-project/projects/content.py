@@ -1,5 +1,7 @@
 from .vars import *
 from scripts.topic_expressor import q_what
+import spacy
+nlp = spacy.load("en_core_web_sm")
 
 PROJ_TYPE_LIST = {
     PROJ_TYPE_ANALYSIS_REPORT: PROJ_TEXT_TYPE_ANALYSIS_REPORT,
@@ -224,20 +226,20 @@ PROJ_SUBTYPE_DESCRIPTIONS = {
 }
 
 PROJ_TOPIC_DESCRIPTIONS = {
-    PROJ_TOPIC_PERSON: 'A person is typically one named individual who will be at the centre of your document.  Eeffectively the entire document will be about them.',
-    PROJ_TOPIC_COMPANY: 'A company is...',
-    PROJ_TOPIC_GROUP: 'A group is...',
-    PROJ_TOPIC_PRODUCT_SERVICE: 'Product Service is...',
-    PROJ_TOPIC_CONCEPT_THING: 'Concept or a Thing could be...',
-    PROJ_TOPIC_PLACE_DEST_BUILDING: 'A Place is possibly...',
+    PROJ_TOPIC_PERSON: 'A person is typically one named individual who will be at the centre of your document. Effectively the entire document will be about them.',
+    PROJ_TOPIC_COMPANY: 'A company is a legal entity designed either for-profit.  An organisation is typically either a government agency or not-for-profit organisation.  Consider carefully when selecting a company or organisation that you are referring to the legal title of the organisation and not a division within an organisation.',
+    PROJ_TOPIC_GROUP: 'A group is a named group of people, things or animals.  It could also be a division with a company or organisation, For example, a local football team is a group, elephants are a group of animals etc.',
+    PROJ_TOPIC_PRODUCT_SERVICE: 'A product is a tangible item that is put on the market for acquisition, attention, or consumption, while a service is an intangible item, which arises from the output of one or more individuals.',
+    PROJ_TOPIC_CONCEPT_THING: 'This category relates to ideas and abstract concepts.  Examples include - climate - technology - flying.  Furthermore, this category also includes things these may be products such as - Lego - Computers - Boeing A380.',
+    PROJ_TOPIC_PLACE_DEST_BUILDING: 'A place, destination or building is a physical area that can be seen on a map or satellite photograph.  If you are referring to a group of places (eg Parks) then group would be a better selection.',
 }
 
 def getChoiceHeading_doc_subtype(project):
     return "What sort of " + PROJ_TYPE_LIST[project.doc_type] + " would you like to start creating?"
 
 def getChoiceHeading_doc_topic(project):
-    trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
-    return "What is the main subject or topic you would like to cover in this " + PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower() + " for " + trExp + "?"
+    prop_target_reader_exp = project.props.get(name=PROP_TARGET_READER).response_exp
+    return "What is the main subject or topic you would like to cover in this " + PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower() + " for " + prop_target_reader_exp + "?"
 
 
 def getChoiceHeading_doc_len(project):
@@ -251,17 +253,12 @@ def getPropQuestionText(project, p_name):
     elif p_name == PROP_TOPIC_IMPACT:
         return "Who or what is most " + "impacted by the " + PROJ_TOPIC_CHOICES_LIST[project.doc_topic].lower() + " - '" + project.props.get(name=PROP_TOPIC_NAME).response + "'?"
     elif p_name == PROP_TARGET_IMPRESSION:
-        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
-        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
-        subjectExpression = q_what(subjectName)
-        subjectExpressionJoin = subjectExpression[-1]
-        return "What action or impression do you want " + trExp + " to have as a result of reading this " + PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower() +" on " + subjectExpressionJoin + "?"
+        prop_target_reader_exp = project.props.get(name=PROP_TARGET_READER).response_exp
+        prop_topic_name_exp = project.props.get(name=PROP_TOPIC_NAME).response_exp
+        return "What action or impression do you want " + prop_target_reader_exp + " to have as a result of reading this " + PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower() +" on " + prop_topic_name_exp + "?"
     elif p_name == PROP_TOPIC_CAUSE:
-        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
-        subjectExpression = q_what(subjectName)
-        subjectExpressionJoin = subjectExpression[-1]
-        return "Who or what is affecting, causing or creating " + subjectExpressionJoin + "?"
-
+        prop_topic_name_exp = project.props.get(name=PROP_TOPIC_NAME).response_exp
+        return "Who or what is affecting, causing or creating " + prop_topic_name_exp + "?"
     return '?'
 
 def getPropQuestionLeadIn(project, p_name):
@@ -270,21 +267,14 @@ def getPropQuestionLeadIn(project, p_name):
     elif p_name == PROP_TOPIC_NAME:
         return "The main subject or topic for this " + PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower() + " will be a..."
     elif p_name == PROP_TOPIC_IMPACT:
-        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
-        subjectExpression = q_what(subjectName)
-        subjectExpressionJoin = subjectExpression[-1]
-        # subjectExpressionWhat = subjectExpression[2]
-        # subjectExpressionJoinLI = subjectExpression[4] if len(subjectExpression[4]) > 1 else subjectExpressionJoin
-        subjectExpressonStartSentence = subjectExpressionJoin[0].upper() + subjectExpressionJoin[1:]
-        return subjectExpressonStartSentence + " will have the greatest " + "impact on..."
+        prop_topic_name_exp = project.props.get(name=PROP_TOPIC_NAME).response_exp
+        return prop_topic_name_exp[0].upper() + prop_topic_name_exp[1:] + " will have the greatest " + "impact on..."
     elif p_name == PROP_TARGET_IMPRESSION:
-        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
-        return "I would like " + trExp + " to...  "
+        prop_target_reader_exp = project.props.get(name=PROP_TARGET_READER).response_exp
+        return "I would like " + prop_target_reader_exp + " to...  "
     elif p_name == PROP_TOPIC_CAUSE:
-        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
-        subjectExpression = q_what(subjectName)
-        subjectExpressionJoin = subjectExpression[-1]
-        return subjectExpressionJoin.capitalize()[0] + subjectExpressionJoin[1:] + " will be impacted by...  "
+        prop_topic_name_exp = project.props.get(name=PROP_TOPIC_NAME).response_exp
+        return prop_topic_name_exp[0].upper() + prop_topic_name_exp[1:] + " will be impacted by...  "
     return '?'
 
 def getDocBasecampTopText(project):
@@ -295,7 +285,7 @@ def getDocBasecampSubText(project):
 
 def genBasecampPropEditFieldHTML(prop, sentence_start=False):
     if sentence_start:
-        return f"<span class='editable' pname=\'{prop.name}\' pvalue=\'{prop.response}' evalue=\'{prop.response_exp}\' tvalue=\'{prop.response_exp.capitalize()[0]}{prop.response_exp[1:]}\'>{prop.response_exp.capitalize()[0]}{prop.response_exp[1:]}</span>"
+        return f"<span class='editable' pname=\'{prop.name}\' pvalue=\'{prop.response}' evalue=\'{prop.response_exp}\' tvalue=\'{prop.response_exp[0].upper()}{prop.response_exp[1:]}\'>{prop.response_exp[0].upper()}{prop.response_exp[1:]}</span>"
     else:
         return f"<span class='editable' pname=\'{prop.name}\' pvalue=\'{prop.response}' evalue=\'{prop.response_exp}\' tvalue=\'{prop.response_exp}\'>{prop.response_exp}</span>"
 
@@ -334,8 +324,6 @@ pwoLists = [['Please select'],["impact","improve", "strengthen","progress", "dev
 primaryOrientation = ['Please Select...', "positively", "negatively", "neutrally"]
 
 def getAutoOrientation():
-    import spacy
-    nlp = spacy.load("en_core_web_sm")
     selectedOrientation = -1
     proposalWordsOutcome = pwoLists[selectedOrientation]
     proposalWordsOutcomesPossibilities = {}
@@ -390,20 +378,16 @@ def getTip_prop(project, p_name):
         return "<p>This is the main/primay subject in your document. Think carefully about this as it will impact everything you do from now on.</p>\
                 <p>You may not get it right at this time, and may need to come back and revise it once you see it presented in other contexts.</p>"
     elif p_name == PROP_TOPIC_IMPACT:
-        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
-        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
-        subjectExpression = q_what(subjectName)
-        subjectExpressionJoin = subjectExpression[-1]
-        return f"<p>Think of this in the context of your document – what you are trying to say about {subjectExpressionJoin}.</p><p>This can be a: person, division within an organisation, organisation/entity, place, product concept etc.  It could also be the target reader of your document ({trExp}).</p><p>Try to separate from target reader if possible e.g. if target reader is board of a company, those affected could be the staff.</p>"
+        prop_target_reader_exp = project.props.get(name=PROP_TARGET_READER).response_exp
+        prop_topic_name_exp = project.props.get(name=PROP_TOPIC_NAME).response_exp
+        return f"<p>Think of this in the context of your document – what you are trying to say about {prop_topic_name_exp}.</p><p>This can be a: person, division within an organisation, organisation/entity, place, product concept etc.  It could also be the target reader of your document ({prop_target_reader_exp}).</p><p>Try to separate from target reader if possible e.g. if target reader is board of a company, those affected could be the staff.</p>"
     elif p_name == PROP_TARGET_IMPRESSION:
-        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
-        return "<p>Example: I would like " + trExp + " to... (buy our product, visit our website, make x decision, feel informed, become more engaged etc).</p>"
+        prop_target_reader_exp = project.props.get(name=PROP_TARGET_READER).response_exp
+        return "<p>Example: I would like " + prop_target_reader_exp + " to... (buy our product, visit our website, make x decision, feel informed, become more engaged etc).</p>"
     elif p_name == PROP_TOPIC_CAUSE:
-        trExp = q_what(project.props.get(name=PROP_TARGET_READER).response)[-1]
-        subjectName = project.props.get(name=PROP_TOPIC_NAME).response
-        subjectExpression = q_what(subjectName)
-        subjectExpressionJoin = subjectExpression[-1]
-        return "<p>This is ideally something or someone that is driving change in " + subjectExpressionJoin + ".</p><p>It could be a person, team (e.g. marketing), regulation, place, product concept etc.</p><p>If you really get stuck, don't worry just use " + trExp + ".</p>"
+        prop_target_reader_exp = project.props.get(name=PROP_TARGET_READER).response_exp
+        prop_topic_name_exp = project.props.get(name=PROP_TOPIC_NAME).response_exp
+        return "<p>This is ideally something or someone that is driving change in " + prop_topic_name_exp + ".</p><p>It could be a person, team (e.g. marketing), regulation, place, product concept etc.</p><p>If you really get stuck, don't worry just use " + prop_target_reader_exp + ".</p>"
     return ""
 
 def getTip_basecamp():
@@ -418,7 +402,7 @@ def getExpressedTerm(p_name, term):
         return q_what(term)[-1]
     elif p_name == PROP_TOPIC_NAME:
         exp_term = q_what(term)[-1]
-        # return f"{exp_term.capitalize()[0]}{exp_term[1:]}"
+        # return f"{exp_term[0].upper()}{exp_term[1:]}"
         return exp_term
     elif p_name == PROP_TOPIC_IMPACT:
         return q_what(term)[-1]

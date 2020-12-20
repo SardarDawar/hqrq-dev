@@ -48,6 +48,7 @@ btnNext_CreateProjectPage_2_DocType.onclick = () => {
 
     formInp_title.value = projName;
     formInp_doc_type.value = projDocType;
+    pageCleanup();
     form_projectCreation.submit();
 }
 
@@ -81,6 +82,7 @@ btnCreateProject.onclick = () => {
     })
     setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content, null, true)
     setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content, null, true)
+    pageCleanup();
 }
 
 if (initilShowProjectCreationPage) btnCreateProject.click();
@@ -92,6 +94,7 @@ btnBack_CreateProjectPage_1_Name.onclick = () => {
     showPage('.page-wrap.pg0-wrap')
     setRightSidebarSecondaryContent('.page-wrap.pg0-wrap', pg0_sdbrR_header, pg0_sdbrR_content, null, true)
     setRightSidebarContent(pg0_sdbrR_header, pg0_sdbrR_content, null, true)
+    pageCleanup();
 }
 
 btnNext_CreateProjectPage_1_Name.onclick = () => {
@@ -119,6 +122,7 @@ btnNext_CreateProjectPage_1_Name.onclick = () => {
         setRightSidebarSecondaryContent('.page-wrap.pg2-wrap', pg2_sdbrR_header, pg2_sdbrR_content, null, true)
         setRightSidebarContent(pg2_sdbrR_header, pg2_sdbrR_content, null, true)
     }
+    pageCleanup();
 }
 
 btnBack_CreateProjectPage_2_DocType.onclick = () => {
@@ -126,6 +130,7 @@ btnBack_CreateProjectPage_2_DocType.onclick = () => {
     showPage('.page-wrap.pg1-wrap')
     setRightSidebarSecondaryContent('.page-wrap.pg1-wrap', pg1_sdbrR_header, pg1_sdbrR_content, null, true)
     setRightSidebarContent(pg1_sdbrR_header, pg1_sdbrR_content, null, true)
+    pageCleanup();
 }
 
 // page 2 visual choices logic

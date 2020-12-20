@@ -12,6 +12,7 @@ const btnNext_UpdateProject = document.getElementById("btn_next_updproj");
 
 btnCreateProject.onclick = () => {
     disable_btnOpt(btnCreateProject)
+    pageCleanup();
     window.location.href = url_projCreate
 }
 
@@ -51,6 +52,7 @@ btnNext_UpdateProject.onclick = () => {
     }
 
     formInp_upd.value = projUpd;
+    pageCleanup();
     form_projectUpdate.submit();
 }
 

@@ -21,6 +21,7 @@ const btnNext_UpdateProject = document.getElementById("btn_next_updproj");
 
 btnCreateProject.onclick = () => {
     disable_btnOpt(btnCreateProject)
+    pageCleanup();
     window.location.href = url_projCreate
 }
 
@@ -40,8 +41,13 @@ pg2vischs.forEach(el => {
         pg2_selection_check = true;
         const el_id = el.getAttribute("id");
         if (el_id in pg2_visch_help_dict) {
-            setRightSidebarSecondaryContent(curr_page_sel, pg2_visch_help_dict[el_id][1], pg2_visch_help_dict[el_id][2], pg2_visch_help_dict[el_id][0], !sdbrR_header_fixed)
-            setRightSidebarContent(pg2_visch_help_dict[el_id][1], pg2_visch_help_dict[el_id][2], pg2_visch_help_dict[el_id][0], !sdbrR_header_fixed)
+            if (pg2_visch_help_dict[el_id][1] === null) {
+                setRightSidebarSecondaryContent(curr_page_sel, pg2_sdbrR_header, pg2_visch_help_dict[el_id][2], pg2_visch_help_dict[el_id][0], true)
+                setRightSidebarContent(pg2_sdbrR_header, pg2_visch_help_dict[el_id][2], pg2_visch_help_dict[el_id][0], true)
+            } else {
+                setRightSidebarSecondaryContent(curr_page_sel, pg2_visch_help_dict[el_id][1], pg2_visch_help_dict[el_id][2], pg2_visch_help_dict[el_id][0], true)
+                setRightSidebarContent(pg2_visch_help_dict[el_id][1], pg2_visch_help_dict[el_id][2], pg2_visch_help_dict[el_id][0], true)
+            }
         }            
     }
 })
@@ -131,5 +137,6 @@ btnNext_UpdateProject.onclick = () => {
     }
 
     formInp_upd.value = projUpd;
+    pageCleanup();
     form_projectUpdate.submit();
 }

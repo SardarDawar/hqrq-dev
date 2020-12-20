@@ -10,6 +10,7 @@ const btnNext_UpdateProject = document.getElementById("btn_next_updproj");
 
 btnCreateProject.onclick = () => {
     disable_btnOpt(btnCreateProject)
+    pageCleanup();
     window.location.href = url_projCreate
 }
 
@@ -19,6 +20,7 @@ const form_projectUpdate = document.getElementById("project_update_form");
 
 
 btnNext_UpdateProject.onclick = () => {
+    pageCleanup();
     form_projectUpdate.submit();
 }
 

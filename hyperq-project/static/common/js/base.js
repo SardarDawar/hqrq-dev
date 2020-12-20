@@ -301,3 +301,7 @@ function moveCursorToEndOfContenteditable(contentEditableElement)
         range.select();//Select the range (make it the visible selection
     }
 }
+
+pageCleanup = () => {
+    if (typeof textVoiceCleanup !== 'undefined') textVoiceCleanup()
+}

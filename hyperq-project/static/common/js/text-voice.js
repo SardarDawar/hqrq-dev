@@ -67,6 +67,11 @@ function TextToVoice(text) {
     }
 };
 
+function textVoiceCleanup() {
+    window.speechSynthesis.cancel();
+    if (speechTimeout) clearTimeout(speechTimeout); 
+}
+
 const start_beep = document.getElementById("beep");
 
 var voiceToText_FieldType = 'input'

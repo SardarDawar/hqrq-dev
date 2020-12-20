@@ -45,7 +45,7 @@
             <div class="opt-dropdown">
 
                 {% for rp in recent_projects %}
-                <div class="opt-dropdown-opt opt-text-svg opt opt-proj" onclick="window.location.href='{% url 'project' rp.slug %}';">
+                <div class="opt-dropdown-opt opt-text-svg opt opt-proj" onclick="pageCleanup(); window.location.href='{% url 'project' rp.slug %}';">
                     {{ rp.getProjectTypeSVG|safe }}
                     <span class="opt-text-col">
                         <p class="opt-text-col-1">{{ rp.title | truncatechars:27 }}</p> 
@@ -92,7 +92,7 @@
 
                 <hr class="sep sep-sm">
 
-                <div class="opt opt-dropdown-opt opt-text" onclick="window.location.href='{% url 'logout' %}?next={{request.path}}'">
+                <div class="opt opt-dropdown-opt opt-text" onclick="pageCleanup(); window.location.href='{% url 'logout' %}?next={{request.path}}'">
                     Logout
                 </div>
 
