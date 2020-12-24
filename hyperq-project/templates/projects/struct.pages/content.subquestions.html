@@ -23,4 +23,45 @@ pg1_sdbrR_content = `
     </div>  
 `.trim()
 
+{% if QUESTIONS_DICT %}
+var pg2_tabs_dict = {};
+
+{% for k1 in QUESTIONS_DICT %}
+pg2_tabs_dict['{{k1}}'] = {}
+
+{% with QUESTIONS_DICT|get_dict_item:k1 as itm %}
+{% for k2 in itm %}
+{% ifnotequal k2 'subq' %}
+pg2_tabs_dict['{{k1}}']['{{k2}}'] = `{{itm|get_dict_item:k2|safe}}`;
+if (pg2_tabs_dict['{{k1}}']['{{k2}}'] === "True") {
+    pg2_tabs_dict['{{k1}}']['{{k2}}'] = true;
+    if ('{{k2}}' === 'has_subq') {
+        {% with itm|get_dict_item:'subq' as itm2 %}
+        pg2_tabs_dict['{{k1}}']['subq'] = {}
+        {% for k3 in itm2 %}
+            pg2_tabs_dict['{{k1}}']['subq']['{{k3}}'] = {}
+            {% with itm2|get_dict_item:k3 as itm3 %}
+            {% for k4 in itm3 %}
+                pg2_tabs_dict['{{k1}}']['subq']['{{k3}}']['{{k4}}'] = `{{itm3|get_dict_item:k4|safe}}`;
+                if (pg2_tabs_dict['{{k1}}']['subq']['{{k3}}']['{{k4}}']  === "True") {
+                    pg2_tabs_dict['{{k1}}']['subq']['{{k3}}']['{{k4}}']  = true;
+                } else if (pg2_tabs_dict['{{k1}}']['subq']['{{k3}}']['{{k4}}']  === "False") {
+                    pg2_tabs_dict['{{k1}}']['subq']['{{k3}}']['{{k4}}']  = false;
+                }
+            {% endfor %}
+            {% endwith %}
+        {% endfor %}
+        {% endwith %}
+    }
+    // parse subqs
+} else if (pg2_tabs_dict['{{k1}}']['{{k2}}'] === "False") {
+    pg2_tabs_dict['{{k1}}']['{{k2}}'] = false;
+}
+{% endifnotequal %}
+{% endfor %}
+{% endwith %}
+
+{% endfor %}
+
+{% endif %}
 </script>

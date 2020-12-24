@@ -74,3 +74,33 @@
 .editable {
   border-bottom: 1px solid #3b3b3b;
 }
+
+.text-jq-anim {
+  transition: none;
+}
+
+.tab-mover {
+  filter: grayscale(100%);
+  opacity: 25%;
+  cursor: pointer;
+}
+
+.tab-mover:not(.show) {
+  /* display: none; */
+  width: 0;
+  margin: 0 !important;
+}
+
+.tab-mover:hover {
+  filter: grayscale(100%);
+  opacity: 50%;
+}
+
+.tab-mover.tb-mv-left {
+  transform: rotate(180deg); 
+  margin-right: 30px;
+}
+
+.tab-mover.tb-mv-right {
+  margin-left: auto;
+}

@@ -543,20 +543,26 @@ def projectSubquestions(request, slug):
                 'ql': f"{proj_topic_name} is...",
             }, 
             "1": {
-                'has_subq': True,
-                'subq': [
-                    "Q1",
-                    "Q2",
-                    "Q3",
-                ],
+                'has_subq': False,
+                'q': f"In what way will <span class='editable'>{proj_topic_name}</span> affect investors?",
+                'ql': f"{proj_topic_name} will affect investors by...",
             }, 
             "2": {
                 'has_subq': True,
-                'subq': [
-                    "Q1",
-                    "Q2",
-                    "Q3",
-                ] ,
+                'subq': {
+                    "2_1": {
+                        'sq': f"Why will <span class='editable'>{proj_topic_name}</span> benefit investors?",
+                        'sql': f"{proj_topic_name} is...",
+                    },
+                    "2_2": {
+                        'sq': f"Who is <span class='editable'>{proj_topic_name}</span>?",
+                        'sql': f"{proj_topic_name} is...",
+                    },
+                    "2_3": {
+                        'sq': f"Who is <span class='editable'>{proj_topic_name}</span>?",
+                        'sql': f"{proj_topic_name} is...",
+                    },
+                },
             }
         },
     }

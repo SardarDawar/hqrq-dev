@@ -72,72 +72,51 @@ window.onresize = () => {
 }
 
 
+// page tabs
 
+// page tabs
+const pg2tabs = document.querySelectorAll(".tabselect")
 
+const pg2change_q = document.getElementById("pg2-change-question")
+const pg2change_ql = document.getElementById("pg2-change-questionlead")
+const $pg2change_q = $(pg2change_q)
+const $pg2change_ql = $(pg2change_ql)
 
+const tabMVleft = document.querySelector(".tab-mover.tb-mv-left")
+const tabMVright = document.querySelector(".tab-mover.tb-mv-right")
 
+var curr_qid = 0;
 
-// Show the first tab and hide the rest
-$("#left-button").hide()
-$(document).ready(function () {
-  let clickcount = 0 // variable
-  $("#tabs-nav li:first-child").addClass("active")
+pg2tabs.forEach(el => {    
+  el.onclick = () => {
+    if (el.dataset.qid && !el.classList.contains("active")) {
+      const qid = el.dataset.qid;
+      if (qid === curr_qid) return;
+      console.log(qid)
+      console.log(pg2_tabs_dict[qid])
+      const itm = pg2_tabs_dict[qid]
+      curr_qid = qid;
 
-  $("#tabs-nav li:first-child").find("rect").css("fill", "#EF8162")
-  $(".tab-content").hide()
-  $(".tab-content:first").show()
+      pg2tabs.forEach(el2 => { 
+        if (el2 !== el && el2.classList.contains("active")) el2.classList.remove("active")
+      })
+      if (!el.classList.contains("active")) el.classList.add("active")
 
-  $("#tabs-nav li").click(function () {
-    $("#tabs-nav li").removeClass("active")
-
-    $(".tab-content").hide()
-
-    var activeTab = $(this).find("a").attr("href")
-    var activeColor = $(this).find("rect").css("fill", "#EF8162")
-    $(activeTab).fadeIn()
-
-    console.log(activeColor, "here")
-
-    return false
-  })
-  $(".subqestioncontainer #subquestionitemcontainer:first").addClass("active")
-  $(".subqestioncontainer #subquestionitemcontainer").hide()
-  $(".subqestioncontainer #subquestionitemcontainer:first").show()
-
-  $("#right-button").click(function () {
-    if (clickcount < 2) {
-      $(".subqestioncontainer #subquestionitemcontainer").removeClass("active")
-      $(".subqestioncontainer #subquestionitemcontainer").hide()
-
-      clickcount += 1
-
-      console.log(clickcount)
-      $("#left-button").show()
-    } else {
-      $("#right-button").hide()
-      $("#left-button").show()
+      if (itm['has_subq']) {
+        if (!tabMVleft.classList.contains("show")) tabMVleft.classList.add("show")
+        if (!tabMVright.classList.contains("show")) tabMVright.classList.add("show")
+      } else {
+        if (tabMVleft.classList.contains("show")) tabMVleft.classList.remove("show")
+        if (tabMVright.classList.contains("show")) tabMVright.classList.remove("show")
+        $pg2change_q.stop().fadeOut(100, ()=> {
+          $pg2change_q.html(itm['q'])
+          $pg2change_q.fadeIn(50)
+        })
+        $pg2change_ql.stop().fadeOut(100, ()=> {
+          $pg2change_ql.html(itm['ql'])
+          $pg2change_ql.fadeIn(50)
+        })
+      }
     }
-  })
-
-  $("#left-button").click(function () {
-    if (clickcount > 0) {
-      console.log("hey")
-      $(".subqestioncontainer #subquestionitemcontainer").removeClass("active")
-      $(".subqestioncontainer #subquestionitemcontainer").hide()
-      console.log(clickcount)
-
-      clickcount -= 1
-      $("#right-button").show()
-    } else {
-      $("#right-button").show()
-
-      $("#left-button").hide()
-    }
-  })
+  }
 })
-
-
-
-
-
-

@@ -23,7 +23,7 @@
                 <div class="text-muted top-fixed-text" style="font-size:18px" id="pg1-acc-speak-field" value="{{ PROJECT_TOPIC_NAME }}">{{ PROJECT_TOPIC_NAME }} /</div>
                 <div class="pg-tabs" style="display: flex; width: 100%; height: auto;">
                   {% for q in QUESTIONS_DICT %}
-                  <div class="sep-wrap{% if forloop.counter0 == 0 %} active{% endif %}" id="qtab-{{forloop.counter0}}">
+                  <div class="sep-wrap{% if forloop.counter0 == 0 %} active{% endif %} tabselect" id="qtab-{{q}}" data-qid="{{q}}">
                     <hr class="sep">
                   </div>
                   {% endfor %}
@@ -31,19 +31,26 @@
               </div>
               
               <div class="top-text full" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">
-                <span style="display: flex;">
-                  <span style="max-width: calc(100% - 60px);">
-					{{ QUESTIONS_DICT.0|get_dict_item:'q'|safe }}
-                  </span>
-                  <div class="text-muted pl-4" id="contentEditButton" style="margin-top: -10px;">
-                    Edit
-                  </div>
+				<span style="display: flex;">
+					
+					
+					<img class="tab-mover tb-mv-left{% if QUESTIONS_DICT.0|get_dict_item:'has_subq' %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
+					
+					<span class="text-jq-anim" style="max-width: calc(100% - 60px);" id="pg2-change-question">
+						{{ QUESTIONS_DICT.0|get_dict_item:'q'|safe }}
+					</span>
+					<div class="text-muted pl-4" id="contentEditButton" style="margin-top: -10px;">
+						Edit
+					</div>
+
+					<img class="tab-mover tb-mv-right{% if QUESTIONS_DICT.0|get_dict_item:'has_subq' %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
+
                 </span>
               </div>
               <hr class="sep">
               <div class="pg1-content">
                   <div class="pg1-question">
-                      <div class="pg1-question-text along-access-text">
+                      <div class="pg1-question-text along-access-text text-jq-anim" id="pg2-change-questionlead">
 						{{ QUESTIONS_DICT.0|get_dict_item:'ql'|safe }}
                       </div>
                       <div class="accessibility" style="display: flex; align-items: center;">
