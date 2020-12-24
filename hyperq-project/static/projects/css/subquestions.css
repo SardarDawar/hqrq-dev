@@ -82,7 +82,14 @@
 .tab-mover {
   filter: grayscale(100%);
   opacity: 25%;
+}
+
+.tab-mover:not(.disabled) {
   cursor: pointer;
+}
+
+.tab-mover.disabled {
+  opacity: 10%;
 }
 
 .tab-mover:not(.show) {
@@ -91,7 +98,7 @@
   margin: 0 !important;
 }
 
-.tab-mover:hover {
+.tab-mover:not(.disabled):hover {
   filter: grayscale(100%);
   opacity: 50%;
 }

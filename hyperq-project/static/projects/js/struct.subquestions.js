@@ -86,14 +86,13 @@ const tabMVleft = document.querySelector(".tab-mover.tb-mv-left")
 const tabMVright = document.querySelector(".tab-mover.tb-mv-right")
 
 var curr_qid = 0;
+var curr_sqid = -1;
 
 pg2tabs.forEach(el => {    
   el.onclick = () => {
     if (el.dataset.qid && !el.classList.contains("active")) {
       const qid = el.dataset.qid;
       if (qid === curr_qid) return;
-      console.log(qid)
-      console.log(pg2_tabs_dict[qid])
       const itm = pg2_tabs_dict[qid]
       curr_qid = qid;
 
@@ -105,9 +104,71 @@ pg2tabs.forEach(el => {
       if (itm['has_subq']) {
         if (!tabMVleft.classList.contains("show")) tabMVleft.classList.add("show")
         if (!tabMVright.classList.contains("show")) tabMVright.classList.add("show")
+        for (var firstKey in itm['subq']) break;
+        curr_sqid = firstKey;
+        $pg2change_q.stop().fadeOut(100, ()=> {
+          $pg2change_q.html(itm['subq'][firstKey]['sq'])
+          $pg2change_q.fadeIn(50)
+        })
+        $pg2change_ql.stop().fadeOut(100, ()=> {
+          $pg2change_ql.html(itm['subq'][firstKey]['sql'])
+          $pg2change_ql.fadeIn(50)
+        })
+        console.log(itm['subq'])
+        tabMVleft.onclick = null
+        tabMVright.onclick = null
+        tabMVleft.onclick = () => {
+          if ("prv_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid]) {
+            const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["prv_sq_id"]
+            curr_sqid = new_sq_id
+            const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
+            $pg2change_q.stop().fadeOut(100, ()=> {
+              $pg2change_q.html(new_sq['sq'])
+              $pg2change_q.fadeIn(50)
+            })
+            $pg2change_ql.stop().fadeOut(100, ()=> {
+              $pg2change_ql.html(new_sq['sql'])
+              $pg2change_ql.fadeIn(50)
+            })
+          }
+
+          if (!("prv_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVleft.classList.add("disabled")
+          else tabMVleft.classList.remove("disabled")
+          if (!("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVright.classList.add("disabled")
+          else tabMVright.classList.remove("disabled")
+        }
+        tabMVright.onclick = () => {
+          if ("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid]) {
+            const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["nxt_sq_id"]
+            curr_sqid = new_sq_id
+            const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
+            $pg2change_q.stop().fadeOut(100, ()=> {
+              $pg2change_q.html(new_sq['sq'])
+              $pg2change_q.fadeIn(50)
+            })
+            $pg2change_ql.stop().fadeOut(100, ()=> {
+              $pg2change_ql.html(new_sq['sql'])
+              $pg2change_ql.fadeIn(50)
+            })
+          }
+
+          if (!("prv_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVleft.classList.add("disabled")
+          else tabMVleft.classList.remove("disabled")
+          if (!("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVright.classList.add("disabled")
+          else tabMVright.classList.remove("disabled")
+        }
+
+        if (!("prv_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVleft.classList.add("disabled")
+        else tabMVleft.classList.remove("disabled")
+        if (!("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVright.classList.add("disabled")
+        else tabMVright.classList.remove("disabled")
+
       } else {
+        tabMVleft.onclick = null
+        tabMVright.onclick = null
         if (tabMVleft.classList.contains("show")) tabMVleft.classList.remove("show")
         if (tabMVright.classList.contains("show")) tabMVright.classList.remove("show")
+        curr_sqid = -1;
         $pg2change_q.stop().fadeOut(100, ()=> {
           $pg2change_q.html(itm['q'])
           $pg2change_q.fadeIn(50)
@@ -120,3 +181,5 @@ pg2tabs.forEach(el => {
     }
   }
 })
+
+pg2tabs[0].click()

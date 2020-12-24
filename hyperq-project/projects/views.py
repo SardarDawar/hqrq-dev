@@ -552,15 +552,19 @@ def projectSubquestions(request, slug):
                 'subq': {
                     "2_1": {
                         'sq': f"Why will <span class='editable'>{proj_topic_name}</span> benefit investors?",
-                        'sql': f"{proj_topic_name} is...",
+                        'sql': f"{proj_topic_name} will benefit investors because...",
+                        'nxt_sq_id': "2_2",
                     },
                     "2_2": {
-                        'sq': f"Who is <span class='editable'>{proj_topic_name}</span>?",
-                        'sql': f"{proj_topic_name} is...",
+                        'sq': f"When will <span class='editable'>{proj_topic_name}</span> benefit investors?",
+                        'sql': f"{proj_topic_name} will benefit investors at...",
+                        'prv_sq_id': "2_1",
+                        'nxt_sq_id': "2_3",
                     },
                     "2_3": {
-                        'sq': f"Who is <span class='editable'>{proj_topic_name}</span>?",
-                        'sql': f"{proj_topic_name} is...",
+                        'sq': f"How will <span class='editable'>{proj_topic_name}</span> benefit investors?",
+                        'sql': f"{proj_topic_name} will benefit investors by...",
+                        'prv_sq_id': "2_2",
                     },
                 },
             }
