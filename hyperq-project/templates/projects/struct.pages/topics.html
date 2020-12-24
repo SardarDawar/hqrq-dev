@@ -1,0 +1,161 @@
+{% extends "common/home.html" %}
+{% load static %}
+{% load extra_tags %}
+
+<!-- body content -->
+
+{% block main_window %}
+    <!-- center window start -->
+    <div class="main-win">
+        <div class="main-content">
+
+
+
+            <div class="page-wrap pg1-wrap" style="margin-top: 75px;">
+                <div style="font-size:33px;line-height: 58px;font-weight: 400;max-width:587px;max-height:172px;" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">{{QUESTION_TITLE}} </div>
+                <div class="sub___header"><div class="sub__headerleft">Please choose 3</div><div class="sub__headerright text-muted" > 
+                
+                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.9788 2.72921H14.458C15.0413 2.72921 15.4997 2.27087 15.4997 1.68754C15.4997 1.10421 15.0413 0.645874 14.458 0.645874H11.333C10.7497 0.645874 10.2913 1.10421 10.2913 1.68754V4.60421C10.2913 5.18754 10.7497 5.64587 11.333 5.64587C11.9163 5.64587 12.3747 5.18754 12.3747 4.60421V4.04171C13.3538 5.12504 13.9163 6.54171 13.9163 8.02087C13.9163 11.2709 11.2705 13.9375 7.99967 13.9375C7.41634 13.9375 6.95801 14.3959 6.95801 14.9792C6.95801 15.5625 7.41634 16.0209 7.99967 16.0209C12.4163 16.0209 15.9997 12.4375 15.9997 8.02087C15.9997 6.06254 15.2705 4.18754 13.9788 2.72921Z" fill="#D6D6D6"/>
+                        <path d="M4.66666 10.4375C4.08333 10.4375 3.625 10.8958 3.625 11.4792V11.9792C2.64583 10.8958 2.08333 9.5 2.08333 8C2.08333 4.75 4.72916 2.08333 8 2.08333C8.58333 2.08333 9.04166 1.625 9.04166 1.04167C9.04166 0.458333 8.58333 0 8 0C3.58333 0 0 3.58333 0 8C0 10 0.749999 11.8958 2.04167 13.3333H1.54167C0.958333 13.3333 0.5 13.7917 0.5 14.375C0.5 14.9583 0.958333 15.4167 1.54167 15.4167H4.66666C5.25 15.4167 5.70833 14.9583 5.70833 14.375V11.4583C5.70833 10.8958 5.25 10.4375 4.66666 10.4375Z" fill="#D6D6D6"/>
+                        </svg>
+                        <div>Regenerate topics</div>
+                        <div>Help</div>
+                        <div>
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.9078 1.26C13.9239 1.26095 14.8981 1.66501 15.6165 2.38348C16.335 3.10195 16.739 4.07613 16.74 5.0922V12.9078C16.739 13.9239 16.335 14.8981 15.6165 15.6165C14.8981 16.335 13.9239 16.739 12.9078 16.74H5.0922C4.07613 16.739 3.10195 16.335 2.38348 15.6165C1.66501 14.8981 1.26095 13.9239 1.26 12.9078V5.0922C1.26095 4.07613 1.66501 3.10195 2.38348 2.38348C3.10195 1.66501 4.07613 1.26095 5.0922 1.26H12.9078ZM12.9078 0H5.0922C3.74283 0.00379972 2.44982 0.541518 1.49567 1.49567C0.541518 2.44982 0.00379972 3.74283 0 5.0922V12.9078C0.00379972 14.2572 0.541518 15.5502 1.49567 16.5043C2.44982 17.4585 3.74283 17.9962 5.0922 18H12.9078C14.2572 17.9962 15.5502 17.4585 16.5043 16.5043C17.4585 15.5502 17.9962 14.2572 18 12.9078V5.0922C17.9962 3.74283 17.4585 2.44982 16.5043 1.49567C15.5502 0.541518 14.2572 0.00379972 12.9078 0Z" fill="#C9C9C9"/>
+                                <path d="M9.14266 4.41895C9.46286 4.45239 9.78081 4.50468 10.0949 4.57555C11.0543 4.84735 11.6249 5.61415 11.6969 6.63295C11.7316 6.95939 11.6798 7.28923 11.5468 7.58937C11.4138 7.88951 11.2042 8.14939 10.9391 8.34295C10.6835 8.54095 10.4153 8.72094 10.1579 8.91535C9.97135 9.03753 9.82028 9.20665 9.71981 9.40569C9.61933 9.60474 9.573 9.82672 9.58546 10.0493C9.59186 10.21 9.54429 10.3682 9.45034 10.4987C9.35638 10.6292 9.22146 10.7245 9.06706 10.7693C8.90268 10.8326 8.72196 10.8395 8.55322 10.789C8.38449 10.7386 8.23727 10.6335 8.13466 10.4903C8.06742 10.3775 8.03081 10.2491 8.02846 10.1177C8.01567 9.71081 8.10245 9.30691 8.28125 8.94114C8.46006 8.57537 8.72548 8.2588 9.05446 8.01895C9.34338 7.79906 9.6159 7.55842 9.86986 7.29895C9.99092 7.15633 10.0645 6.97953 10.0805 6.79314C10.1219 6.28375 9.79426 5.95614 9.26686 5.92194C8.62966 5.88055 8.09326 6.04614 7.71886 6.60954C7.64074 6.74234 7.52383 6.84803 7.38384 6.9124C7.24386 6.97676 7.08752 6.9967 6.93586 6.96954C6.39586 6.87954 6.16366 6.44034 6.38506 5.93454C6.61683 5.44159 7.01527 5.04635 7.51006 4.81855C8.01883 4.5685 8.57592 4.43215 9.14266 4.41895Z" fill="#C9C9C9"/>
+                                <path d="M9.68088 12.4974C9.68448 13.0752 9.36048 13.419 8.79348 13.419C8.22648 13.419 7.84848 13.0878 7.84668 12.6036C7.84668 11.9322 8.14728 11.5974 8.74668 11.5794C9.23448 11.565 9.74208 11.8638 9.68088 12.4974Z" fill="#C9C9C9"/>
+                                </svg>
+                                
+
+                        </div>
+                </div></div>
+              <hr style="margin-top:0"/>
+             
+                <div class="question___container" style="height:100%">
+                    <div class="topics___content-wrapper">
+                        <div  class="topics___content-items">
+                       Elements of off-roading
+                        </div>
+                        <div  class="topics___content-items">
+                        Another topic
+                        </div>
+                        <div  class="topics___content-items">
+                       Another topic
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="topics___content-wrapper">
+                        <div  class="topics___content-items">
+                       Elements of off-roading
+                        </div>
+                        <div  class="topics___content-items">
+                        Another topic
+                        </div>
+                        <div  class="topics___content-items">
+                       Another topic
+                        </div>
+                    </div>
+                    <div class="topics___content-wrapper">
+                        <div  class="topics___content-items">
+                       Elements of off-roading
+                        </div>
+                        <div  class="topics___content-items">
+                        Another topic
+                        </div>
+                        <div  class="topics___content-items">
+                       Another topic
+                        </div>
+                    </div>
+                    <div class="topics___content-wrapper">
+                        <div  class="topics___content-items">
+                       Elements of off-roading
+                        </div>
+                        <div  class="topics___content-items">
+                        Another topic
+                        </div>
+                        <div  class="topics___content-items">
+                       Another topic
+                        </div>
+                    </div>
+                        
+             
+                    
+                    <div class="inputbox" >
+                      <div class="inputfieldcontainer" style="box-sizing: border-box;border:1px solid black;width:70%;position:relative;height: 51px; margin-right:30px;">
+                   
+                            
+                      <input style="width: 100%;padding-left:46px;padding-top:20px;"  type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Add your own sub topic" maxlength="1000" {% if curr_value %}value="{{ curr_value }}"{% endif %}>
+                      <svg style="top:17;left:13;position:absolute" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="7" y1="4.37113e-08" x2="7" y2="15" stroke="black" stroke-width="2"/>
+                        <line x1="15" y1="8.5" x2="-8.74228e-08" y2="8.5" stroke="black" stroke-width="2"/>
+                        </svg>
+                    </input>
+                    
+                      
+
+                      </div>  
+                
+
+                        <div style="margin-left:0%"  class="accessibility">
+                          <button type="button" class="btn btn-light acc-opt acc-mic" data-fieldid="pg1_field_updproj">
+                              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="microphone" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" class="svg-inline--fa fa-microphone fa-w-11 fa-9x"><path fill="currentColor" d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z" class=""></path></svg>
+                          </button>
+                          <button type="button" class="btn btn-light acc-opt acc-speak" data-fieldid="pg1-acc-speak-field">
+                              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512" class="svg-inline--fa fa-volume fa-w-15 fa-9x"><path fill="currentColor" d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.53 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z" class=""></path></svg>
+                          </button>
+                          <button type="button" class="btn btn-light acc-opt acc-help">
+                              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="question" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="svg-inline--fa fa-question fa-w-12 fa-9x"><path fill="currentColor" d="M202.021 0C122.202 0 70.503 32.703 29.914 91.026c-7.363 10.58-5.093 25.086 5.178 32.874l43.138 32.709c10.373 7.865 25.132 6.026 33.253-4.148 25.049-31.381 43.63-49.449 82.757-49.449 30.764 0 68.816 19.799 68.816 49.631 0 22.552-18.617 34.134-48.993 51.164-35.423 19.86-82.299 44.576-82.299 106.405V320c0 13.255 10.745 24 24 24h72.471c13.255 0 24-10.745 24-24v-5.773c0-42.86 125.268-44.645 125.268-160.627C377.504 66.256 286.902 0 202.021 0zM192 373.459c-38.196 0-69.271 31.075-69.271 69.271 0 38.195 31.075 69.27 69.271 69.27s69.271-31.075 69.271-69.271-31.075-69.27-69.271-69.27z" class=""></path></svg>
+                          </button>
+                      </div>
+                    </div>
+                  
+                    
+                </div>
+               
+                <div class="pg1-buttons">
+                 
+                    <button type="button" class="btn btn-dark cust-button" id="btn_back_updproj" >Back</button>
+                    <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_updproj">Next</button>
+                </div>
+                
+                <div class="noshow" style="opacity: 0; position: absolute; top: 0; z-index: -100;">
+                    {{ PROJECT_SVG|safe }}
+                </div>
+                <div  class="sidebar-right-secondary"><div class="side-wrap"><div class="side-id" style="display: none; width: 0; height: 0;"></div><div class="side-header"></div><div class="side-content"></div></div></div>
+
+            </div>
+            
+        </div>
+    </div>
+    <!-- center window end -->
+{% endblock %}
+
+<!-- end body content -->
+
+{% block hidden_content %}
+<form method="POST" id="project_update_form">
+    {% csrf_token %}
+    <input type="text" {% if curr_value %}value="{{ curr_value }}"{% endif %} name="{{FORM_INPUT_NAME}}" id="projFormInp-upd">
+    {% if FORCE_NEXT %}
+    <input type="checkbox" name="force_next" value="ForceNext" checked>
+    {% endif %}
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<!-- <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js" defer></script> -->
+<script src="{% static 'common/js/text-voice.js' %}" type="text/javascript" defer></script>
+<script>
+    // page constants
+    const user_firstName = "{{ request.user.first_name }}";
+    const user_lastName = "{{ request.user.last_name }}";
+    const user_fullName = "{{ request.user.get_full_name }}";
+    const user_email = "{{ request.user.email }}";
+    const proj_choice_curr_value = {% if curr_value %}"{{ curr_value }}"{% else %}null{% endif %};
+</script>
+<script src="{% static 'common/js/accessibility.js' %}" type="text/javascript" defer></script>
+<script src="{% static 'projects/js/initial.prop.js' %}" type="text/javascript" defer></script>
+{% endblock %}

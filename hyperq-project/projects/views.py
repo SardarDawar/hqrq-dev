@@ -66,6 +66,8 @@ def project(request, slug):
         return projectInitialQuestionsView(request, project)
     elif project.stage == PROJ_STAGE_BASECAMP:
         return projectBasecampView(request, project)
+    elif project.stage == PROJ_STAGE_STRUCTURING:
+        return redirect('project-subq', project.slug)
 
     return notificationView(request, NOTIF__FAILED_LOAD, getProjectPageExtraContext(project))
 
@@ -498,3 +500,76 @@ def getFlowRender(request, project, curr, step=None):
                         return projectPropertyView(request, project, prop, additional)
     # if here, will probably be forwarded to basecamp
     return redirect('project', project.slug)
+
+
+def projectSubquestions(request, slug):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        raise Http404("Project does not exist")
+    
+    if request.method == 'POST':
+        return redirect('project-topics', project.slug)
+
+    # GET
+    burl, battr = getFlowBackUrlAttr(None)
+    proj_topic_name = "Nicola Tesla"
+    context = {
+        'project': project,
+        'page_project': True,
+        'sidebar_initial_collapsed': True,
+
+        'QUESTION_TEXT': f"What is {proj_topic_name}",
+        'QUESTION_LEADIN': f"{proj_topic_name} is...",
+        "CONTENT_PAGE_PATH": "projects/struct.pages/content.subquestions.html",
+        'PAGE_TIP': "",
+        
+        'PROJECT_TYPE': PROJ_TYPE_LIST[project.doc_type],
+        'PROJECT_SUBTYPE': PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype],
+        'PROJECT_SVG': PROJ_TYPE_SVGS[project.doc_type],
+
+        'FORM_INPUT_NAME': "",
+        'FORM_URL_NAME': 'project-prop-update',
+        'FORM_URL_ATTR': "project-subq",
+        'BACK_URL': burl,
+        'BACK_URL_ATTR': battr,
+
+        "PROJECT_TOPIC_NAME": proj_topic_name,
+
+        "QUESTIONS_DICT": {
+            "Where": {
+                'has_subq': False,
+            }, 
+            "Who": {
+                'has_subq': True,
+                'subq': [
+                    "Q1",
+                    "Q2",
+                    "Q3",
+                ]
+            }, 
+            "Which": {
+                'has_subq': True,
+                'subq': [
+                    "Q1",
+                    "Q2",
+                    "Q3",
+                ] 
+            }
+        },
+    }
+
+    return render(request, "projects/struct.pages/subquestions.html", context)
+
+def projectTopics(request, slug):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        raise Http404("Project does not exist")
+
+    context = {
+        "QUESTION_TITLE": "What topics do you want to include in this report about off-roading",
+        "QUESTION_LIST": ["Elements of off-roading", "Another topic", "AnotherTopic"],
+    }
+
+    return render(request, "projects/struct.pages/topics.html", context)

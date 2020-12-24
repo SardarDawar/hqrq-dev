@@ -1,0 +1,32 @@
+.pg-tabs .sep-wrap {
+  width: 100%;
+  margin-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.pg-tabs .sep-wrap:NOT(.active) {
+  cursor: pointer;
+}
+
+.pg-tabs .sep-wrap hr.sep {
+  border-width: 2px;
+
+  border-color: #c9c9c9ab;
+}
+
+.pg-tabs .sep-wrap.active hr.sep {
+  border-color: #EF8162;
+}
+
+.pg-tabs .sep-wrap:not(.active):hover hr.sep {
+  border-color: #C9C9C9;
+}
+
+.top-fixed-text {
+  margin-bottom: 30px;
+}
+
+.pg-tabs {
+  margin-bottom: 40px;
+}
