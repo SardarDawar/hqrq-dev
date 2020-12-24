@@ -19,7 +19,7 @@
           
           <div class="page-wrap pg1-wrap" style="margin-top: 75px;">
               
-              <div class="page-top-wrap">
+              <div class="pg-top-wrap">
                 <div class="text-muted top-fixed-text" style="font-size:18px" id="pg1-acc-speak-field" value="{{ PROJECT_TOPIC_NAME }}">{{ PROJECT_TOPIC_NAME }} /</div>
                 <div class="pg-tabs" style="display: flex; width: 100%; height: auto;">
                   {% for q in QUESTIONS_DICT %}
@@ -30,14 +30,29 @@
                 </div>
               </div>
               
-              <div class="top-text full" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">{{ QUESTION_TEXT }}</div>
+              <div class="top-text full" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">
+                <span style="display: flex;">
+                  <span style="max-width: calc(100% - 60px);">
+					{{ QUESTIONS_DICT.0|get_dict_item:'q'|safe }}
+                  </span>
+                  <div class="text-muted pl-4" id="contentEditButton" style="margin-top: -10px;">
+                    Edit
+                  </div>
+                </span>
+              </div>
               <hr class="sep">
               <div class="pg1-content">
                   <div class="pg1-question">
                       <div class="pg1-question-text along-access-text">
-                          {{ QUESTION_LEADIN }}
+						{{ QUESTIONS_DICT.0|get_dict_item:'ql'|safe }}
                       </div>
-                      <div class="accessibility">
+                      <div class="accessibility" style="display: flex; align-items: center;">
+
+                          <div class="auto-answer btn btn-light">
+							<svg width="19" height="22" viewBox="0 0 19 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.4205 17.258L15.4745 15.3113V1.3289C15.4745 1.14726 15.3272 1 15.1456 1H5.27869C5.27243 1 5.26649 1.00321 5.26023 1.00369C5.23003 1.00514 5.20016 1.01124 5.17174 1.02136C5.1621 1.02425 5.15247 1.02762 5.14315 1.03164C5.10654 1.04738 5.07313 1.0697 5.04455 1.09732L1.0978 5.04407C1.07018 5.07201 1.04786 5.10461 1.03196 5.14042C1.0273 5.1507 1.02473 5.16082 1.02104 5.17142C1.01156 5.19872 1.00594 5.22714 1.00434 5.25589C1.00434 5.26312 1 5.26938 1 5.27661V17.7737C1 17.9553 1.14726 18.1026 1.3289 18.1026H12.683L14.6294 20.048C14.998 20.4207 15.5008 20.6298 16.025 20.6285C16.8239 20.6292 17.5443 20.1481 17.85 19.4098C18.1554 18.6717 17.9858 17.8222 17.4202 17.258H17.4205ZM14.6325 19.1222L9.51323 14.0045L11.3764 12.141L16.4941 17.2606L14.6325 19.1222ZM9.23492 13.3524L8.78895 11.4174L10.7243 11.863L9.23492 13.3524ZM4.9498 2.12287V4.94675H2.12592L4.9498 2.12287ZM1.66084 17.4448V5.60454H5.27869C5.46033 5.60454 5.60759 5.45727 5.60759 5.27564V1.65779H14.8167V14.6532L11.6093 11.4434L11.6056 11.4412C11.5785 11.4153 11.5471 11.3943 11.5129 11.379C11.5036 11.375 11.4948 11.3721 11.4856 11.3687C11.4741 11.3636 11.4623 11.3591 11.4503 11.3552L8.42456 10.6581C8.31391 10.6324 8.19796 10.6656 8.11767 10.7458C8.03737 10.8261 8.00429 10.9422 8.02982 11.0527L8.72712 14.0786C8.73097 14.0906 8.73547 14.1025 8.74061 14.1141C8.74398 14.1229 8.74655 14.1317 8.75089 14.1407C8.76598 14.1754 8.78734 14.2072 8.81368 14.2344L8.81529 14.2371L12.0249 17.4448H1.66084ZM16.9545 19.5842C16.7085 19.831 16.3743 19.9698 16.0258 19.9698C15.6773 19.9698 15.3431 19.831 15.0972 19.5842L15.252 19.4291L16.9574 17.7241C17.2042 17.9704 17.3428 18.3051 17.3422 18.6539C17.3417 19.0027 17.2021 19.3369 16.9545 19.5826V19.5842Z" fill="#C9C9C9" stroke="#C9C9C9"/></svg>
+							Answer for me
+                          </div>
+
                           <button type="button" class="btn btn-light acc-opt acc-mic" data-fieldid="pg1_field_updproj">
                               <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="microphone" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" class="svg-inline--fa fa-microphone fa-w-11 fa-9x"><path fill="currentColor" d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z" class=""></path></svg>
                           </button>
@@ -93,7 +108,8 @@
     const user_firstName = "{{ request.user.first_name }}";
     const user_lastName = "{{ request.user.last_name }}";
     const user_fullName = "{{ request.user.get_full_name }}";
-    const user_email = "{{ request.user.email }}";
+	const user_email = "{{ request.user.email }}";
+	const url_projCreate = "{% url 'project-create' %}";
     const proj_choice_curr_value = {% if curr_value %}"{{ curr_value }}"{% else %}null{% endif %};
 </script>
 {% include CONTENT_PAGE_PATH %}

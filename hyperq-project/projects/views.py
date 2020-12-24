@@ -537,24 +537,26 @@ def projectSubquestions(request, slug):
         "PROJECT_TOPIC_NAME": proj_topic_name,
 
         "QUESTIONS_DICT": {
-            "Where": {
+            "0": {
                 'has_subq': False,
+                'q': f"Who is <span class='editable'>{proj_topic_name}</span>?",
+                'ql': f"{proj_topic_name} is...",
             }, 
-            "Who": {
+            "1": {
                 'has_subq': True,
                 'subq': [
                     "Q1",
                     "Q2",
                     "Q3",
-                ]
+                ],
             }, 
-            "Which": {
+            "2": {
                 'has_subq': True,
                 'subq': [
                     "Q1",
                     "Q2",
                     "Q3",
-                ] 
+                ] ,
             }
         },
     }

@@ -28,5 +28,49 @@
 }
 
 .pg-tabs {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+}
+
+.pg-top-wrap {
+  padding-bottom: 50px;
+}
+
+#contentEditButton, #contentEditOptions > * {
+  font-family: var(--base-font-regular);
+  font-size: 18px;
+  color: #9FA3A7 !important;
+  cursor: pointer;
+}
+
+.auto-answer {
+  color: #8C8E8F;
+  cursor: pointer;
+  font-size: 16px;
+  border: solid #C9C9C9;
+  border-width: 0px 2px 0px 0px;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+
+  background: none;
+  border-radius: 0;
+}
+
+.auto-answer:hover, .auto-answer:focus {
+  color: #8C8E8F !important;
+
+  background: none;
+  border-radius: 0;
+}
+
+.auto-answer svg {
+  margin-right: 10px;
+}
+
+.top-text {
+  font-size: 32px !important;
+}
+
+.editable {
+  border-bottom: 1px solid #3b3b3b;
 }
