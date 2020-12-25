@@ -40,6 +40,15 @@
   font-size: 18px;
   color: #9FA3A7 !important;
   cursor: pointer;
+  width: max-content !important;
+}
+
+#contentEditButton {
+  min-width: 60px;
+}
+
+#contentEditOptions {
+  min-width: 120px;
 }
 
 .auto-answer {
