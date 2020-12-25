@@ -122,6 +122,8 @@
     flex-direction: column;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
+    /* align-content: center; */
+    align-content: flex-start;
 }
 
 .vischsl-item {

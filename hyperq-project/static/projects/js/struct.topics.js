@@ -158,3 +158,22 @@ btn_AddTopic.onclick = () => {
     const new_vischsl = document.getElementById(`pg2vischsl${pg2vischs.length+1}`)
     // new_vischsl.click()
 }
+
+
+(function() {
+    function scrollHorizontally(e) {
+        e = window.event || e;
+        var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        pg2vischContainer.scrollLeft -= (delta * 40); // Multiplied by 40
+        e.preventDefault();
+    }
+    if (pg2vischContainer.addEventListener) {
+        // IE9, Chrome, Safari, Opera
+        pg2vischContainer.addEventListener('mousewheel', scrollHorizontally, false);
+        // Firefox
+        pg2vischContainer.addEventListener('DOMMouseScroll', scrollHorizontally, false);
+    } else {
+        // IE 6/7/8
+        pg2vischContainer.attachEvent('onmousewheel', scrollHorizontally);
+    }
+})();
