@@ -51,6 +51,10 @@
   min-width: 120px;
 }
 
+@media (max-width: 750px) {
+
+}
+
 .auto-answer {
   color: #8C8E8F;
   cursor: pointer;

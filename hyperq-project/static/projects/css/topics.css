@@ -93,6 +93,16 @@
 }
 
 
+@media (max-width: 750px) {
+    .pg1-fields-secondary { 
+        flex-direction: column;
+    }
+    
+    .pg1-fs-inp {
+        max-width: unset;
+        margin-bottom: 5px;
+    }
+}
 
 
 
@@ -177,3 +187,4 @@
     line-height: 15px;
     margin-top: auto;
 }
+
