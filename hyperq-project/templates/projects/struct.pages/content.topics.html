@@ -1,0 +1,26 @@
+{% load extra_tags %}
+
+<script type="text/javascript">
+const sdbrR_header_fixed = false;
+
+pg1_sdbrR_header = `
+    <span class="side-header-icon">
+        {{ PROJECT_SVG|safe }}
+    </span>    
+    <span class="side-header-text" style="display: flex; flex-direction: column">
+        <span {% if SIDEBAR_SHOW_SUBTYPE %}style="margin-top: 15px;"{% endif %}>{{PROJECT_TYPE}}</span>
+    </span>
+`.trim()
+pg1_sdbrR_content = `
+    <div class="side-header high-gap" style="padding-top:70px">Suggestions</div>
+    <div style="padding-top: 15px">
+        <p>
+            Detailed document types more specifically detertmine the method, document length and output format for your document.  
+        <p>
+        <p>
+            Select a box to see the details of that option
+        </p>  
+    </div>  
+`.trim()
+
+</script>

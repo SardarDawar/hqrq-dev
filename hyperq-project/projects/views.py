@@ -17,7 +17,8 @@ from .content import (  PROJ_SUBTYPE_DESCRIPTIONS, PROJ_TYPE_LIST, PROJ_SUBTYPE_
                         getDocBasecampTopText, getDocBasecampSubText, getDocBasecampResponsesList,
                         getFlowBackUrlAttr, getFlowNextUrlAttr, getAttrName,
                         getTip_title, getTip_doc_type, getTip_doc_sutype, getTip_doc_topic, getTip_doc_len,
-                        getTip_basecamp, getTip_prop)
+                        getTip_basecamp, getTip_prop,
+                        getQuestionsDict, getChoiceHeading_topics, getTopicsChoiceList)
 from .utils import defaultProjectSubtype
 from .models import Project, Property
 import json
@@ -513,14 +514,14 @@ def projectSubquestions(request, slug):
 
     # GET
     burl, battr = getFlowBackUrlAttr(None)
-    proj_topic_name = "Nicola Tesla"
+    prop_topic_name_response = "Nicola Tesla"
     context = {
         'project': project,
         'page_project': True,
         'sidebar_initial_collapsed': True,
 
-        'QUESTION_TEXT': f"What is {proj_topic_name}",
-        'QUESTION_LEADIN': f"{proj_topic_name} is...",
+        'QUESTION_TEXT': f"What is {prop_topic_name_response}",
+        'QUESTION_LEADIN': f"{prop_topic_name_response} is...",
         "CONTENT_PAGE_PATH": "projects/struct.pages/content.subquestions.html",
         'PAGE_TIP': "",
         
@@ -534,41 +535,9 @@ def projectSubquestions(request, slug):
         'BACK_URL': burl,
         'BACK_URL_ATTR': battr,
 
-        "PROJECT_TOPIC_NAME": proj_topic_name,
+        "PROJECT_TOPIC_NAME": prop_topic_name_response,
 
-        "QUESTIONS_DICT": {
-            "0": {
-                'has_subq': False,
-                'q': f"Who is <span class='editable'>{proj_topic_name}</span>?",
-                'ql': f"{proj_topic_name} is...",
-            }, 
-            "1": {
-                'has_subq': False,
-                'q': f"In what way will <span class='editable'>{proj_topic_name}</span> affect investors?",
-                'ql': f"{proj_topic_name} will affect investors by...",
-            }, 
-            "2": {
-                'has_subq': True,
-                'subq': {
-                    "2_1": {
-                        'sq': f"Why will <span class='editable'>{proj_topic_name}</span> benefit investors?",
-                        'sql': f"{proj_topic_name} will benefit investors because...",
-                        'nxt_sq_id': "2_2",
-                    },
-                    "2_2": {
-                        'sq': f"When will <span class='editable'>{proj_topic_name}</span> benefit investors?",
-                        'sql': f"{proj_topic_name} will benefit investors at...",
-                        'prv_sq_id': "2_1",
-                        'nxt_sq_id': "2_3",
-                    },
-                    "2_3": {
-                        'sq': f"How will <span class='editable'>{proj_topic_name}</span> benefit investors?",
-                        'sql': f"{proj_topic_name} will benefit investors by...",
-                        'prv_sq_id': "2_2",
-                    },
-                },
-            }
-        },
+        "QUESTIONS_DICT": getQuestionsDict(project),
     }
 
     return render(request, "projects/struct.pages/subquestions.html", context)
@@ -578,10 +547,29 @@ def projectTopics(request, slug):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         raise Http404("Project does not exist")
-
+    
+    ch_head, ch_subtext, ch_minsel_count = getChoiceHeading_topics(project) 
     context = {
-        "QUESTION_TITLE": "What topics do you want to include in this report about off-roading",
-        "QUESTION_LIST": ["Elements of off-roading", "Another topic", "AnotherTopic"],
+        'project': project,
+        'page_project': True,
+        'sidebar_initial_collapsed': True,
+
+        'CHOICE_HEADING': ch_head,
+        'CHOICE_SUBTEXT': ch_subtext,
+        "CHOICES": getTopicsChoiceList(project),
+        "CHOICE_MINSEL_COUNT": ch_minsel_count,
+
+        "CONTENT_PAGE_PATH": "projects/struct.pages/content.topics.html",
+        'PAGE_TIP': "",
+        
+        'PROJECT_TYPE': PROJ_TYPE_LIST[project.doc_type],
+        'PROJECT_SUBTYPE': PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype],
+        'PROJECT_SVG': PROJ_TYPE_SVGS[project.doc_type],
+
+        'FORM_INPUT_NAME': "",
+        'FORM_URL_NAME': 'project-prop-update',
+        'FORM_URL_ATTR': "project-subq",
+        'BACK_URL': "project-subq",
     }
 
     return render(request, "projects/struct.pages/topics.html", context)

@@ -418,3 +418,80 @@ def getUnexpressedTerm(exp_term):
     exp_term = exp_term.strip()
     exp_term_words = [x for x in exp_term.split(" ") if x.strip()]
     return " ".join(exp_term_words[1:]) if exp_term_words[0] in ARTICLE_LIST else exp_term
+
+
+# questions/subquestions stage
+
+def getQuestionsDict(project):
+    qdict = {}
+
+    prop_target_reader = project.props.get(name=PROP_TARGET_READER)
+    prop_topic_name = project.props.get(name=PROP_TOPIC_NAME)
+    prop_target_impression = project.props.get(name=PROP_TARGET_IMPRESSION)
+    prop_topic_impact = project.props.get(name=PROP_TOPIC_IMPACT)
+    
+    prop_target_reader_exp = prop_target_reader.response_exp
+    prop_topic_name_response = prop_topic_name.response
+
+    # placeholder values
+    prop_target_reader_exp = "investors"
+    prop_topic_name_response = "Nicola Tesla"
+
+    qdict = {
+        "0": {
+            'has_subq': False,
+            'q': f"Who is <span class='editable'>{prop_topic_name_response}</span>?",
+            'ql': f"{prop_topic_name_response} is...",
+        }, 
+        "1": {
+            'has_subq': False,
+            'q': f"In what way will <span class='editable'>{prop_topic_name_response}</span> affect {prop_target_reader_exp}?",
+            'ql': f"{prop_topic_name_response} will affect {prop_target_reader_exp} by...",
+        }, 
+        "2": {
+            'has_subq': True,
+            'subq': {
+                "2_1": {
+                    'sq': f"Why will <span class='editable'>{prop_topic_name_response}</span> benefit {prop_target_reader_exp}?",
+                    'sql': f"{prop_topic_name_response} will benefit {prop_target_reader_exp} because...",
+                    'nxt_sq_id': "2_2",
+                },
+                "2_2": {
+                    'sq': f"When will <span class='editable'>{prop_topic_name_response}</span> benefit {prop_target_reader_exp}?",
+                    'sql': f"{prop_topic_name_response} will benefit {prop_target_reader_exp} at...",
+                    'prv_sq_id': "2_1",
+                    'nxt_sq_id': "2_3",
+                },
+                "2_3": {
+                    'sq': f"How will <span class='editable'>{prop_topic_name_response}</span> benefit {prop_target_reader_exp}?",
+                    'sql': f"{prop_topic_name_response} will benefit {prop_target_reader_exp} by...",
+                    'prv_sq_id': "2_2",
+                },
+            },
+        }
+    }
+
+    return qdict
+
+def getChoiceHeading_topics(project):
+    proj_doc_subtype = PROJ_SUBTYPE_CHOICES_SEL_LIST[project.doc_type][project.doc_subtype].lower()
+    prop_topic_name_response = project.props.get(name=PROP_TOPIC_NAME).response
+
+    # placeholders
+    # proj_doc_subtype = "report"
+    prop_topic_name_response = "off-roading"
+    choice_count = 3
+    return f"What topics do you want to include in this {proj_doc_subtype} about <span class='editable'>{prop_topic_name_response}</span>?", f"Please choose {choice_count}", choice_count
+
+def getTopicsChoiceList(project):
+    prop_topic_name_response = project.props.get(name=PROP_TOPIC_NAME).response
+
+    # placeholder
+    chList = [
+        "Elements of off-roading",
+        "Types of off-roading",
+        "Wikipedia of off-roading",
+        "Mud tyres",
+    ]
+
+    return chList
