@@ -1,0 +1,125 @@
+{% extends "common/home.html" %}
+{% load static %}
+{% load extra_tags %}
+
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'projects/css/subquestions.css' %}">
+{% endblock %}
+
+<!-- body content -->
+
+{% block main_window %}
+    <!-- center window start -->
+    <div class="main-win">
+        <div class="main-content">
+          
+          
+          
+          <div class="page-wrap pg1-wrap" style="margin-top: 75px;">
+              
+              <div class="pg-top-wrap">
+                <div class="text-muted top-fixed-text" style="font-size:18px" id="pg1-acc-speak-field" value="{{ PROJECT_TOPIC_NAME }}">{{ PROJECT_TOPIC_NAME }} /</div>
+                <div class="pg-tabs" style="display: flex; width: 100%; height: auto;">
+                  {% for q in QUESTIONS_DICT %}
+                  <div class="sep-wrap{% if forloop.counter0 == 0 %} active{% endif %} tabselect" id="qtab-{{q}}" data-qid="{{q}}">
+                    <hr class="sep">
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              
+              
+
+              <div class="top-text full" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">
+				<span style="display: flex;">
+                        <img class="tab-mover tb-mv-left {% if QUESTIONS_DICT|first|length > 1 %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
+                        
+                        <span class="text-jq-anim" style="max-width: calc(100% - 60px);" id="pg2-change-question">
+                            {{ QUESTIONS_DICT|first|first }}
+                        </span>
+                        <div class="text-muted pl-4" id="contentEditButton" style="margin-top: -10px;">
+                            Edit
+                        </div>
+
+                        <img class="tab-mover tb-mv-right {% if QUESTIONS_DICT|first|length > 1 %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
+                    
+                </span>
+              </div>
+              <hr class="sep">
+              <div class="pg1-content">
+                  <div class="pg1-question">
+                      <div class="pg1-question-text along-access-text text-jq-anim" id="pg2-change-questionlead">
+                        {{ QUESTIONS_DICT|first|first }}
+                      </div>
+                      <div class="accessibility" style="display: flex; align-items: center;">
+
+                          <div class="auto-answer btn btn-light">
+							<svg width="19" height="22" viewBox="0 0 19 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.4205 17.258L15.4745 15.3113V1.3289C15.4745 1.14726 15.3272 1 15.1456 1H5.27869C5.27243 1 5.26649 1.00321 5.26023 1.00369C5.23003 1.00514 5.20016 1.01124 5.17174 1.02136C5.1621 1.02425 5.15247 1.02762 5.14315 1.03164C5.10654 1.04738 5.07313 1.0697 5.04455 1.09732L1.0978 5.04407C1.07018 5.07201 1.04786 5.10461 1.03196 5.14042C1.0273 5.1507 1.02473 5.16082 1.02104 5.17142C1.01156 5.19872 1.00594 5.22714 1.00434 5.25589C1.00434 5.26312 1 5.26938 1 5.27661V17.7737C1 17.9553 1.14726 18.1026 1.3289 18.1026H12.683L14.6294 20.048C14.998 20.4207 15.5008 20.6298 16.025 20.6285C16.8239 20.6292 17.5443 20.1481 17.85 19.4098C18.1554 18.6717 17.9858 17.8222 17.4202 17.258H17.4205ZM14.6325 19.1222L9.51323 14.0045L11.3764 12.141L16.4941 17.2606L14.6325 19.1222ZM9.23492 13.3524L8.78895 11.4174L10.7243 11.863L9.23492 13.3524ZM4.9498 2.12287V4.94675H2.12592L4.9498 2.12287ZM1.66084 17.4448V5.60454H5.27869C5.46033 5.60454 5.60759 5.45727 5.60759 5.27564V1.65779H14.8167V14.6532L11.6093 11.4434L11.6056 11.4412C11.5785 11.4153 11.5471 11.3943 11.5129 11.379C11.5036 11.375 11.4948 11.3721 11.4856 11.3687C11.4741 11.3636 11.4623 11.3591 11.4503 11.3552L8.42456 10.6581C8.31391 10.6324 8.19796 10.6656 8.11767 10.7458C8.03737 10.8261 8.00429 10.9422 8.02982 11.0527L8.72712 14.0786C8.73097 14.0906 8.73547 14.1025 8.74061 14.1141C8.74398 14.1229 8.74655 14.1317 8.75089 14.1407C8.76598 14.1754 8.78734 14.2072 8.81368 14.2344L8.81529 14.2371L12.0249 17.4448H1.66084ZM16.9545 19.5842C16.7085 19.831 16.3743 19.9698 16.0258 19.9698C15.6773 19.9698 15.3431 19.831 15.0972 19.5842L15.252 19.4291L16.9574 17.7241C17.2042 17.9704 17.3428 18.3051 17.3422 18.6539C17.3417 19.0027 17.2021 19.3369 16.9545 19.5826V19.5842Z" fill="#C9C9C9" stroke="#C9C9C9"/></svg>
+							Answer for me
+                          </div>
+
+                          <button type="button" class="btn btn-light acc-opt acc-mic" data-fieldid="pg1_field_updproj">
+                              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="microphone" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" class="svg-inline--fa fa-microphone fa-w-11 fa-9x"><path fill="currentColor" d="M176 352c53.02 0 96-42.98 96-96V96c0-53.02-42.98-96-96-96S80 42.98 80 96v160c0 53.02 42.98 96 96 96zm160-160h-16c-8.84 0-16 7.16-16 16v48c0 74.8-64.49 134.82-140.79 127.38C96.71 376.89 48 317.11 48 250.3V208c0-8.84-7.16-16-16-16H16c-8.84 0-16 7.16-16 16v40.16c0 89.64 63.97 169.55 152 181.69V464H96c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h160c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16h-56v-33.77C285.71 418.47 352 344.9 352 256v-48c0-8.84-7.16-16-16-16z" class=""></path></svg>
+                          </button>
+                          <button type="button" class="btn btn-light acc-opt acc-speak" data-fieldid="pg1-acc-speak-field">
+                              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512" class="svg-inline--fa fa-volume fa-w-15 fa-9x"><path fill="currentColor" d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.53 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z" class=""></path></svg>
+                          </button>
+                          <button type="button" class="btn btn-light acc-opt acc-help" data-helptext="{{ PAGE_TIP }}">
+                              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="question" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="svg-inline--fa fa-question fa-w-12 fa-9x"><path fill="currentColor" d="M202.021 0C122.202 0 70.503 32.703 29.914 91.026c-7.363 10.58-5.093 25.086 5.178 32.874l43.138 32.709c10.373 7.865 25.132 6.026 33.253-4.148 25.049-31.381 43.63-49.449 82.757-49.449 30.764 0 68.816 19.799 68.816 49.631 0 22.552-18.617 34.134-48.993 51.164-35.423 19.86-82.299 44.576-82.299 106.405V320c0 13.255 10.745 24 24 24h72.471c13.255 0 24-10.745 24-24v-5.773c0-42.86 125.268-44.645 125.268-160.627C377.504 66.256 286.902 0 202.021 0zM192 373.459c-38.196 0-69.271 31.075-69.271 69.271 0 38.195 31.075 69.27 69.271 69.27s69.271-31.075 69.271-69.271-31.075-69.27-69.271-69.27z" class=""></path></svg>
+                          </button>
+                      </div>
+                  </div>
+                  <div class="pg1-fields">
+                      <input type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000" {% if curr_value %}value="{{ curr_value }}"{% endif %}>
+                  </div>
+              </div>
+              <hr class="sep">
+              <div class="pg1-buttons">
+                  {% if BACK_URL %}
+                  <button type="button" class="btn btn-dark cust-button" id="btn_back_updproj" onclick="event.preventDefault(); pageCleanup(); window.location.href='{% url BACK_URL project.slug BACK_URL_ATTR %}'">Back</button>
+                  {% endif %}
+                  <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_updproj">Next</button>
+              </div>
+              
+              <div class="noshow" style="opacity: 0; position: absolute; top: 0; z-index: -100;">
+                  {{ PROJECT_SVG|safe }}
+              </div>
+              <div class="sidebar-right-secondary"><div class="side-wrap"><div class="side-id" style="display: none; width: 0; height: 0;"></div><div class="side-header"></div><div class="side-content"></div></div></div>
+
+          </div>
+            
+        </div>
+    </div>
+    <!-- center window end -->
+{% endblock  %}
+
+<!-- end body content -->
+
+{% block hidden_content %}
+<form method="POST" id="project_update_form">
+    {% csrf_token %}
+    <input type="text" {% if curr_value %}value="{{ curr_value }}"{% endif %} name="{{FORM_INPUT_NAME}}" id="projFormInp-upd">
+    {% if FORCE_NEXT %}
+    <input type="checkbox" name="force_next" value="ForceNext" checked>
+    {% endif %}
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<!-- <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js" defer></script> -->
+<script src="{% static 'common/js/text-voice.js' %}" type="text/javascript" defer></script>
+<script type="text/javascript">
+    // page constants
+    const user_firstName = "{{ request.user.first_name }}";
+    const user_lastName = "{{ request.user.last_name }}";
+    const user_fullName = "{{ request.user.get_full_name }}";
+	const user_email = "{{ request.user.email }}";
+	const url_projCreate = "{% url 'project-create' %}";
+    const proj_choice_curr_value = {% if curr_value %}"{{ curr_value }}"{% else %}null{% endif %};
+</script>
+{% include CONTENT_PAGE_PATH %}
+<script src="{% static 'common/js/accessibility.js' %}" type="text/javascript" defer></script>
+<script src="{% static 'projects/js/struct.subquestions.js' %}" type="text/javascript" defer></script>
+{% endblock %}
