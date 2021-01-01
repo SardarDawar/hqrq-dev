@@ -5,10 +5,7 @@ from django.core.exceptions import SuspiciousOperation, PermissionDenied
 from .notifications import *
 from .forms import ProjectCreationForm
 from common.views import notificationView
-from .vars import ( PROJ_STAGE_STARTED, PROJ_STAGE_INIT_QUESTIONS, PROJ_STAGE_BASECAMP, PROJ_STAGE_STRUCTURING, 
-                    PROJ_INIT_QUESTIONS_FLOW, 
-                    INIT_Q_TITLE, INIT_Q_TYPE, INIT_Q_SUBTYPE, INIT_Q_DOC_LEN, INIT_Q_DOC_TOPIC, INIT_Q_PROP,
-                    PROJ_TYPE_CHOICES, PROJ_SUBTYPE_CHOICES_SEL, PROJ_TOPIC_CHOICES, PROJ_DOCSIZE_CHOICES )
+from .vars import *
 from .content import (  PROJ_SUBTYPE_DESCRIPTIONS, PROJ_TYPE_LIST, PROJ_SUBTYPE_CHOICES_SEL_LIST,
                         PROJ_TOPIC_DESCRIPTIONS, PROJ_DOCSIZE_DESCRIPTIONS,
                         PROJ_TYPE_SVGS, PROJ_TYPE_SUBTYPES, PROJ_TYPE_DESCRIPTIONS, PROJ_TYPE_OUTPUT_DETAILS,
@@ -24,6 +21,9 @@ from .models import Project, Property
 import json
 from django.db import transaction
 from .questions import *
+# from  .scripts import variableLibrary as vl
+
+
 
 @login_required
 def projectCreate(request):
@@ -515,19 +515,29 @@ def projectSubquestions(request, slug):
     if request.method == 'POST':
         return redirect('project-topics', project.slug)
 
+
+
+    # ! Find Index for 'masterDocTypeIndex
+    # print("="*70)
+    # print(subject_type_list.index(project.doc_topic))
+    # print(project.getPROP_TARGET_READER_RESPONSE())
+    # print("="*70)
+    docLengthOptions = {"PDS_1" : 2, "PDS_UPTO_5" : 3, "PDS_UPTO_20" : 4, "PDS_UNLIMITED" : 5}
+
+
     # Question for the Script...
     (filteredQuestionList, leadingText, postQuestionMessage) =  question(
         firstName = request.user.email,
         projectName = project.title,
-        masterDocTypeIndex = 1,
-        detailedDoctype = 1,
-        targetReader = "Suleman",
-        subjectType = 1,
-        subjectName = "Lawyer",
-        affectedBy =  "Judge",
-        actionOrImpression = "Public",
-        affectingOn = "Politician",
-        docLengthChoice = 1
+        masterDocTypeIndex = doc_list_1.index(project.doc_type),
+        detailedDoctype = sub_type_list.index(project.doc_subtype),
+        targetReader = project.getPROP_TARGET_READER_RESPONSE(),
+        subjectType = subject_type_list.index(project.doc_topic),
+        subjectName = project.getPROP_TOPIC_NAME(),
+        affectedBy =  project.getPROP_TOPIC_IMPACT(),
+        actionOrImpression = project.getPROP_TOPIC_CAUSE(),
+        affectingOn = project.getPROP_TARGET_IMPRESSION(),
+        docLengthChoice = docLengthOptions[project.doc_len]
     )
     for index in range(len(filteredQuestionList)) :
         # print(filteredQuestionList[index])
@@ -539,12 +549,12 @@ def projectSubquestions(request, slug):
         else :
             print("Message is empty - No message")
 
-    print(questionsDict)
+    # print(questionsDict)
 
 
     # GET
     burl, battr = getFlowBackUrlAttr(None)
-    prop_topic_name_response = "Nicola Tesla"
+    prop_topic_name_response = project.getPROP_TOPIC_NAME()
     context = {
         'project': project,
         'page_project': True,

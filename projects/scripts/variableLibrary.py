@@ -2,6 +2,7 @@
 import spacy
 nlp = spacy.load("en_core_web_sm")
 usedQuestion ={}
+from projects.vars import doc_list_1
 
 # pastList = [0]
 # presentList = [2,3,4,5,6,8,10,11]
@@ -30,10 +31,10 @@ for k,v in docLengthOptions.items():
     docOptionsIndex.append(v)
 #print(docOptionsList,docOptionsIndex)
 
-userDefinedSubjectTypeOptions = ['Please select...','person', 'company', 'group', 'product or service', 'concept or thing', 'place, destination or building']
+userDefinedSubjectTypeOptions = ['person', 'company', 'group', 'product or service', 'concept or thing', 'place, destination or building']
 
 #Question Element 3 - Uses words to define the relationship(s) between subject and object
-primaryOrientation = ['Please Select...', "positively", "negatively", "neutrally"]
+primaryOrientation = ["positively", "negatively", "neutrally"]
 pwoLists = [['Please select'],["impact","improve", "strengthen","progress", "develop", "elevate", "upgrade", "help", "assist", "enhance", "better", "advance", "refine", "amplify"],["impact", "diminish", "reduce", "lessen","minimise", "lower", "decrease", "disturb","impinge on","upset"],["impact", "change", "affect", "influence", "transform", "alter", "shift"]]
 #proposalWordsOutcome = ""
 global proposalWordsOutcome
@@ -101,15 +102,8 @@ possessivePronounFemale = ["she", "her", "her"]
 possessivePronounOther = ["its", "it", "it"]
 possessivePronounGroup = ["they","their","them"]
 questionLevel = ["1", "2", "3", "4", "5"]
-#subjectType = userDefinedSubjectTypeOptions
-
-#masterContentType = ["Analysis Report -assessment/review/report/comparison", "Compliance Document -policy document/procedures document","Creative Work -creative fiction/creative non-fiction","Rationale -decision rationale/selection analysis/recommendation","Direct Communication -email/letter/memo/notice/newsletter","Persuasive Piece -essay/article/blog/article/whitepaper/ebook","Promotional Work -website/landing page/advertisement/flier/brochure","Business Proposal -proposal/quote/potential scenario", "Requirements Document -scope/charter/business requirements document","Future Scenario -strategy/plan/goal definition document", "Technical Document -how to article/patent specification/product manual", "Training Program -curriculum/training document"]
-doc_list1 = ['Please select...', 'Analysis Report', 'Compliance Document',
-             'Creative Content', 'Rationale', 'Direct Communication',
-             'Persuasive Piece', 'Promotional Content', 'Business Proposal',
-             'Requirements Document', 'Future Scenario', 'Technical Document',
-             'Training Program']
-doc_list2 = ['Available types...',
+doc_list1 = doc_list_1
+doc_list2 = [
              ['assessment', 'review', 'report', 'comparison'],
              ['policy document', 'proceedures document'],
              ['creative fiction', 'creative non-fiction'],
@@ -121,9 +115,10 @@ doc_list2 = ['Available types...',
              ['scope', 'charter', 'business requirements document'],
              ['strategy', 'plan', 'goal outline','definition document'],
              ['how to article', 'patent specification', 'product manual'],
-             ['curriculum', 'training document']]
+             ['curriculum', 'training document']
+    ]
 
-doc_list2_1 = ['Description for document subtypes...',
+doc_list2_1 = [
                ['States a position or Hypothesis and breaks that position down into a number of supporting and dissenting view ultimately providing a rounded evaluation of a topic and usually presenting a recommendation','Evaluates the performance, features or benefits of something or someone and leaves the reader with an impression (a positive or negative feeling) related to the topic','Documents the findings that have resulted from the analysis of a core topic or objective and outlines the reasoning behind those findings','This document type makes a comparison between one or more people, places, things or groups. It is designed to compare and contrast different features, benefits or aspects.'],
                ['Offers a structured approach to presenting an organisations policies to staff, suppliers, customer or members. The document is clearly structured around legal or organisational objectives and is designed to make the reader able to assess if they are in compliance or not in compliance with policies', 'Outlines step by step activities that are required to achieve either compliance or a desired organisational objective.'],
                ['Not based on fact, but interesting presents a series of plausible hypotheticals. Not presented in a chronological manner.', 'A unique method for exploring non-fiction topics and drilling down into aspects of potential interest to the reader.'],
@@ -153,7 +148,7 @@ doc_list2_2 = ['Selection of Heirarchy Method for Master Document Type...',
                ['tocBased']
               ]
 
-doc_list1_1 = ['Descriptions...',
+doc_list1_1 = [
              'Provides a structured framework for assessing something and documenting a report to communicate the findings. Leverages best practice methods in critical thinking',
              'A compliance document outlines how staff, contractors or third parties should act. Incorporates external 3rd party requirements such as government legislation and applies them to an organisational context. Available in MS Word/Google Docs/Pdf/Text. Outputs available from 5 pages to 100 pages. Deliverable contains introduction, table of contents, and numbered headings and sections. Logo and 3 customisable images available.',
              'Creative content is a work that is designed to delight and entertain. Content not based purely on analysis, uses ideas (unexpected connections) to "present with identity", enabling the content to be highly differentiated. Available in MS Word/Google Docs/Pdf/Text - Outputs available from 1 page to 500 pages. Deliverable is presented in topic order, does not contain table of contents or summary, designer template with no logo and scope for two custom images. Can be present, explanatory, explanatory MethodX, docTemplateX, icon Y',
@@ -167,7 +162,7 @@ doc_list1_1 = ['Descriptions...',
              'Outlines to the user of a product or service how to use that product or serviced. Available in MS Word/Google Docs/Pdf/Text. Outputs available from 5 pages to 100 pages. Presented in portrait format. Deliverable contains introduction, table of contents, and numbered headings and sections. Logo and 3 customisable images available. Can be present, explanatory, explanatory MethodX, docTemplateX, icon Y',
              'Content that is designed to train someone or teach someone how to do something - typically designed to be presented by a teacher, tutor etc. Available in MS Powerpoint/MS Word/Google Docs/Google Slides/Pdf/Text - Note multiple outputs availabe from a single consultation between 1 page and 100 pages. Landscape and Portrait options available. Method used facilitates the clear structuring of concepts for communication to those who are in a learning mode. Contains a table of contents, summary, designer template scope for custom logo and three custom images. Can be present, explanatory, explanatory MethodX, docTemplateX, icon Y']
 
-doc_list1_2 = ['Outputs...',
+doc_list1_2 = [
                'Available in MS Word/Google Docs/Pdf/Text.  Outputs - 1 page to 100 pages - portrait format.  Includes: introduction, table of contents executive summary, conclusion and summary.  Offers 4 customisable images including logo.',
                'Available in MS Word/Google Docs/Pdf/Text.  Outputs - 5 pages to 100 pages.  Deliverable contains introduction, table of contents, and numbered headings and sections.  Logo and 3 customisable images available.',
                'Available in MS Word/Google Docs/Pdf/Text.  Outputs - 1 page to 500 pages.  Deliverable is presented in topic order, does not contain table of contents or summary, designer template with no logo and scope for two custom images.',

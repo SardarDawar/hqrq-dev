@@ -6,12 +6,66 @@
 {% block extra_css %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'projects/css/subquestions.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 {% endblock %}
 
 <!-- body content -->
 
 {% block main_window %}
     <!-- center window start -->
+
+
+<script>
+    $(document).ready(function(){
+        $(".tx5", this).click(function() {
+                edit_value = $(this).text();
+                if (edit_value == "Edit") {
+                    $(this).text("Done");
+                    $(this).css({"color": "#000000"});
+                    $(this).parent().parent().find("span").each(function(i, obj) {
+                        $(obj).hide();
+                    });
+                    $(this).parent().parent().find("select").each(function(i, obj) {
+                        $(obj).show();
+                    });
+                };
+                if (edit_value == "Done") {
+                    $(this).text("Edit");
+                    $(this).css({"color": "#A7A7A7"});
+                    $(this).parent().parent().find("select").each(function(i, obj) {
+                        $(obj).hide();
+                    });
+                    $(this).parent().parent().find("span").each(function(i, obj) {
+                        $(obj).show();
+                    });
+                    $(this).parent().parent().find("select option:selected").each(function(i, obj) {
+                        var stxt = $(obj).text();
+                        var select_id = $(obj).parent().prop("id");
+                        var unse_id = select_id.substring(1);
+                        $(obj).parent().parent().find("span").each(function(i, sobj) {
+                            var span_id = $(sobj).prop("id");
+                            var unsp_id = span_id.substring(1);
+                            if (unse_id == unsp_id) {
+                                $(sobj).text(stxt);
+                            }
+                            char1 = unse_id.substring(0, 1);
+                            $(sobj).parent().parent().parent().parent().find("span").each(function(i, sxobj) {
+                                var span_id = $(sxobj).prop("id");
+                                var unsp_id = span_id.substring(1);
+                                var chr1 = unse_id.substring(0, 1);
+                                if (chr1 == "3") {
+                                    if (unse_id == unsp_id) {
+                                        $(sxobj).text(stxt);
+                                    }
+                                }
+                            });
+                        });
+                    });
+                };
+            });
+    })
+</script>
+
     <div class="main-win">
         <div class="main-content">
           
@@ -37,9 +91,12 @@
                         <img class="tab-mover tb-mv-left {% if QUESTIONS_DICT|first|length > 1 %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
                         
                         <span class="text-jq-anim" style="max-width: calc(100% - 60px);" id="pg2-change-question">
-                            {{ QUESTIONS_DICT|first|first }}
+                            {% with QUESTIONS_DICT|first|first as r %}
+                                {{  r }}
+                            {% endwith  %}
+                            
                         </span>
-                        <div class="text-muted pl-4" id="contentEditButton" style="margin-top: -10px;">
+                        <div class="tx5 text-muted pl-4" id="contentEditButton" style="margin-top: -10px;">
                             Edit
                         </div>
 

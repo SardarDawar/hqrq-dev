@@ -17,9 +17,16 @@ class Project(models.Model):
     title = models.CharField(max_length=500)
     
     # doc attributes
+    # Master Doc Type...
     doc_type = models.CharField(max_length=25, choices=PROJ_TYPE_CHOICES, null=True)
+    
+    # Sub type of the document...
     doc_subtype = models.CharField(max_length=25, choices=PROJ_SUBTYPE_CHOICES, null=True)
+
+    # Length of the document
     doc_len = models.CharField(max_length=25, choices=PROJ_DOCSIZE_CHOICES, null=True)
+
+    # ! Subject Type of the document...
     doc_topic = models.CharField(max_length=25, choices=PROJ_TOPIC_CHOICES, null=True)
 
     # project state
@@ -54,6 +61,27 @@ class Project(models.Model):
 
     def getProjectTypeSVG(self):
         return PROJ_TYPE_SVGS[self.doc_type]
+
+    # ! PROJECT:PROP_TARGET_READER : RESPONSE
+    def getPROP_TARGET_READER_RESPONSE(self):
+        return Property.objects.filter(project__id=self.id, name = "PROP_TARGET_READER")[0].response
+    
+    # ! PROJECT:PROP_TOPIC_NAME : RESPONSE
+    def getPROP_TOPIC_NAME(self):
+        return Property.objects.filter(project__id=self.id, name = "PROP_TOPIC_NAME")[0].response
+
+    # ! PROJECT:PROP_TOPIC_IMPACT : RESPONSE
+    def getPROP_TOPIC_IMPACT(self):
+        return Property.objects.filter(project__id=self.id, name = "PROP_TOPIC_IMPACT")[0].response
+
+    # ! PROJECT:PROP_TOPIC_CAUSE : RESPONSE
+    def getPROP_TOPIC_CAUSE(self):
+        return Property.objects.filter(project__id=self.id, name = "PROP_TOPIC_CAUSE")[0].response
+
+    # ! PROJECT:PROP_TARGET_IMPRESSION : RESPONSE
+    def getPROP_TARGET_IMPRESSION(self):
+        return Property.objects.filter(project__id=self.id, name = "PROP_TARGET_IMPRESSION")[0].response
+
 
 class Property(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="props")
