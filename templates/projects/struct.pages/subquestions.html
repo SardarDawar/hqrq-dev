@@ -17,53 +17,58 @@
 
 <script>
     $(document).ready(function(){
-        $(".tx5", this).click(function() {
-                edit_value = $(this).text();
-                if (edit_value == "Edit") {
-                    $(this).text("Done");
-                    $(this).css({"color": "#000000"});
-                    $(this).parent().parent().find("span").each(function(i, obj) {
-                        $(obj).hide();
-                    });
-                    $(this).parent().parent().find("select").each(function(i, obj) {
-                        $(obj).show();
-                    });
-                };
-                if (edit_value == "Done") {
-                    $(this).text("Edit");
-                    $(this).css({"color": "#A7A7A7"});
-                    $(this).parent().parent().find("select").each(function(i, obj) {
-                        $(obj).hide();
-                    });
-                    $(this).parent().parent().find("span").each(function(i, obj) {
-                        $(obj).show();
-                    });
-                    $(this).parent().parent().find("select option:selected").each(function(i, obj) {
-                        var stxt = $(obj).text();
-                        var select_id = $(obj).parent().prop("id");
-                        var unse_id = select_id.substring(1);
-                        $(obj).parent().parent().find("span").each(function(i, sobj) {
-                            var span_id = $(sobj).prop("id");
-                            var unsp_id = span_id.substring(1);
-                            if (unse_id == unsp_id) {
-                                $(sobj).text(stxt);
-                            }
-                            char1 = unse_id.substring(0, 1);
-                            $(sobj).parent().parent().parent().parent().find("span").each(function(i, sxobj) {
-                                var span_id = $(sxobj).prop("id");
-                                var unsp_id = span_id.substring(1);
-                                var chr1 = unse_id.substring(0, 1);
-                                if (chr1 == "3") {
-                                    if (unse_id == unsp_id) {
-                                        $(sxobj).text(stxt);
-                                    }
+        $("#contentDoneButton").hide();
+            $("#contentEditButton").on("click", function(){
+                        // $(this).hide();
+                        // $("#contentDoneButton").show();
+                        // console.debug($("#pg2-change-question").html().trim());
+                        var $words = "";
+                        var $rephrase = ""
+                        var $articles = ["the", "a", "an"];
+                        var $willVerb = ["will","would", "are", "shall", "must", "was", "may", "might", "were", "do", "does", "should", "could", "can", "is", "what", "how", "why", "where", "when",  "are", "improve", "affect", "influence", "change", "impact", "alter", "form"];
+                        var $is = ["is", "are", "would", "will", "should", "shall", "can", "could", "must", "was", "were", "may", "might"]
+                        var $w = "";
+                        $words = $("#pg2-change-question").html().trim().split(" ");
+                        // console.debug($words);
+                        for(var i = 0; i <  $words.length; i++){
+                            // if(!$rephrase.includes($words)[i].toLowerCase()){
+                                if($articles.includes($words[i].toLowerCase())){
+                                    
                                 }
-                            });
-                        });
-                    });
-                };
+                                
+                                else{
+                                    if($willVerb.includes($words[i].toLowerCase())){
+                                        if($is.includes($words[i].toLowerCase())){
+                                            var $option1 = "<option value=" + $words[i]   + ">" +   $words[i] +  "</option>";
+                                            var $option2 = "<option value="  + "would"  + ">" +  "would"  +  "</option>";
+                                            var $option3 = "<option value="  + "shall"    + ">" +  "shall" +  "</option>";
+                                            var $option4 = "<option value="  + "should" + ">" +  "should" +  "</option>";
+                                            var $option5 = "<option value="  + "can"    + ">" +  "can"  +  "</option>";
+                                            var $option6 = "<option value="  + "could" +  ">" +  "could" +   "</option>";
+                                            $rephrase += "<select class='mr-1'>" + $option1  + $option2 + $option3 + $option4 + $option5 + $option6 +   "</select>";
+                                        }
+                                        else{
+                                            var $option1 = "<option value=" + $words[i]   + ">" +   $words[i] +  "</option>";
+                                            $rephrase += "<select class='mr-1'>" + $option1  +  "</select>";
+                                        }
+
+                                    }
+                                    else{
+                                        var $option1 = "<option value='a " + $words[i]   + "'>" + "a " +  $words[i] +  "</option>";
+                                        var $option2 = "<option value='the "+  $words[i]   + "'>" + "the " + $words[i] +  "</option>";
+                                        var $option3 = "<option value='"+  $words[i]   + "'>" + $words[i] +  "</option>";
+                                        $rephrase += "<select class='mr-1'>"  + $option1 + $option2  + $option3 + "</select>";
+                                    }
+
+
+                                    
+                                }
+                            // }
+                            }
+
+                        $("#pg2-change-question").html($rephrase);
             });
-    })
+    });
 </script>
 
     <div class="main-win">
@@ -83,25 +88,21 @@
                   {% endfor %}
                 </div>
               </div>
-              
-              
-
               <div class="top-text full" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">
-				<span style="display: flex;">
+				<span style="display: flex;" >
                         <img class="tab-mover tb-mv-left {% if QUESTIONS_DICT|first|length > 1 %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
-                        
                         <span class="text-jq-anim" style="max-width: calc(100% - 60px);" id="pg2-change-question">
                             {% with QUESTIONS_DICT|first|first as r %}
                                 {{  r }}
                             {% endwith  %}
-                            
                         </span>
-                        <div class="tx5 text-muted pl-4" id="contentEditButton" style="margin-top: -10px;">
+                        <div class="tx5 text-muted pl-4" id="contentEditButton" style="margin-top: -10px;" >
                             Edit
                         </div>
-
+                        <div class="tx5 text-muted pl-4" id="contentDoneButton" style="margin-top: -10px;" >
+                            Done
+                        </div>
                         <img class="tab-mover tb-mv-right {% if QUESTIONS_DICT|first|length > 1 %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
-                    
                 </span>
               </div>
               <hr class="sep">
