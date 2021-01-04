@@ -96,6 +96,10 @@ pg2tabs.forEach(el => {
       const qid = el.dataset.qid;
       if (qid === curr_qid) return;
       const itm = pg2_tabs_dict[qid]
+      // console.debug(pg2_tabs_leading_dict[qid]);
+      const itm_leading = pg2_tabs_leading_dict[qid];
+      // console.debug(JSON.stringify(itm_leading));
+      // JSON.stringify(itm_leading);
       curr_qid = qid;
       // console.debug(curr_qid);
       // console.debug(qid);
@@ -111,6 +115,7 @@ pg2tabs.forEach(el => {
         // console.debug(itm);
         // for (var firstKey in itm['subq']) break;
         curr_sqid = Object.keys(itm)[0];
+
         currnet_index = 0
         // console.debug(curr_sqid);
         $pg2change_q.stop().fadeOut(100, ()=> {
@@ -120,7 +125,7 @@ pg2tabs.forEach(el => {
           if (!tabMVright.classList.contains("show")) tabMVright.classList.add("show")
         });
         $pg2change_ql.stop().fadeOut(100, ()=> {
-          $pg2change_ql.html(curr_sqid)
+          $pg2change_ql.html(itm_leading[currnet_index]);
           $pg2change_ql.fadeIn(50)
         });
         tabMVleft.onclick = null
@@ -137,7 +142,7 @@ pg2tabs.forEach(el => {
               $pg2change_q.fadeIn(50)
             })
             $pg2change_ql.stop().fadeOut(100, ()=> {
-              $pg2change_ql.html(curr_sqid)
+              $pg2change_ql.html(itm_leading[currnet_index]);
               $pg2change_ql.fadeIn(50)
             })
           }
@@ -162,7 +167,7 @@ pg2tabs.forEach(el => {
               $pg2change_q.fadeIn(50)
             })
             $pg2change_ql.stop().fadeOut(100, ()=> {
-              $pg2change_ql.html(curr_sqid)
+              $pg2change_ql.html(itm_leading[currnet_index]);
               $pg2change_ql.fadeIn(50)
             })
           }
@@ -193,7 +198,9 @@ pg2tabs.forEach(el => {
           if (tabMVright.classList.contains("show")) tabMVright.classList.remove("show")
         })
         $pg2change_ql.stop().fadeOut(100, ()=> {
-          $pg2change_ql.html(Object.keys(itm)[0])
+          // console.debug(JSON.stringify(Object.keys(itm_leading)));
+          // console.debug(itm_leading);
+          $pg2change_ql.html((itm_leading));
           // $pg2change_q.html(Object.keys(itm)[0]);
           // console.debug(itm['ql']);
           $pg2change_ql.fadeIn(50)

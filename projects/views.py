@@ -561,7 +561,7 @@ def projectSubquestions(request, slug):
             print("Message is empty - No message")
             # leadingText
 
-    # display_print(leadingText)
+    # display_print(questionLeadingText)
     # print(questionsDict)
 
 

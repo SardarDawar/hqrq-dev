@@ -98,7 +98,7 @@ def heirarchyDummy(firstName, tenseChoice, docLengthChoice, endingLevel, userDef
 
     return questionGenerator(userDefinedSubject,userDefinedProspect)
         #leadingText = leadingTextGenerator.RuleMapper(question)
-    print(" first presented questions above ")
+    # print(" first presented questions above ")
 
     proceed = input("Would you like to re-structure the questions (enter Y or N) :  ")
     while proceed == "Y" :
@@ -158,25 +158,9 @@ def heirarchyDummy(firstName, tenseChoice, docLengthChoice, endingLevel, userDef
         print("The Node Zero Rerun questions are above ")
 
         proceed = input("Would you like to re-structure the questions (enter Y or N) :  ")
-    # leadingTextIndex = []
-    # for index in range(len(filteredQuestionList)):
-    #     leadingTextIndex.append([])
-    #     # for question in filteredQuestionList[index]:
-    #     #     leadingText = leadingTextGenerator.RuleMapper(question)
-    #     #     leadingTextIndex[index].append(leadingText)
-    #     #     print(filteredQuestionList[index])
-    #     #     print(leadingTextIndex[index])
-    #     #     if (not vl.postQuestionMessage.get(index) == ""):
-    #     #         print(vl.postQuestionMessage.get(index))
-    #     #     else:
-    #     #         print("Message is empty - No message")
-    #             # for question in filteredQuestionList:
-    # #     print(question)
-    # # for leadingText in leadingTextIndex:
-    # #     print(leadingText)
+    
         questionGenerator(userDefinedSubject, userDefinedProspect)
         node = userDefinedSubject
-    # print(" final questions for node Zero above ")
 
     Heirarchy.append({userDefinedSubject: [userDefinedSubject]})
     global NodeId

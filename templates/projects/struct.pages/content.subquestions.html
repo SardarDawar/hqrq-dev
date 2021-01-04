@@ -25,6 +25,13 @@ pg1_sdbrR_content = `
 
 {% if QUESTIONS_DICT %}
 var pg2_tabs_dict = {};
+var pg2_tabs_leading_dict={};
+
+{% autoescape off %}
+{% for key in QUESTION_LEADING_TEXT %}
+    pg2_tabs_leading_dict["{{ key }}"] =  {{ QUESTION_LEADING_TEXT|get_dict_item:key }};
+{% endfor %}
+{% endautoescape %}
 
 {% for k1 in QUESTIONS_DICT %}
 pg2_tabs_dict['{{k1}}'] = {}
