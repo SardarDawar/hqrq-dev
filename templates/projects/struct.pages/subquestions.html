@@ -14,6 +14,11 @@
 {% block main_window %}
     <!-- center window start -->
 
+    <style>
+        select{
+            font-size: 15px !important;
+        }
+    </style>
 
 <script>
     $(document).ready(function(){
@@ -41,9 +46,9 @@
                                     if($willVerb.includes($words[i].toLowerCase())){
                                         if($is.includes($words[i].toLowerCase())){
                                             var $option0 = "<option value=" +  $words[i]   + ">" +   $words[i] +  "</option>";
-                                            var $option1 = "<option value=" +  "PAST"   + ">" +   "PAST" +  "</option>";
-                                            var $option2 = "<option value="  + "PRESENT"  + ">" +  "PRESENT"  +  "</option>";
-                                            var $option3 = "<option value="  + "FUTURE"    + ">" +  "FUTURE" +  "</option>";
+                                            var $option1 = "<option value=" +  "past"   + ">" +   "past" +  "</option>";
+                                            var $option2 = "<option value="  + "present"  + ">" +  "present"  +  "</option>";
+                                            var $option3 = "<option value="  + "future"    + ">" +  "future" +  "</option>";
                                            
                                             $rephrase += "<select class='mr-1'>" + $option0 + $option1  + $option2 + $option3  +   "</select>";
                                         }
@@ -58,9 +63,9 @@
                                         if($miliciousWords.includes($words[i].toLowerCase())){
                                             // console.debug("MaliciousWords");
                                             var $option1 = "<option value='" + $words[i]   + "'>" +  $words[i] +  "</option>";
-                                            var $option2 = "<option value='" + "POSITIVE"   + "'>" +  "POSITIVE" +  "</option>";
-                                            var $option3 = "<option value='" + "NEGATIVE"   + "'>" +  "NEGATIVE" +  "</option>";
-                                            var $option4 = "<option value='" + "NEUTRAL"   + "'>" +  "NEUTRAL" +  "</option>";
+                                            var $option2 = "<option value='" + "positive"   + "'>" +  "positive" +  "</option>";
+                                            var $option3 = "<option value='" + "negative"   + "'>" +  "negative" +  "</option>";
+                                            var $option4 = "<option value='" + "neutral"   + "'>" +  "neutral" +  "</option>";
                                             $rephrase += "<select class='mr-1'>"  + $option1 + $option2 + $option3 + $option4 +   "</select>";
                                         }
                                         else{
