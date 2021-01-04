@@ -17,11 +17,39 @@ proposalWordOutcome = 'impact'
 
 def questionGenerator(userDefinedSubject,userDefinedProspect) :
 
-    whatQuestion = ["What is " + userDefinedSubject,]
-    whereQuestion = ["Where will " + userDefinedSubject + " impact " + userDefinedProspect, "Where could " + userDefinedSubject + " alter " + userDefinedProspect, "Where should " + userDefinedSubject + " change " + userDefinedProspect]
-    whenQuestion = ["When should " + userDefinedSubject + " change " + userDefinedProspect, "When will " + userDefinedSubject + " form " + userDefinedProspect, "When can " + userDefinedSubject + " alter " + userDefinedProspect]
-    howQuestion = ["How can " + userDefinedSubject + " change " + userDefinedProspect, "How does " + userDefinedSubject + " change " + userDefinedProspect, "How can " + userDefinedSubject + " alter " + userDefinedProspect]
-    whyQuestion = ["Why can " + userDefinedSubject + " change " + userDefinedProspect,   "Why does " + userDefinedSubject + " change " + userDefinedProspect, "Why can " + userDefinedSubject + " alter " + userDefinedProspect]
+
+    # ! WHAT QUESTION LIST
+    whatQuestion = [
+        "What is " + userDefinedSubject + " ?",
+    ]
+    
+    # ! WHERE QUESTION  LIST
+    whereQuestion = [
+        "Where will " + userDefinedSubject + " impact " + userDefinedProspect + " ?", 
+        "Where could " + userDefinedSubject + " alter " + userDefinedProspect + " ?", 
+        "Where should " + userDefinedSubject + " change " + userDefinedProspect + " ?"
+    ]
+    
+    # ! WHEN QUESTION LIST
+    whenQuestion = [
+        "When should " + userDefinedSubject + " change " + userDefinedProspect + " ?", 
+        "When will " + userDefinedSubject + " form " + userDefinedProspect + " ?", 
+        "When can " + userDefinedSubject + " alter " + userDefinedProspect + " ?"
+    ]
+
+    # !  HOW QUESTION LIST
+    howQuestion = [
+        "How can " + userDefinedSubject + " change " + userDefinedProspect + " ?" , 
+        "How does " + userDefinedSubject + " change " + userDefinedProspect + " ?", 
+        "How can " + userDefinedSubject + " alter " + userDefinedProspect + " ?"
+    ]
+
+    # ! WHY QUESTION LIST
+    whyQuestion = [
+        "Why can " + userDefinedSubject + " change " + userDefinedProspect + " ?",   
+        "Why does " + userDefinedSubject + " change " + userDefinedProspect + " ?", 
+        "Why can " + userDefinedSubject + " alter " + userDefinedProspect + " ?"
+    ]
 
     filteredQuestionList = [whatQuestion,whereQuestion, whenQuestion, howQuestion, whyQuestion]
 
@@ -33,8 +61,8 @@ def questionGenerator(userDefinedSubject,userDefinedProspect) :
     whyLeadin = [userDefinedSubject + " can change " + userDefinedProspect + " because ", userDefinedSubject + " does change " + userDefinedProspect + " because ", userDefinedSubject + " can alter " + userDefinedProspect  + " because"]
 
     leadingText = [whatLeadin, whereLeadin, whenLeadin, howLeadin, whyLeadin]
-    print("Question Indexes to display in Front End", vl.activeQuestions)
-    print("Number of Answers to take by question index", vl.answerModifier)
+    # print("Question Indexes to display in Front End", vl.activeQuestions)
+    # print("Number of Answers to take by question index", vl.answerModifier)
     return (filteredQuestionList, leadingText, vl.postQuestionMessage)
 
 

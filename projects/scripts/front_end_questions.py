@@ -26,13 +26,13 @@ q1 = "\nGreat, thanks " + firstName + ".  What would you like to call your new p
 leadinText = "This project will be called..."
 tip = "Tip: Name your project something that will help you identify it.  Note that with HyperQuestions, we will use your name throughout your document so pick something that also reads well"
 suggestion = "Thinking will help you to distil many of the concepts involved in your document and prepare you for the process.  You can come back and change the document name before creating your document.  The document name will be used in your final document.  Here are some sample names to get you thinking: - Department of Defence HR Requirements - Microsoft Strategic Business Plan - Eucalypt Cultivation Guide - Plastic Products Overview"
-print(q1 + "\n" + tip + "\n" + suggestion + "\n" + leadinText)
+# print(q1 + "\n" + tip + "\n" + suggestion + "\n" + leadinText)
 projectName = input()
 vl.projectName = projectName
 
 #Page 1 - Q2 What mastere document type
 q2 = "So what type of document is your " + projectName + "? Select box below."
-print("\n")
+# print("\n")
 
 tip = "Tip: Once you select an option, a description of this type and its output formats will be displayed - this will help you be sure you have picked the best option.  Please consider carefully as each type may produce different outcomes – select one and see what it offers."
 suggestion = "Select the closest category to your project.  What you are trying to create could be a sub-category (next page) - click and you will see the subtypes to help you select.  Your selection will potentially impact: - the method used for the remainder of the document creation process - the primary tense used in your document.  For example, a business proposal relates to the future. - your selection will impact the way in which key terms and inputs are interpreted by the HyperQuestions Ai Engine."

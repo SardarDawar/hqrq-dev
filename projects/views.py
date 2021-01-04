@@ -24,6 +24,12 @@ from .questions import *
 # from  .scripts import variableLibrary as vl
 
 
+def display_print(msg):
+    print("="*70)
+    print(msg)
+    print("="*70)
+
+
 
 @login_required
 def projectCreate(request):
@@ -506,7 +512,11 @@ def getFlowRender(request, project, curr, step=None):
 
 @login_required
 def projectSubquestions(request, slug):
+    # !Question Dictionary ... 
     questionsDict = {}
+
+    # Question Leading Text..
+    questionLeadingText = {}
     try:
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
@@ -542,13 +552,16 @@ def projectSubquestions(request, slug):
     for index in range(len(filteredQuestionList)) :
         # print(filteredQuestionList[index])
         questionsDict[index] = filteredQuestionList[index]
+        questionLeadingText[index] = leadingText[index]
         # print(leadingText[index])
         if(not postQuestionMessage.get(index) == "") :
-            # print(postQuestionMessage.get(index))
+            # display_print(leadingText[index])
             pass
         else :
             print("Message is empty - No message")
+            # leadingText
 
+    # display_print(leadingText)
     # print(questionsDict)
 
 
@@ -578,7 +591,10 @@ def projectSubquestions(request, slug):
         "PROJECT_TOPIC_NAME": prop_topic_name_response,
 
         # "QUESTIONS_DICT": getQuestionsDict(project),
-        "QUESTIONS_DICT":questionsDict
+        "QUESTIONS_DICT":questionsDict, 
+
+        # Question Leading Text
+        "QUESTION_LEADING_TEXT" : questionLeadingText
     }
 
     return render(request, "projects/struct.pages/subquestions.html", context)

@@ -25,9 +25,10 @@
                         var $words = "";
                         var $rephrase = ""
                         var $articles = ["the", "a", "an"];
-                        var $willVerb = ["will","would", "are", "shall", "must", "was", "may", "might", "were", "do", "does", "should", "could", "can", "is", "what", "how", "why", "where", "when",  "are", "improve", "affect", "influence", "change", "impact", "alter", "form"];
+                        var $willVerb = ["will","would", "are", "shall", "must", "was", "may", "might", "were", "do", "does", "should", "could", "can", "is", "what", "how", "why", "where", "when",  "are"];
                         var $is = ["is", "are", "would", "will", "should", "shall", "can", "could", "must", "was", "were", "may", "might"]
                         var $w = "";
+                        var $miliciousWords = ["impact","alter","form","change"]
                         $words = $("#pg2-change-question").html().trim().split(" ");
                         // console.debug($words);
                         for(var i = 0; i <  $words.length; i++){
@@ -39,13 +40,12 @@
                                 else{
                                     if($willVerb.includes($words[i].toLowerCase())){
                                         if($is.includes($words[i].toLowerCase())){
-                                            var $option1 = "<option value=" + $words[i]   + ">" +   $words[i] +  "</option>";
-                                            var $option2 = "<option value="  + "would"  + ">" +  "would"  +  "</option>";
-                                            var $option3 = "<option value="  + "shall"    + ">" +  "shall" +  "</option>";
-                                            var $option4 = "<option value="  + "should" + ">" +  "should" +  "</option>";
-                                            var $option5 = "<option value="  + "can"    + ">" +  "can"  +  "</option>";
-                                            var $option6 = "<option value="  + "could" +  ">" +  "could" +   "</option>";
-                                            $rephrase += "<select class='mr-1'>" + $option1  + $option2 + $option3 + $option4 + $option5 + $option6 +   "</select>";
+                                            var $option0 = "<option value=" +  $words[i]   + ">" +   $words[i] +  "</option>";
+                                            var $option1 = "<option value=" +  "PAST"   + ">" +   "PAST" +  "</option>";
+                                            var $option2 = "<option value="  + "PRESENT"  + ">" +  "PRESENT"  +  "</option>";
+                                            var $option3 = "<option value="  + "FUTURE"    + ">" +  "FUTURE" +  "</option>";
+                                           
+                                            $rephrase += "<select class='mr-1'>" + $option0 + $option1  + $option2 + $option3  +   "</select>";
                                         }
                                         else{
                                             var $option1 = "<option value=" + $words[i]   + ">" +   $words[i] +  "</option>";
@@ -54,10 +54,30 @@
 
                                     }
                                     else{
-                                        var $option1 = "<option value='a " + $words[i]   + "'>" + "a " +  $words[i] +  "</option>";
-                                        var $option2 = "<option value='the "+  $words[i]   + "'>" + "the " + $words[i] +  "</option>";
-                                        var $option3 = "<option value='"+  $words[i]   + "'>" + $words[i] +  "</option>";
-                                        $rephrase += "<select class='mr-1'>"  + $option1 + $option2  + $option3 + "</select>";
+                                        console.debug(($words[i].toLowerCase()));
+                                        if($miliciousWords.includes($words[i].toLowerCase())){
+                                            console.debug("MaliciousWords");
+                                            var $option1 = "<option value='" + $words[i]   + "'>" +  $words[i] +  "</option>";
+                                            var $option2 = "<option value='" + "POSITIVE"   + "'>" +  "POSITIVE" +  "</option>";
+                                            var $option3 = "<option value='" + "NEGATIVE"   + "'>" +  "NEGATIVE" +  "</option>";
+                                            var $option4 = "<option value='" + "NEUTRAL"   + "'>" +  "NEUTRAL" +  "</option>";
+                                            $rephrase += "<select class='mr-1'>"  + $option1 + $option2 + $option3 + $option4 +   "</select>";
+                                        }
+                                        else{
+                                            if($words[i].trim() == "?"){
+                                            var $option1 = "<option value='" + $words[i]   + "'>" +  $words[i] +  "</option>";
+                                            $rephrase += "<select class='mr-1'>"  + $option1 + "</select>";
+                                        }
+                                        else{
+                                            var $option1 = "<option value='a " + $words[i]   + "'>" + "a " +  $words[i] +  "</option>";
+                                            var $option2 = "<option value='the "+  $words[i]   + "'>" + "the " + $words[i] +  "</option>";
+                                            var $option3 = "<option value='"+  $words[i]   + "'>" + $words[i] +  "</option>";
+                                            $rephrase += "<select class='mr-1'>"  + $option1 + $option2  + $option3 + "</select>";
+                                        }   
+                                        
+                                        }
+
+                                        
                                     }
 
 
@@ -109,7 +129,7 @@
               <div class="pg1-content">
                   <div class="pg1-question">
                       <div class="pg1-question-text along-access-text text-jq-anim" id="pg2-change-questionlead">
-                        {{ QUESTIONS_DICT|first|first }}
+                        {{ QUESTION_LEADING_TEXT|first|first }}
                       </div>
                       <div class="accessibility" style="display: flex; align-items: center;">
 
