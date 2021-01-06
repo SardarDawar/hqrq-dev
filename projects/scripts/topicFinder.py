@@ -5,7 +5,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import validators
-from. import variableLibrary as vl
+from . import variableLibrary as vl
 # import nltk
 import spacy
 

@@ -1,12 +1,13 @@
 {% extends "common/home.html" %}
 {% load static %}
-{% load extra_tags %}
-
+{% load extra_tags  %}
 
 {% block extra_css %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'projects/css/subquestions.css' %}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{{ project.id|json_script:"PROJECT_ID" }}
+
 {% endblock %}
 
 <!-- body content -->
@@ -18,83 +19,14 @@
         select{
             font-size: 15px !important;
         }
+        #contentDoneButton {
+    font-family: var(--base-font-regular);
+    font-size: 18px;
+    color: #9FA3A7 !important;
+    cursor: pointer;
+    width: max-content !important;
+}
     </style>
-
-<script>
-    $(document).ready(function(){
-        $("#contentDoneButton").hide();
-            $("#contentEditButton").on("click", function(){
-                        // $(this).hide();
-                        // $("#contentDoneButton").show();
-                        // console.debug($("#pg2-change-question").html().trim());
-                        var $words = "";
-                        var $rephrase = ""
-                        var $articles = ["the", "a", "an"];
-                        var $willVerb = ["will","would", "are", "shall", "must", "was", "may", "might", "were", "do", "does", "should", "could", "can", "is", "what", "how", "why", "where", "when",  "are"];
-                        var $is = ["is", "are", "would", "will", "should", "shall", "can", "could", "must", "was", "were", "may", "might"]
-                        var $w = "";
-                        var $miliciousWords = ["impact","alter","form","change"]
-                        $words = $("#pg2-change-question").html().trim().split(" ");
-                        // console.debug($words);
-                        for(var i = 0; i <  $words.length; i++){
-                            // if(!$rephrase.includes($words)[i].toLowerCase()){
-                                if($articles.includes($words[i].toLowerCase())){
-                                    
-                                }
-                                
-                                else{
-                                    if($willVerb.includes($words[i].toLowerCase())){
-                                        if($is.includes($words[i].toLowerCase())){
-                                            var $option0 = "<option value=" +  $words[i]   + ">" +   $words[i] +  "</option>";
-                                            var $option1 = "<option value=" +  "past"   + ">" +   "past" +  "</option>";
-                                            var $option2 = "<option value="  + "present"  + ">" +  "present"  +  "</option>";
-                                            var $option3 = "<option value="  + "future"    + ">" +  "future" +  "</option>";
-                                           
-                                            $rephrase += "<select class='mr-1'>" + $option0 + $option1  + $option2 + $option3  +   "</select>";
-                                        }
-                                        else{
-                                            var $option1 = "<option value=" + $words[i]   + ">" +   $words[i] +  "</option>";
-                                            $rephrase += "<select class='mr-1'>" + $option1  +  "</select>";
-                                        }
-
-                                    }
-                                    else{
-                                        // console.debug(($words[i].toLowerCase()));
-                                        if($miliciousWords.includes($words[i].toLowerCase())){
-                                            // console.debug("MaliciousWords");
-                                            var $option1 = "<option value='" + $words[i]   + "'>" +  $words[i] +  "</option>";
-                                            var $option2 = "<option value='" + "positive"   + "'>" +  "positive" +  "</option>";
-                                            var $option3 = "<option value='" + "negative"   + "'>" +  "negative" +  "</option>";
-                                            var $option4 = "<option value='" + "neutral"   + "'>" +  "neutral" +  "</option>";
-                                            $rephrase += "<select class='mr-1'>"  + $option1 + $option2 + $option3 + $option4 +   "</select>";
-                                        }
-                                        else{
-                                            if($words[i].trim() == "?"){
-                                            var $option1 = "<option value='" + $words[i]   + "'>" +  $words[i] +  "</option>";
-                                            $rephrase += "<select class='mr-1'>"  + $option1 + "</select>";
-                                        }
-                                        else{
-                                            var $option1 = "<option value='a " + $words[i]   + "'>" + "a " +  $words[i] +  "</option>";
-                                            var $option2 = "<option value='the "+  $words[i]   + "'>" + "the " + $words[i] +  "</option>";
-                                            var $option3 = "<option value='"+  $words[i]   + "'>" + $words[i] +  "</option>";
-                                            $rephrase += "<select class='mr-1'>"  + $option1 + $option2  + $option3 + "</select>";
-                                        }   
-                                        
-                                        }
-
-                                        
-                                    }
-
-
-                                    
-                                }
-                            // }
-                            }
-
-                        $("#pg2-change-question").html($rephrase);
-            });
-    });
-</script>
 
     <div class="main-win">
         <div class="main-content">
@@ -116,7 +48,7 @@
               <div class="top-text full" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">
 				<span style="display: flex;" >
                         <img class="tab-mover tb-mv-left {% if QUESTIONS_DICT|first|length > 1 %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
-                        <span class="text-jq-anim" style="max-width: calc(100% - 60px);" id="pg2-change-question">
+                        <span class="text-jq-anim" style="max-width: calc(100% - 60px);" id="pg2-change-question" data-action="{% url 'PROJECTSEDITQUESTIONAJAX_URL' %}">
                             {% with QUESTIONS_DICT|first|first as r %}
                                 {{  r }}
                             {% endwith  %}
@@ -205,4 +137,203 @@
 {% include CONTENT_PAGE_PATH %}
 <script src="{% static 'common/js/accessibility.js' %}" type="text/javascript" defer></script>
 <script src="{% static 'projects/js/struct.subquestions.js' %}" type="text/javascript" defer></script>
+
+
+
+<script>
+    $(document).ready(function(){
+        const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
+        // console.debug(value);
+        $("#contentDoneButton").hide();
+            $("#contentEditButton").on("click", function(){
+                        $(this).hide();
+                        $("#contentDoneButton").show();
+                        // console.debug($("#pg2-change-question").html().trim());
+                        var $words = "";
+                        var $rephrase = ""
+                        var $articles = ["the", "a", "an"];
+                        var $willVerb = ["will","would", "are", "shall", "must", "was", "may", "might", "were", "do", "does", "should", "could", "can", "is", "what", "how", "why", "where", "when",  "are"];
+                        var $is = ["is", "are", "would", "will", "should", "shall", "can", "could", "must", "was", "were", "may", "might"]
+                        var $w = "";
+                        var $miliciousWords = ["impact","alter","form","change"]
+                        $words = $("#pg2-change-question").html().trim().split(" ");
+                        // console.debug($words);
+                        for(var i = 0; i <  $words.length; i++){
+                            // if(!$rephrase.includes($words)[i].toLowerCase()){
+                                if($articles.includes($words[i].toLowerCase())){
+                                    
+                                }
+                                
+                                else{
+                                    if($willVerb.includes($words[i].toLowerCase())){
+                                        if($is.includes($words[i].toLowerCase())){
+                                            var $option0 = "<option value=" +  $words[i]   + ">" +   $words[i] +  "</option>";
+                                            var $option1 = "<option value=" +  "past"   + ">" +   "past" +  "</option>";
+                                            var $option2 = "<option value="  + "present"  + ">" +  "present"  +  "</option>";
+                                            var $option3 = "<option value="  + "future"    + ">" +  "future" +  "</option>";
+                                           
+                                            $rephrase += "<select class='mr-1'>" + $option0 + $option1  + $option2 + $option3  +   "</select>";
+                                        }
+                                        else{
+                                            var $option1 = "<option value=" + $words[i]   + ">" +   $words[i] +  "</option>";
+                                            $rephrase += "<select class='mr-1'>" + $option1  +  "</select>";
+                                        }
+
+                                    }
+                                    else{
+                                        // console.debug(($words[i].toLowerCase()));
+                                        if($miliciousWords.includes($words[i].toLowerCase())){
+                                            // console.debug("MaliciousWords");
+                                            var $option1 = "<option value='" + $words[i]   + "'>" +  $words[i] +  "</option>";
+                                            var $option2 = "<option value='" + "positive"   + "'>" +  "positive" +  "</option>";
+                                            var $option3 = "<option value='" + "negative"   + "'>" +  "negative" +  "</option>";
+                                            var $option4 = "<option value='" + "neutral"   + "'>" +  "neutral" +  "</option>";
+                                            $rephrase += "<select class='mr-1'>"  + $option1 + $option2 + $option3 + $option4 +   "</select>";
+                                        }
+                                        else{
+                                            if($words[i].trim() == "?"){
+                                            var $option1 = "<option value='" + $words[i]   + "'>" +  $words[i] +  "</option>";
+                                            $rephrase += "<select class='mr-1'>"  + $option1 + "</select>";
+                                        }
+                                        else{
+                                            if($words[i-1].trim() == "a" ){
+                                                var $option1 = "<option value='a " + $words[i]   + "'>" + "a " +  $words[i] +  "</option>";
+                                                var $option2 = "<option value='the "+  $words[i]   + "'>" + "the " + $words[i] +  "</option>";
+                                                var $option3 = "<option value='"+  $words[i]   + "'>" + $words[i] +  "</option>";
+                                                $rephrase += "<select class='mr-1'>"  + $option1 + $option2  + $option3 + "</select>";
+                                            }
+                                            else if( $words[i-1].trim() == "the"){
+                                                var $option1 = "<option value='the " + $words[i]   + "'>" + "the " +  $words[i] +  "</option>";
+                                                var $option2 = "<option value='a "+  $words[i]   + "'>" + "a " + $words[i] +  "</option>";
+                                                var $option3 = "<option value='"+  $words[i]   + "'>" + $words[i] +  "</option>";
+                                                $rephrase += "<select class='mr-1'>"  + $option1 + $option2  + $option3 + "</select>";
+                                            }
+                                            else{
+                                                var $option1 = "<option value='a " + $words[i]   + "'>" + "a " +  $words[i] +  "</option>";
+                                                var $option2 = "<option value='the "+  $words[i]   + "'>" + "the " + $words[i] +  "</option>";
+                                                var $option3 = "<option value='"+  $words[i]   + "'>" + $words[i] +  "</option>";
+                                                $rephrase += "<select class='mr-1'>"  + $option3 + $option1  + $option2 + "</select>";
+                                            }
+                                            
+                                        }   
+                                        
+                                        }
+
+                                        
+                                    }
+
+
+                                    
+                                }
+                            // }
+                            }
+
+                        $("#pg2-change-question").html($rephrase);
+            });
+            $("#contentDoneButton").on("click", function(){
+                var originText = "";
+                $.each($("#pg2-change-question select"), function(){
+                            // console.info($(this).val())
+                            originText += (" " + $(this).val());
+                            
+                        }),
+                $.ajax({
+                    method: "GET",
+                    url: $("#pg2-change-question").attr("data-action"),
+                    data: { 
+                        project_id : project_id,
+                        name: originText.trim(), 
+                    }
+                }).done(function( html ) 
+                    {
+                         originText = ""
+                        // console.debug(html["instance"]);
+                        // console.debug($("#pg2-change-question ").html());
+                        // $.each($("#pg2-change-question select"), function(){
+                        //     // console.info($(this).val())
+                        //     originText += (" " + $(this).val());
+                            
+                        // });
+                        $("#pg2-change-question").html(originText);
+                        // console.debug(curr_qid);
+                        
+                        $("#contentDoneButton").hide();
+                        $("#contentEditButton").show();
+                        // alert( "Data Saved: "  );
+                    }).always(function(response) {
+                        // $("#pg2-change-question").html();
+                        // console.debug($("#pg2-change-question").html());
+                        // $("#contentDoneButton").hide();
+                        // $("#contentEditButton").show();
+                        // location.reload();
+                            // console.debug(response["QUESTIONS_DICT"]);
+
+                            var dictA = response["QUESTIONS_DICT_AJAX"];
+                            pg2_tabs_leading_dict = response["QUESTION_LEADING_TEXT_AJAX"]
+                            
+                            // console.debug(dictB, pg2_tabs_leading_dict);
+                            // // pg2_tabs_dict = response["QUESTIONS_DICT_AJAX"];
+                            // console.debug(typeof(dictA));
+                            Object.size = function(obj) {
+                                var size = 0, key;
+                                for (key in obj) {
+                                    if (obj.hasOwnProperty(key)) size++;
+                                }
+                                return size;
+                            };
+                            const myObj = dictA
+                            var size = Object.size(myObj);
+                            // console.debug(size);
+                            // // dictA = 
+                            var dummyArray = [];
+                            for(var index = 0; index < size; index++){
+                                pg2_tabs_dict[index] = {};
+                                // console.debug("sadsad");
+                            }
+                            var subindex = 0;
+                            for(var index = 0; index < size; index++)
+                            {
+                                
+                                
+                                // console.debug(dictA[index].length);
+                                if(dictA[index].length > 1){
+                                    for(var sub =0; sub < dictA[index].length; sub++){
+                                        dummyArray = dictA[index][sub];
+                                        pg2_tabs_dict[index][dummyArray] = "None" ;
+                                        
+                                        
+                                    }
+                                    // console.debug($("#pg2-change-question").html(Object.keys(pg2_tabs_dict[curr_qid])[0]);
+                                    // console.debug(Object.keys(pg2_tabs_dict[curr_qid])[currnet_index]);
+                                    $("#pg2-change-question").html(Object.keys(pg2_tabs_dict[curr_qid])[currnet_index]);
+                                    $("#pg2-change-questionlead").html(pg2_tabs_leading_dict[curr_qid][currnet_index]);
+                                    
+                                }
+                                else{
+                                    // subindex = dictA[index];
+                                    dummyArray = dictA[index];
+                                    pg2_tabs_dict[index][dummyArray] = "None" ;
+                                    // console.debug(Object.keys(pg2_tabs_dict[curr_qid])[0][0]);
+                                    
+                                    $("#pg2-change-question").html(Object.keys(pg2_tabs_dict[curr_qid])[0]);
+                                    $("#pg2-change-questionlead").html(pg2_tabs_leading_dict[curr_qid]);
+                                    
+                                }
+                            }
+                            // console.debug(pg2_tabs_leading_dict);
+                            
+
+                            // console.debug(pg2_tabs_dict);
+
+                            
+
+
+                    });
+            });
+            
+    });
+</script>
+
+
+
 {% endblock %}

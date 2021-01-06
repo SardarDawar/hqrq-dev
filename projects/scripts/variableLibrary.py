@@ -2,7 +2,73 @@
 import spacy
 nlp = spacy.load("en_core_web_sm")
 usedQuestion ={}
-from projects.vars import doc_list_1
+
+requiredQuestionList = []
+activeQuestions = []
+answerModifier = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
+postQuestionMessage = {0: "", 1: "", 2: "", 3: "", 4: ""}
+
+passThroughExpressorUDS = True     # update this flag on every pass
+passThroughExpressorUDP = True     # update this flag on every pass
+passThroughExpressorFlag = True
+
+udsNo = ""
+udpNo = ""
+
+# Variables coming in from front-end questions and being stored for use by functions
+fname = ""
+projectName = ""
+masterDocTypeSelection = ""
+chosenDoctype = ""                                                #lower case master document Type
+detailedDoctypeSelected = ""                                      # english version of detailed doc type selected without article
+detailedDoctypeDesc = ""                                          # detailed description of detailed doc type selected
+dde = ""                                                    # detailed document type expression (english) after topic expressor
+
+#Target REader
+targetReader = ""                                                 # target reader as entered by user
+tRE = ""                                                          # targe reader as expressed by topic expressor
+
+#Subject Type is Category of Subject
+subjectType = ""                                                  # index of subject type
+subjectTypeName = ""                                               # english of subject type
+
+#Sybject as provided by user
+subjectName = ""                                                   # the name of the subject as entered by the user
+subjectExpressionJoin = ""                                         # subject expressed
+subjectExpressonStartSentence = ""                                 # subject expression at the start of sentence - Capitalised
+subjectExpressionJoinLI = ""                                       # subject expression for use in leadin text (me you in particular)
+
+#Tense Provided by user
+selectedTense = ""                                                 # Selected tense in english
+autoTense = ""                                                     # machine selected tense based on doctype
+
+#Selected Orientation
+selectedOrientation = ""                                        # index of the selected orientation
+selectedOrientationText = ""                                       # text associated with the selected orientation - Positively - Negativly -  Neutrally
+orienationIndex = ""
+
+#Who is affected by the subject
+affectedBy = ""                                                    # affected by as entered by user
+affectedByExpression = ""                                          # affected by as expressed by topic expressor
+
+# Who is impacting on the subject
+affectingOn = ""                                                   # affecting on as entered by user
+affectingOnExpression = ""                                         # affecting on as expressed
+
+#action or impression desired on Target Reader as a result of covering subject
+actionOrImpression = ""                                            # action or impression as entered by user.  Preceded by word "To"
+
+# Document Length and Document Level
+docLengthChoice = ""                                               # selected choice by user (index)
+endingLevel = ""                                                   # level at which to terminate heirarchy
+
+questionsToDisplay = []                                             # which question indexes to display in front end
+finalQuestions = []                                                 # final set of questions for node
+finalLeadinText = []                                                   # final leadin text to display
+
+
+
+
 
 # pastList = [0]
 # presentList = [2,3,4,5,6,8,10,11]
@@ -26,16 +92,35 @@ tenseChoice = []
 docOptionsList = []
 docOptionsIndex = []
 
+doc_list2 = [
+             ['assessment', 'review', 'report', 'comparison'],
+             ['policy document', 'proceedures document'],
+             ['creative fiction', 'creative non-fiction'],
+             ['decision rationale', 'selection analysis', 'recommendation'],
+             ['email', 'letter', 'memo', 'notice', 'newsletter'],
+             ['essay', 'article', 'blog post', 'e-book', 'book', 'whitepaper'],
+             ['website', 'landing page', 'advertisement', 'flier', 'brochure'],
+             ['proposal', 'quote', 'potential scenario'],
+             ['scope', 'charter', 'business requirements document'],
+             ['strategy', 'plan', 'goal outline','definition document'],
+             ['how to article', 'patent specification', 'product manual'],
+             ['curriculum', 'training document']
+    ]
+
+
+
+
+
 for k,v in docLengthOptions.items():
     docOptionsList.append(k)
     docOptionsIndex.append(v)
 #print(docOptionsList,docOptionsIndex)
 
-userDefinedSubjectTypeOptions = ['person', 'company', 'group', 'product or service', 'concept or thing', 'place, destination or building']
+userDefinedSubjectTypeOptions = ['Please select...','person', 'company', 'group', 'product or service', 'concept or thing', 'place, destination or building']
 
 #Question Element 3 - Uses words to define the relationship(s) between subject and object
-primaryOrientation = ["positively", "negatively", "neutrally"]
-pwoLists = [['Please select'],["impact","improve", "strengthen","progress", "develop", "elevate", "upgrade", "help", "assist", "enhance", "better", "advance", "refine", "amplify"],["impact", "diminish", "reduce", "lessen","minimise", "lower", "decrease", "disturb","impinge on","upset"],["impact", "change", "affect", "influence", "transform", "alter", "shift"]]
+primaryOrientation = ['Please Select...', "positively", "negatively", "neutrally"]
+pwoLists = [['Please select'],["impact", "support", "improve", "strengthen", "advantage", "progress", "develop", "elevate", "upgrade", "help", "assist", "enhance", "benefit", "advance", "refine"],["impact", "diminish", "reduce", "lessen","minimise", "lower", "decrease", "disturb","impinge on","upset"],["impact", "change", "affect", "influence", "transform", "alter", "shift"]]
 #proposalWordsOutcome = ""
 global proposalWordsOutcome
 proposalWordsOutcome = ["impact", "change", "affect", "influence", "transform", "induce change in", "shift"]
@@ -102,7 +187,14 @@ possessivePronounFemale = ["she", "her", "her"]
 possessivePronounOther = ["its", "it", "it"]
 possessivePronounGroup = ["they","their","them"]
 questionLevel = ["1", "2", "3", "4", "5"]
-doc_list1 = doc_list_1
+#subjectType = userDefinedSubjectTypeOptions
+
+#masterContentType = ["Analysis Report -assessment/review/report/comparison", "Compliance Document -policy document/procedures document","Creative Work -creative fiction/creative non-fiction","Rationale -decision rationale/selection analysis/recommendation","Direct Communication -email/letter/memo/notice/newsletter","Persuasive Piece -essay/article/blog/article/whitepaper/ebook","Promotional Work -website/landing page/advertisement/flier/brochure","Business Proposal -proposal/quote/potential scenario", "Requirements Document -scope/charter/business requirements document","Future Scenario -strategy/plan/goal definition document", "Technical Document -how to article/patent specification/product manual", "Training Program -curriculum/training document"]
+doc_list1 = [ 'Analysis Report', 'Compliance Document',
+             'Creative Content', 'Rationale', 'Direct Communication',
+             'Persuasive Piece', 'Promotional Content', 'Business Proposal',
+             'Requirements Document', 'Future Scenario', 'Technical Document',
+             'Training Program']
 doc_list2 = [
              ['assessment', 'review', 'report', 'comparison'],
              ['policy document', 'proceedures document'],
@@ -115,8 +207,7 @@ doc_list2 = [
              ['scope', 'charter', 'business requirements document'],
              ['strategy', 'plan', 'goal outline','definition document'],
              ['how to article', 'patent specification', 'product manual'],
-             ['curriculum', 'training document']
-    ]
+             ['curriculum', 'training document']]
 
 doc_list2_1 = [
                ['States a position or Hypothesis and breaks that position down into a number of supporting and dissenting view ultimately providing a rounded evaluation of a topic and usually presenting a recommendation','Evaluates the performance, features or benefits of something or someone and leaves the reader with an impression (a positive or negative feeling) related to the topic','Documents the findings that have resulted from the analysis of a core topic or objective and outlines the reasoning behind those findings','This document type makes a comparison between one or more people, places, things or groups. It is designed to compare and contrast different features, benefits or aspects.'],
@@ -133,7 +224,7 @@ doc_list2_1 = [
                ['Relates to the development of course materials for students and often comprises of multiple classes and topics', 'A step by step guide on what needs to be learned and accompanies either teaching materials or is used for train the trainer activities.']
               ]
 
-doc_list2_2 = ['Selection of Heirarchy Method for Master Document Type...',
+doc_list2_2 = [
                ['criticalThinking'],
                ['tocBased'],
                ['freeForm'],
@@ -176,7 +267,8 @@ doc_list1_2 = [
                'Available in MS Word/Google Docs/Pdf/Text.  Outputs - 5 pages to 100 pages.  Presented in portrait format.  Deliverable contains introduction, table of contents, and numbered headings and sections.  Logo and 3 customisable images available.',
                'Available in MS Powerpoint/MS Word/Google Docs/Google Slides/Pdf/Text  - Note multiple outputs availabe from a single consultation between 1 page and 100 pages.  Landscape and Portrait options available.  Method used facilitates the clear structuring of concepts for communication to those who are in a learning mode.  Contains a table of contents, summary, designer template scope for custom logo and three custom images.']
 
-doc_list3_2 = [['tense', 'orientation','pleaseselect.png'],['t', 'neutrally', 'analysisreport.png'],
+doc_list3_2 = [['tense', 'orientation','pleaseselect.png'],
+               ['p', 'neutrally', 'analysisreport.png'],
                ['f', 'neutrally', 'compliancedocument.png'],
                ['t', 'neutrally', 'creativework.png'],
                ['t', 'neutrally', 'rationale.png'],
@@ -184,19 +276,19 @@ doc_list3_2 = [['tense', 'orientation','pleaseselect.png'],['t', 'neutrally', 'a
                ['t', 'neutrally', 'persuasivepiece.png'],
                ['f', 'neutrally', 'promotionalwork.png'],
                ['f', 'positively', 'businessproposal.png'],
-               ['t', 'neutrally', 'requirementsdocument.png'],
+               ['f', 'neutrally', 'requirementsdocument.png'],
                ['f', 'positively', 'futurescenario.png'],
                ['t', 'neutrally', 'technicaldocument.png'],
                ['t', 'neutrally', 'trainingprogram.png']]
 
-doc_list3 = ['Please select...',
+doc_list3 = [
              '1 page',
              '5 pages',
              '20 pages',
              'unlimited'
              ]
 
-doc_list3_1 = ['Descriptions...',
+doc_list3_1 = [
                'Small document or overview - covers one master topic and 3 subtopics.  Wordcount from 200 words to 500 words depending on output format',
                '5 page document, a brief document typically covering one master topic, 3 subtopics and 2 further subtopics.  Wordcount 1,000 to 2,000 words depending on output format',
                '20 page document, a signficant document with master topics and subtopics dynamically assembled throughout the process - typically a 4 level topic heirarchy.  Wordcount 4,000 to 7,000 words depending on output format',
@@ -205,16 +297,6 @@ doc_list3_1 = ['Descriptions...',
 
 doc_tips = {'page1': 'Tip: Once you select an option, a detailed description will be displayed. Please consider carefully as different content types may produce different outcomes.',
             'page2': ['Note: If you are seeking to create multiple', 'documents then you can create a copy of this file once finished and edit.']}
-
-userDefinedSubjectTypeDescriptions = [
-    "Please Select", 
-    "A person is typically one named individual who will be at the centre of your document. Effectively the entire document will be about them.", 
-    "A company is a legal entity designed either for-profit.  An organisation is typically either a government agency or not-for-profit organisation.  Consider carefully when selecting a company or organisation that you are referring to the legal title of the organisation and not a division within an organisation.", 
-    "A group is a named group of people, things or animals.  It could also be a division with a company or organisation, For example, a local football team is a group, elephants are a group of animals etc.", 
-    "A product is a tangible item that is put on the market for acquisition, attention, or consumption, while a service is an intangible item, which arises from the output of one or more individuals.", 
-    "This category relates to ideas and abstract concepts.  Examples include - climate - technology - flying.  Furthermore, this category also includes things these may be products such as - Lego - Computers - Boeing A380.", 
-    "A place, destination or building is a physical area that can be seen on a map or satellite photograph.  If you are referring to a group of places (eg Parks) then group would be a better selection"
-]
 
 doctypeDescription = {"Analysis Report" : ["Provides a structured framework for assessing something and documenting a report to communicate the findings", "Available in MS Word/Google Docs/Pdf/Text.  Outputs available from 1 page to 100 pages - portrait format.  Deliverable contains introduction, table of contents executive summary, conclusion and summary.  Offers 4 customisable images including logo.", "present" ,"explanatory", "criticalthinking", "docTemplateX", "icon Y"], "Compliance Document" : ["A compliance document outlines how staff, contractors or third parties should act.  Incorporates external 3rd party requirements such as government legislation and applies them to an organisational context.", "Available in MS Word/Google Docs/Pdf/Text.  Outputs available from 5 pages to 100 pages.  Deliverable contains introduction, table of contents, and numbered headings and sections.  Logo and 3 customisable images available.", "future" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Creative Work" : ["Creative content is a work that is designed to delight and entertain.  Content not based purely on analysis, uses ideas (unexpected connections) to 'present with identity', enabling the content to be highly differentiated.", "Available in MS Word/Google Docs/Pdf/Text - Outputs available from 1 page to 500 pages.  Deliverable is presented in topic order, does not contain table of contents or summary, designer template with no logo and scope for two custom images.", "present" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Rationale" : ["A rationale is a document that uses Pyramid Thinking to identify and  support a conclusion or recommendation.  Helps the user to understand implications and choose between alternatives based on their personal or organisational situation.", "Available in MS Word/Google Docs/Pdf/Text -  Outputs available from 1 page to 100 pages.  Deliverable contains introduction, table of contents executive summary, conclusion and summary.  Customisable images include one logo plus three custom images.", "present" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Direct Communication" : ["A piece of communication designed to communicate a specific message to one or more readers in a direct (not broadcast) communication.", "Available in a range of formats suitable for each communication type (Text for Email), and MS Word/Google Docs/Pdf for Newsletters and Memos -  Outputs available in 1-10 pages.  Deliverable contains appropriate formatting and content for your chosen document type.   Word document outputs include images - one logo plus three custom images.", "present" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Persuasive Piece" : ["A persuasive/explanatory piece of writing on a particular subject (Non Fiction) that is designed to persuade a business or individual about either the benefits or implications of something.", "Available in MS Powerpoint/MS Word/Google Docs/Google Slides/Pdf/Text  - Note multiple outputs availabe from a single consultation between 1 page and 50 pages.  Deliverable is presented to maximise the structuring and presentation of arguments to lead the reader to a clear conclusion. Contains a table of contents, summary, designer template scope for custom logo and three custom images.", "present" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"],"Promotional Work" : ["Promotes a business, concept or idea.  This content is designed to be used in marketing communication and broadcast to your prospective target audience.", "Available in HTML/XML/MS Powerpoint/MS Word/Goole Docs/Google Slides/Pdf/Text - Note some promotional work document categories provide a zipped folder of documents such as landing page and website.  Format makes providsion for specified document format.", "future" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Business Proposal" : ["A business document that assists you to identify, define and communicate a suggested future state, relationship or structure.  Designed to elicit approval by a 3rd party.", "Available in MS Word/Google Docs/Pdf/Text -  Outputs available from 1 page to 100 pages.  Deliverable contains introduction, table of contents executive summary, conclusion and summary.  Customisable images include one logo plus three custom images.", "future" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Requirements Document" : ["A business document that to identify and communicate business or project requirements to another individual or organisation.", "Available in MS Word/Google Docs/Pdf/Text -  Outputs available from 1 page to 100 pages - landscape or portrait format.  Deliverable contains introduction, table of contents executive summary, conclusion and summary.  Customisable images include one logo plus three custom images.", "present" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Future Scenario" : ["Develops a clear picture of a future scenario that does not yet exist and positively presents this to the reader.", "Available in MS Powerpoint/MS Word/Google Docs/Google Slides/Pdf/Text  - Note multiple outputs availabe from a single consultation between 1 page and 100 pages.  Landscape and Portrait options available.  Method used facilitates the development of a logically consistent future scenario.  Contains a table of contents, summary, designer template scope for custom logo and three custom images.", "future" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"], "Technical Document" : ["Outlines to the user of a product or service how to use that product or serviced.", "Available in MS Word/Google Docs/Pdf/Text.  Outputs available from 5 pages to 100 pages.  Presented in portrait format.  Deliverable contains introduction, table of contents, and numbered headings and sections.  Logo and 3 customisable images available.", "present" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"],"Training Program" : ["Content that is designed to train someone or teach someone how to do something - typically designed to be presented by a teacher, tutor etc.", "Available in MS Powerpoint/MS Word/Google Docs/Google Slides/Pdf/Text  - Note multiple outputs availabe from a single consultation between 1 page and 100 pages.  Landscape and Portrait options available.  Method used facilitates the clear structuring of concepts for communication to those who are in a learning mode.  Contains a table of contents, summary, designer template scope for custom logo and three custom images.", "present" ,"explanatory", "explanatory MethodX", "docTemplateX", "icon Y"]}
 #split on dash then split on slash.

@@ -53,7 +53,10 @@ def question(
     # ! DOCUMENT SUBTYPE EXPRESSION
     detailedDoctypeSelected = vl.doc_list2[masterDocTypeIndex][detailedDoctype]
     detailedDoctypeExpression = te.q_what(detailedDoctypeSelected)
-    dde = detailedDoctypeExpression[-1]
+    try:
+        dde = detailedDoctypeExpression[-1]
+    except:
+        dde = detailedDoctypeExpression
 
     # ! WHO IS TARGET READER
     q4 = firstName + ", who (what individual or group) will be reading your " + detailedDoctypeSelected + "?"
@@ -199,7 +202,7 @@ def question(
     # print("Script is in running state")
     # print("selected orientationtext",vl.selectedOrientationText)
     #  hmd.heirarchyDummy(firstName,masterDocTypeIndex,docLengthChoice,endingLevel,affectedByExpression, subjectExpressionJoin)
-    return hmd.heirarchyDummy(firstName,masterDocTypeIndex,docLengthChoice,endingLevel,affectedByExpression, subjectExpressionJoin)
+    return hmd.heirarchyDummy(firstName = firstName, tenseChoice = masterDocTypeIndex, docLengthChoice = docLengthChoice,endingLevel = endingLevel, userDefinedProspect = affectedByExpression, userDefinedSubject = subjectExpressionJoin)
     # print((filteredQuestionList, leadingText, postQuestionMessage))
     # for index in range(len(filteredQuestionList)) :
     #     print(filteredQuestionList[index])

@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404, JsonResponse
@@ -21,13 +22,103 @@ from .models import Project, Property
 import json
 from django.db import transaction
 from .questions import *
+from .scripts import heirarchydummy
 # from  .scripts import variableLibrary as vl
 
+
+# Past, Present, Future
+verbForm = [
+    "",
+    "past",
+    'present',
+    'future'
+]
+
+pwoListsViews = [
+    '',
+    'positive',
+    'negative',
+    'neutral'
+]
 
 def display_print(msg):
     print("="*70)
     print(msg)
     print("="*70)
+
+
+def breakSentence(q):
+    q = q.split(" ")
+    for i in q:
+        if i== " " or i == "":
+            q.remove(i)
+    q = q[:-1]
+    wQuestions = ['what', 'when', 'where', 'how', 'why']
+    vWords= ['should', 'will', 'can', 'does', 'is', 'could', 'present' , 'past', "future"]
+    articles = ["a","the"]
+    mWords = ["impact","alter","form","change", "positive","negative", "neutral"]
+    updatedTense = ""
+    userDefinedSubject = ""
+    updatedPWOIndex = ""
+    userDefinedProspect = ""
+
+    # ! Remove Questions Words
+    for i in q:
+        if i.strip().lower() in wQuestions:
+            q.remove(i)
+            break
+    
+    # ! Remove Verb Words
+    # display_print(q)
+    for i in q:
+        # display_print()
+        if i.strip().lower() in vWords:
+            # display_print(i)
+            updatedTense = ""
+            updatedTense = i
+            q.remove(i)
+            break
+
+    # display_print(updatedTense)
+    # ! User Defined Subject
+    for index in range(0, len(q)):
+        # ? With Articles
+        if q[index].strip().lower() in articles:
+            userDefinedSubject = ""
+            userDefinedSubject = q[index] + " " + q[index+1]
+            q.remove(q[index])
+            q.remove(q[index])
+            break
+        else:
+            # ? Without Articles
+            userDefinedSubject = ""
+            userDefinedSubject = q[index]
+            q.remove(q[index])
+            break
+    
+    # ! Orientation
+    for i in q:
+        if i.strip().lower() in mWords:
+            updatedPWOIndex = i
+            q.remove(i)
+    
+    # ! User Defined Prospect
+    for index in range(0, len(q)):
+        # ? With Articles
+        if q[index].strip().lower() in articles:
+            userDefinedProspect = ""
+            userDefinedProspect = q[index] + " " +  q[index+1]
+            q.remove(q[index])
+            q.remove(q[index])
+            break
+        else:
+            # ? Without Articles
+            userDefinedProspect = ""
+            userDefinedProspect = q[index]
+            q.remove(q[index])
+            break
+        
+    return (updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect)
 
 
 
@@ -511,6 +602,64 @@ def getFlowRender(request, project, curr, step=None):
 
 
 @login_required
+def PROJECTSEDITQUESTIONAJAX(request):
+    # display_print(request.GET)
+    q = request.GET['name']
+    Tense = 1
+    Orientation = 1
+
+    # Questions
+    questionsDict = {}
+
+    # Question Leading Text..
+    questionLeadingText = {}
+    try:
+        project = Project.objects.get(id=int(request.GET['project_id']))
+        (updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect) = breakSentence(q)
+        # project.getPROP_TOPIC_NAME()
+        
+        # display_print(project.setPROP_TOPIC_NAME(userDefinedSubject)
+        # display_print((updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect))
+        # display_print(updatedTense)
+        # )
+        
+        # ? Set Prohect User Defined Subject
+        # project.setPROP_TOPIC_NAME(userDefinedSubject)
+
+        # ? Set Project User Defined Prospect
+        # display_print(userDefinedProspect)
+        if userDefinedProspect.strip().lower() == "":
+            # project.setPROP_TOPIC_IMPACT(userDefinedProspect)
+            # display_print(project.getPROP_TOPIC_IMPACT())
+            userDefinedProspect = project.getPROP_TOPIC_IMPACT()
+
+
+        # display_print(updatedTense.strip().lower())
+        # Update Sentence Tense Form
+        if updatedTense.strip().lower() in verbForm:
+            Tense = verbForm.index(updatedTense.strip().lower())
+            # display_print(Tense)
+
+        if  updatedPWOIndex.strip().lower() in pwoListsViews:
+            Orientation = pwoListsViews.index(updatedPWOIndex.strip().lower())
+
+        updatedQuestions = heirarchydummy.updatedExistingQuestion(userDefinedSubject, userDefinedProspect, Tense , Orientation)
+        # display_print(updatedQuestions)
+        (filteredQuestionList, leadingText, postQuestionMessage) = updatedQuestions
+        display_print((filteredQuestionList, leadingText, postQuestionMessage))
+        for index in range(len(filteredQuestionList)) :
+            questionsDict[index] = filteredQuestionList[index]
+            questionLeadingText[index] = leadingText[index]
+
+        return JsonResponse(json.loads( json.dumps( {"QUESTIONS_DICT_AJAX" : questionsDict, "QUESTION_LEADING_TEXT_AJAX":  questionLeadingText})), status=200)
+
+    except Exception as e:
+        display_print(e)
+        return JsonResponse(json.loads( json.dumps( {"instance": 'error'})), status=400)
+    
+
+
+@login_required
 def projectSubquestions(request, slug):
     # !Question Dictionary ... 
     questionsDict = {}
@@ -550,19 +699,8 @@ def projectSubquestions(request, slug):
         docLengthChoice = docLengthOptions[project.doc_len]
     )
     for index in range(len(filteredQuestionList)) :
-        # print(filteredQuestionList[index])
         questionsDict[index] = filteredQuestionList[index]
         questionLeadingText[index] = leadingText[index]
-        # print(leadingText[index])
-        if(not postQuestionMessage.get(index) == "") :
-            # display_print(leadingText[index])
-            pass
-        else :
-            print("Message is empty - No message")
-            # leadingText
-
-    # display_print(questionLeadingText)
-    # print(questionsDict)
 
 
     # GET

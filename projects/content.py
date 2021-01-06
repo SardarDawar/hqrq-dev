@@ -1,5 +1,5 @@
 from .vars import *
-from scripts.topic_expressor import q_what
+from projects.scripts.topic_expressor import q_what
 import spacy
 nlp = spacy.load("en_core_web_sm")
 

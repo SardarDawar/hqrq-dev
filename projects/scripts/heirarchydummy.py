@@ -68,7 +68,7 @@ def questionGenerator(userDefinedSubject,userDefinedProspect) :
 
 
 
-def heirarchyDummy(firstName, tenseChoice, docLengthChoice, endingLevel, userDefinedProspect ,userDefinedSubject) :
+def heirarchyDummy( userDefinedProspect ,userDefinedSubject, firstName=None, tenseChoice=None, docLengthChoice=None, endingLevel=None) :
     activeQuestions = [0,1,2,3,4]
     vl.activeQuestions = activeQuestions
     leadingTextIndex = []
@@ -100,67 +100,24 @@ def heirarchyDummy(firstName, tenseChoice, docLengthChoice, endingLevel, userDef
         #leadingText = leadingTextGenerator.RuleMapper(question)
     # print(" first presented questions above ")
 
-    proceed = input("Would you like to re-structure the questions (enter Y or N) :  ")
-    while proceed == "Y" :
 
-        userDefinedSubject = input("Updated User Defined Subject")
-        #vl.userDefinedSubject = userDefinedSubject
-
-        # question = te.q_what(vl.userDefinedSubject)
-        # print("quesiton",question)
-        # udsNo = te.q_number(question[0])
-        # print(udsNo)
-        # vl.udsNo = udsNo
-        if userDefinedSubject.find("a ") != 0 and userDefinedSubject.find("the ") != 0:
-            vl.passThroughExpressorUDS = False
-        else :
-            vl.passThroughExpressorUDS = True
-        userDefinedProspect = input("Updated User Defined Prospect")
-        # question = te.q_what(vl.userDefinedProspect)
-        # print("quesiton prospect",question)
-        # udpNo = te.q_number(question[0])
-        # print(udpNo)
-        # vl.udpNo = udpNo
-        if userDefinedProspect.find("a ") != 0 and userDefinedProspect.find("the ") != 0:
-            vl.passThroughExpressorUDP = False
-        else :
-            vl.passThroughExpressorUDP = True
-
-        updatedTense = input("Please enter a Tense number 1-5")
-        updatedPWOIndex = input("Please select your Orientation (1 for positive, 2 for negative, 3 for neutral")
-        updatedPWOIndex = int(updatedPWOIndex)
-        vl.proposalWordsOutcome = vl.pwoLists[updatedPWOIndex]
-        #updatedPWO = input("Enter your Orientation - Positive, Negative, Neutral")
-        updatedTense = int(updatedTense)
-        questionGenerator(userDefinedSubject, userDefinedProspect)
-        vl.passThroughExpressor = True
-        # filteredQuestionList = gl.filterQuestions(questionList)
-        # leadingTextIndex = []
-        # for index in range(len(filteredQuestionList)):
-        #     leadingTextIndex.append([])
-        #     for question in filteredQuestionList[index]:
-        #         leadingText = leadingTextGenerator.RuleMapper(question)
-        #         leadingTextIndex[index].append(leadingText)
-        # for question in filteredQuestionList:
-        #     print(question)
-        # for leadingText in leadingTextIndex:
-        #     print(leadingText)
-        # print("Question Indexes to display in Front End", vl.activeQuestions)
-        # print("Number of Answers to take by question index", vl.answerModifier)
-        # for index in vl.activeQuestions:
-        #     print(filteredQuestionList[index])
-        #     print(leadingTextIndex[index])
-        #     if (not vl.postQuestionMessage.get(index) == ""):
-        # #         print(vl.postQuestionMessage.get(index))
-        #     else:
-        #         print("Message is empty - No message")
-        vl.proposalWordsOutcome = vl.pwoLists[int(vl.orienationIndex)]
-        print("The Node Zero Rerun questions are above ")
-
-        proceed = input("Would you like to re-structure the questions (enter Y or N) :  ")
-    
-        questionGenerator(userDefinedSubject, userDefinedProspect)
-        node = userDefinedSubject
+def updatedExistingQuestion(userDefinedSubject, userDefinedProspect, updatedTense, updatedPWOIndex):
+    if userDefinedSubject.find("a ") != 0 and userDefinedSubject.find("the ") != 0:
+        vl.passThroughExpressorUDS = False
+    else :
+        vl.passThroughExpressorUDS = True
+    if userDefinedProspect.find("a ") != 0 and userDefinedProspect.find("the ") != 0:
+        vl.passThroughExpressorUDP = False
+    else :
+        vl.passThroughExpressorUDP = True
+    updatedPWOIndex = int(updatedPWOIndex)
+    vl.proposalWordsOutcome = vl.pwoLists[updatedPWOIndex]
+    updatedTense = int(updatedTense)
+    questionGenerator(userDefinedSubject, userDefinedProspect)
+    vl.passThroughExpressor = True
+    vl.proposalWordsOutcome = vl.pwoLists[int(updatedPWOIndex)]
+    return questionGenerator(userDefinedSubject, userDefinedProspect)
+    node = userDefinedSubject
 
     Heirarchy.append({userDefinedSubject: [userDefinedSubject]})
     global NodeId

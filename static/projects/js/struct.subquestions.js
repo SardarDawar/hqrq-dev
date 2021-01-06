@@ -92,6 +92,8 @@ var currnet_index = 0;
 
 pg2tabs.forEach(el => {    
   el.onclick = () => {
+    $("#contentEditButton").show();
+    $("#contentDoneButton").hide();
     if (el.dataset.qid && !el.classList.contains("active")) {
       const qid = el.dataset.qid;
       if (qid === curr_qid) return;

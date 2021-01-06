@@ -70,9 +70,26 @@ class Project(models.Model):
     def getPROP_TOPIC_NAME(self):
         return Property.objects.filter(project__id=self.id, name = "PROP_TOPIC_NAME")[0].response
 
+
+    # ! Set Project Topic Name
+    def setPROP_TOPIC_NAME(self, value):
+        prop = Property.objects.filter(project__id=self.id, name = "PROP_TOPIC_NAME")[0]
+        p = Property.objects.get(id=prop.id)
+        p.response = value
+        p.response_exp = value
+        p.save()
+
     # ! PROJECT:PROP_TOPIC_IMPACT : RESPONSE
     def getPROP_TOPIC_IMPACT(self):
         return Property.objects.filter(project__id=self.id, name = "PROP_TOPIC_IMPACT")[0].response
+
+    # ! Set Project Topic Impact
+    def setPROP_TOPIC_IMPACT(self, value):
+        prop = Property.objects.filter(project__id=self.id, name = "PROP_TOPIC_IMPACT")[0]
+        p = Property.objects.get(id=prop.id)
+        p.response = value
+        p.response_exp = value
+        p.save()
 
     # ! PROJECT:PROP_TOPIC_CAUSE : RESPONSE
     def getPROP_TOPIC_CAUSE(self):

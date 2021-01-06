@@ -3,54 +3,54 @@ import re                                      # REGULAR EXPRESSIONS.
 import inflect                                 # PLURAL/SINGULAR PACKAGE.
 import spacy                                   # NLP PACKAGE.
 import nltk                                    # NLP PACKAGE.
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-
+from . import variableLibrary as vl
 from .uncount import uncount_list               # IMPORTING UNCOUNTABLE WORDS.
 from .help_funcs import user_query
-from .app_lists import stops, min_tags, mid_tags, maxp_tags, maxs_tags, sym_tags, con_tags
+from .app_lists import stops, min_tags, mid_tags, maxp_tags, maxs_tags
+from .app_lists import sym_tags, con_tags
 from .the_places import the_words, the_list, the_singular
 
-# nlp = spacy.load("en_core_web_md")             # LOADING SPACY DB.
-import en_core_web_sm
-
-nlp = en_core_web_sm.load()
-
+nlp = spacy.load("en_core_web_md")             # LOADING SPACY DB.
 p = inflect.engine()
 
 
 def base_word(phrase):
-    try:
-        # LOOKING FOR ROOT WORD IN THE PHRASE. 
-        doc = nlp(phrase)
-        b_word, u_word = None, None
-        wl = phrase.split()
-        for wch in doc.noun_chunks:
-            if wch.root.dep_ == "ROOT":
-                b_word, u_word = wch.root.text, wch.root.text
-        if b_word is None:
-            if "with" in wl:
-                b_word, u_word = wl[0], wl[-1]
-            if "of" in wl:
-                b_word, u_word = wl[0], wl[0]
-            if "and" in wl:
-                b_word, u_word = wl[0], wl[0]
-        if b_word is None:
-            tags = [i.tag_ for i in doc]
-            ix = -1
-            for tg in tags[::-1]:
-                if tg in min_tags+sym_tags+con_tags:
-                    ix -= 1
-                else:
-                    break
-            b_word, u_word = wl[ix], wl[ix]
-        if b_word is None:
-            b_word, u_word = wl[-1], wl[-1]
-        # print("BASE WORD: %s\nUNCOUNTABLE CHECK: %s\n" % (b_word, u_word))
-        return (b_word, u_word)
-    except Exception:
-        print("\nROOT WORDS AND UNCOUNT WORDS UNAVAILABLE!!!\n")
-
+    if phrase.find(" ") >= 0 :
+        try:
+            # LOOKING FOR ROOT WORD IN THE PHRASE.
+            doc = nlp(phrase)
+            b_word, u_word = None, None
+            wl = phrase.split()
+            for wch in doc.noun_chunks:
+                if wch.root.dep_ == "ROOT":
+                    b_word, u_word = wch.root.text, wch.root.text
+            if b_word is None:
+                if "with" in wl:
+                    b_word, u_word = wl[0], wl[-1]
+                if "of" in wl:
+                    b_word, u_word = wl[0], wl[0]
+                if "and" in wl:
+                    b_word, u_word = wl[0], wl[0]
+            if b_word is None:
+                tags = [i.tag_ for i in doc]
+                ix = -1
+                for tg in tags[::-1]:
+                    if tg in min_tags+sym_tags+con_tags:
+                        ix -= 1
+                    else:
+                        break
+                b_word, u_word = wl[ix], wl[ix]
+            if b_word is None:
+                b_word, u_word = wl[-1], wl[-1]
+            # print("BASE WORD: %s\nUNCOUNTABLE CHECK: %s\n" % (b_word, u_word))
+            return (b_word, u_word)
+        except Exception:
+            print("\nROOT WORDS AND UNCOUNT WORDS UNAVAILABLE!!!\n")
+    else:
+        b_word = phrase
+        u_word = phrase
+        return (b_word,u_word)
+    # not sure if I need an exception here in case it fails
 
 def q_comb(driver=None, article=None, query=None, prefix="What"):
     ql = [driver, article, query]
@@ -175,13 +175,15 @@ def q_what(query):
         if u_article is not None:
             article = u_article
             #Post processing for person related terms - to strip article
-        if query.find("your ") > -1 or query.find("his ") > -1 or query.find("her ") > -1 or query.find("their ") > -1 or query.find("you ") > -1:
+        if vl.passThroughExpressorFlag != True or query.find("your ") > -1 or query.find("his ") > -1 or query.find("her ") > -1 or query.find("their ") > -1 or query.find("you ") > -1:
             if query.find("a ") == 0:
                 query = query.replace("a ", "")
             if query.find("an ") == 0:
                 query = query.replace("an ", "")
             elif query.find("the ") == 0:
                 query = query.replace("the ", "")
+
+
             article = None
         question = q_comb(driver=driver, article=article, query=query)
         # if both words plural then it is plural
@@ -204,9 +206,9 @@ def q_what(query):
             topicExpressed = query
         else :
             topicExpressed = article + " " + query
+        # print("test data",question)
         return (question, query, driver, article, queryLI, b_word, u_word, tag, topicExpressed)
-    except Exception as e:
-        print(e)
+    except Exception:
         print("\nQUESTIONS UNAVAILABLE!!!\n")
 
 
@@ -241,8 +243,9 @@ def q_number(expres):
         print("\nNUMBERING OF TOPIC UNAVAILABLE!!!\n")
 
 
+
 if __name__ == "__main__":
-    search_term = "management and operations"
+    search_term = "mum"
     question = q_what(search_term)
     try:
         qn = q_number(question[0])
