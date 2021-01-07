@@ -261,19 +261,9 @@
                         $("#contentEditButton").show();
                         // alert( "Data Saved: "  );
                     }).always(function(response) {
-                        // $("#pg2-change-question").html();
-                        // console.debug($("#pg2-change-question").html());
-                        // $("#contentDoneButton").hide();
-                        // $("#contentEditButton").show();
-                        // location.reload();
-                            // console.debug(response["QUESTIONS_DICT"]);
-
                             var dictA = response["QUESTIONS_DICT_AJAX"];
                             pg2_tabs_leading_dict = response["QUESTION_LEADING_TEXT_AJAX"]
-                            
-                            // console.debug(dictB, pg2_tabs_leading_dict);
-                            // // pg2_tabs_dict = response["QUESTIONS_DICT_AJAX"];
-                            // console.debug(typeof(dictA));
+                            pg2_tabs_dict={};
                             Object.size = function(obj) {
                                 var size = 0, key;
                                 for (key in obj) {
@@ -283,49 +273,73 @@
                             };
                             const myObj = dictA
                             var size = Object.size(myObj);
-                            // console.debug(size);
-                            // // dictA = 
                             var dummyArray = [];
                             for(var index = 0; index < size; index++){
                                 pg2_tabs_dict[index] = {};
-                                // console.debug("sadsad");
                             }
                             var subindex = 0;
                             for(var index = 0; index < size; index++)
                             {
-                                
-                                
-                                // console.debug(dictA[index].length);
                                 if(dictA[index].length > 1){
                                     for(var sub =0; sub < dictA[index].length; sub++){
                                         dummyArray = dictA[index][sub];
                                         pg2_tabs_dict[index][dummyArray] = "None" ;
-                                        
-                                        
                                     }
-                                    // console.debug($("#pg2-change-question").html(Object.keys(pg2_tabs_dict[curr_qid])[0]);
-                                    // console.debug(Object.keys(pg2_tabs_dict[curr_qid])[currnet_index]);
-                                    $("#pg2-change-question").html(Object.keys(pg2_tabs_dict[curr_qid])[currnet_index]);
-                                    $("#pg2-change-questionlead").html(pg2_tabs_leading_dict[curr_qid][currnet_index]);
-                                    
                                 }
                                 else{
-                                    // subindex = dictA[index];
                                     dummyArray = dictA[index];
                                     pg2_tabs_dict[index][dummyArray] = "None" ;
-                                    // console.debug(Object.keys(pg2_tabs_dict[curr_qid])[0][0]);
-                                    
-                                    $("#pg2-change-question").html(Object.keys(pg2_tabs_dict[curr_qid])[0]);
-                                    $("#pg2-change-questionlead").html(pg2_tabs_leading_dict[curr_qid]);
-                                    
                                 }
                             }
-                            // console.debug(pg2_tabs_leading_dict);
-                            
-
                             // console.debug(pg2_tabs_dict);
-
+                            itm = pg2_tabs_dict[curr_qid];
+                            itm_leading = pg2_tabs_leading_dict[curr_qid];
+                            // console.debug(Object.keys(itm), currnet_index);
                             
+                            // console.debug(Object.keys(pg2_tabs_dict));
+                            if(Object.keys(itm).length > 1 ){
+                                // itm = Object.keys(itm);
+                                curr_sqid = Object.keys(itm)[currnet_index];
+                                $("#pg2-change-question").html(curr_sqid);
+                                $("#pg2-change-questionlead").html((itm_leading[currnet_index]));
+                                tabMVleft.onclick = () => {
+                                        if (currnet_index != 0) {
+                                            currnet_index -= 1;
+                                            curr_sqid = Object.keys(itm)[currnet_index]
+                                            $pg2change_q.stop().fadeOut(100, ()=> {
+                                            $pg2change_q.html(curr_sqid)
+                                            $pg2change_q.fadeIn(50)
+                                            })
+                                            $pg2change_ql.stop().fadeOut(100, ()=> {
+                                            $pg2change_ql.html(itm_leading[currnet_index]);
+                                            $pg2change_ql.fadeIn(50)
+                                            })
+                                        }
+                                }
+                            
+                            
+                                tabMVright.onclick = () => {
+                                            if (currnet_index != Object.keys(itm).length-1) {
+                                                currnet_index += 1;
+                                                curr_sqid = Object.keys(itm)[currnet_index]
+                                                $pg2change_q.stop().fadeOut(100, ()=> {
+                                                $pg2change_q.html(curr_sqid)
+                                                $pg2change_q.fadeIn(50)
+                                                })
+                                                $pg2change_ql.stop().fadeOut(100, ()=> {
+                                                $pg2change_ql.html(itm_leading[currnet_index]);
+                                                $pg2change_ql.fadeIn(50)
+                                                })
+                                            }
+                                            }
+                            }
+
+                            else{
+                                $("#pg2-change-question").html(Object.keys(itm));
+                                $("#pg2-change-questionlead").html((itm_leading));
+                            }
+                            
+
 
 
                     });

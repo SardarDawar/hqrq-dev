@@ -624,14 +624,15 @@ def PROJECTSEDITQUESTIONAJAX(request):
         # )
         
         # ? Set Prohect User Defined Subject
-        # project.setPROP_TOPIC_NAME(userDefinedSubject)
+        project.setPROP_TOPIC_NAME(userDefinedSubject)
 
         # ? Set Project User Defined Prospect
         # display_print(userDefinedProspect)
         if userDefinedProspect.strip().lower() == "":
-            # project.setPROP_TOPIC_IMPACT(userDefinedProspect)
+            
             # display_print(project.getPROP_TOPIC_IMPACT())
             userDefinedProspect = project.getPROP_TOPIC_IMPACT()
+            project.setPROP_TOPIC_IMPACT(userDefinedProspect)
 
 
         # display_print(updatedTense.strip().lower())

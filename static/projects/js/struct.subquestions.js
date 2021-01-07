@@ -89,6 +89,8 @@ const tabMVright = document.querySelector(".tab-mover.tb-mv-right")
 var curr_qid = 0;
 var curr_sqid = -1;
 var currnet_index = 0;
+var itm = pg2_tabs_dict[0];
+var itm_leading = pg2_tabs_leading_dict[0];
 
 pg2tabs.forEach(el => {    
   el.onclick = () => {
@@ -97,9 +99,9 @@ pg2tabs.forEach(el => {
     if (el.dataset.qid && !el.classList.contains("active")) {
       const qid = el.dataset.qid;
       if (qid === curr_qid) return;
-      const itm = pg2_tabs_dict[qid]
+      var itm = pg2_tabs_dict[qid]
       // console.debug(pg2_tabs_leading_dict[qid]);
-      const itm_leading = pg2_tabs_leading_dict[qid];
+      var itm_leading = pg2_tabs_leading_dict[qid];
       // console.debug(JSON.stringify(itm_leading));
       // JSON.stringify(itm_leading);
       curr_qid = qid;
