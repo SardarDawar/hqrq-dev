@@ -44,17 +44,6 @@ field_updproj.addEventListener('keyup' , (e) => {
     }
 })
 
-btnNext_UpdateProject.onclick = () => {
-    const projUpd = field_updproj.value.trim();
-    if (!projUpd || projUpd.length === 0) {
-        btnNext_UpdateProject.disabled = true;
-        return;
-    }
-
-    formInp_upd.value = projUpd;
-    pageCleanup();
-    form_projectUpdate.submit();
-}
 
 // form logic end
 
@@ -93,13 +82,26 @@ var itm = pg2_tabs_dict[0];
 var itm_leading = pg2_tabs_leading_dict[0];
 
 pg2tabs.forEach(el => {    
+  // console.debug(el);
   el.onclick = () => {
+
+    
+
     $("#contentEditButton").show();
     $("#contentDoneButton").hide();
     if (el.dataset.qid && !el.classList.contains("active")) {
       const qid = el.dataset.qid;
       if (qid === curr_qid) return;
       var itm = pg2_tabs_dict[qid]
+
+      // if
+      // console.debug($(".accessibility"));
+      if(qid == 0){
+        $(".auto-answer").show();
+      }
+      else{
+        $(".auto-answer").hide();
+      }
       // console.debug(pg2_tabs_leading_dict[qid]);
       var itm_leading = pg2_tabs_leading_dict[qid];
       // console.debug(JSON.stringify(itm_leading));
@@ -108,16 +110,19 @@ pg2tabs.forEach(el => {
       // console.debug(curr_qid);
       // console.debug(qid);
       // console.debug(itm);
+      if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)+1){
+        $("#btn_next_updproj").html("Submit");
+      }
+      else{
+        $("#btn_next_updproj").html("Next");
+      }
+
       pg2tabs.forEach(el2 => { 
         if (el2 !== el && el2.classList.contains("active")) el2.classList.remove("active")
       })
       if (!el.classList.contains("active")) el.classList.add("active")
       // console.debug(Object.keys(itm).length);
       if (Object.keys(itm).length>1) {
-        // if (!tabMVleft.classList.contains("show")) tabMVleft.classList.add("show")
-        // if (!tabMVright.classList.contains("show")) tabMVright.classList.add("show")
-        // console.debug(itm);
-        // for (var firstKey in itm['subq']) break;
         curr_sqid = Object.keys(itm)[0];
 
         currnet_index = 0
@@ -129,13 +134,15 @@ pg2tabs.forEach(el => {
           if (!tabMVright.classList.contains("show")) tabMVright.classList.add("show")
         });
         $pg2change_ql.stop().fadeOut(100, ()=> {
-          $pg2change_ql.html(itm_leading[currnet_index]);
+          $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+          itm_leading[currnet_index].slice(1));
           $pg2change_ql.fadeIn(50)
         });
         tabMVleft.onclick = null
         tabMVright.onclick = null
         tabMVleft.onclick = () => {
-          
+          $("#contentEditButton").show();
+    $("#contentDoneButton").hide();
           if (currnet_index != 0) {
             currnet_index -= 1;
             // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["prv_sq_id"]
@@ -146,7 +153,8 @@ pg2tabs.forEach(el => {
               $pg2change_q.fadeIn(50)
             })
             $pg2change_ql.stop().fadeOut(100, ()=> {
-              $pg2change_ql.html(itm_leading[currnet_index]);
+              $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+              itm_leading[currnet_index].slice(1));
               $pg2change_ql.fadeIn(50)
             })
           }
@@ -157,6 +165,8 @@ pg2tabs.forEach(el => {
           // else tabMVright.classList.remove("disabled")
         }
         tabMVright.onclick = () => {
+          $("#contentEditButton").show();
+    $("#contentDoneButton").hide();
           // var index = itm.map(function(o) { return o.attr1; }).indexOf(curr_sqid);
           // var index = itm.findIndex(p => p.attr1 == curr_sqid)
           // console.debug(index);
@@ -171,7 +181,8 @@ pg2tabs.forEach(el => {
               $pg2change_q.fadeIn(50)
             })
             $pg2change_ql.stop().fadeOut(100, ()=> {
-              $pg2change_ql.html(itm_leading[currnet_index]);
+              $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+              itm_leading[currnet_index].slice(1));
               $pg2change_ql.fadeIn(50)
             })
           }
@@ -204,9 +215,8 @@ pg2tabs.forEach(el => {
         $pg2change_ql.stop().fadeOut(100, ()=> {
           // console.debug(JSON.stringify(Object.keys(itm_leading)));
           // console.debug(itm_leading);
-          $pg2change_ql.html((itm_leading));
-          // $pg2change_q.html(Object.keys(itm)[0]);
-          // console.debug(itm['ql']);
+          $pg2change_ql.html((itm_leading[0]).charAt(0).toUpperCase() + 
+          itm_leading[0].slice(1));
           $pg2change_ql.fadeIn(50)
         })
       }
@@ -215,3 +225,126 @@ pg2tabs.forEach(el => {
 })
 
 pg2tabs[0].click()
+
+
+// TODO : Next Button Form Submission Handler
+btnNext_UpdateProject.onclick = () => {
+  const projUpd = field_updproj.value.trim();
+  if (!projUpd || projUpd.length === 0) {
+      btnNext_UpdateProject.disabled = true;
+      return;
+  }
+
+
+  // TODO : calculate the Number of tabs
+  // TODO : get the current active tab id
+  // TODO : compare if number of tabs is equal to (current active tab+1), Submit Form
+  if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)+1){
+    formInp_upd.value = projUpd;
+    pageCleanup();
+    form_projectUpdate.submit();
+  }
+  else{
+    // TODO : Remove All Active Tabs 
+    $.each($(pg2tabs), function(){
+      $(this).removeClass("active");
+    });
+
+    // TODO : Active Next Tab
+    $(pg2tabs[parseInt(curr_qid)+1]).addClass("active");
+    
+    // TODO : Get Next Tab Question Object
+    itm = pg2_tabs_dict[parseInt(curr_qid)+1];
+
+    // TODO : Get Next Tab Question Leading Object
+    itm_leading = pg2_tabs_leading_dict[parseInt(curr_qid)+1]
+
+    // TODO : Check Number of Questions for Next Tab
+    numberOfQuestions = Object.keys(itm).length;
+
+    // TODO : Check Number of Question is equal to 1 or greater than 1
+    if(numberOfQuestions > 1){
+
+      // TODO : Show Main Question
+      $pg2change_q.html(Object.keys(itm)[0]);
+      $pg2change_q.fadeIn(50);
+
+      // TODO : Show Main Question Leading Text
+      // console.debug(itm_leading);
+      $pg2change_ql.html((itm_leading[0]).charAt(0).toUpperCase() + 
+      itm_leading[0].slice(1));
+      $pg2change_ql.fadeIn(50);
+
+      // TODO : Show Left Angle Sub-Question Button
+      tabMVleft.classList.add("show");
+
+      // TODO : Show Right Angle Sub-Question Button
+      tabMVright.classList.add("show"); 
+      curr_sqid = Object.keys(itm)[0];
+      currnet_index = 0
+      tabMVleft.onclick = null;
+      tabMVright.onclick = null;
+      
+      // TODO : Left Angle Sub-Question Button Handler
+      tabMVleft.onclick = () => {
+        $("#contentEditButton").show();
+        $("#contentDoneButton").hide();
+        if (currnet_index != 0) {
+          currnet_index -= 1;
+          curr_sqid = Object.keys(itm)[currnet_index];
+          $pg2change_q.stop().fadeOut(100, ()=> {
+            $pg2change_q.html(curr_sqid);
+            $pg2change_q.fadeIn(50);
+          });
+          $pg2change_ql.stop().fadeOut(100, ()=> {
+            $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+            itm_leading[currnet_index].slice(1));
+            $pg2change_ql.fadeIn(50);
+          });
+        }
+      }
+
+      // TODO : Right Angle Sub-Question Button Handler
+      tabMVright.onclick = () => {
+        $("#contentEditButton").show();
+        $("#contentDoneButton").hide();
+        if (currnet_index != Object.keys(itm).length-1) {
+          currnet_index += 1;
+          curr_sqid = Object.keys(itm)[currnet_index]
+          $pg2change_q.stop().fadeOut(100, ()=> {
+            $pg2change_q.html(curr_sqid)
+            $pg2change_q.fadeIn(50);
+          });
+          $pg2change_ql.stop().fadeOut(100, ()=> {
+            $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+            itm_leading[currnet_index].slice(1));
+            $pg2change_ql.fadeIn(50);
+          });
+        }
+      }
+    }
+    else{
+      tabMVleft.onclick = null;
+      tabMVright.onclick = null;
+      curr_sqid = -1;
+      tabMVleft.classList.remove("show");
+      tabMVright.classList.remove("show");
+      $pg2change_q.html(Object.keys(itm)[0]);
+      $pg2change_q.fadeIn(50);
+      $pg2change_ql.html((itm_leading[0]).charAt(0).toUpperCase() + 
+      itm_leading[0].slice(1));
+      $pg2change_ql.fadeIn(50);
+    }
+    
+    curr_qid = $(pg2tabs[parseInt(curr_qid)+1]).attr("data-qid");
+    if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)+1){
+      $("#btn_next_updproj").html("Submit");
+    }
+    else{
+      $("#btn_next_updproj").html("Next");
+    }
+
+  }
+}
+
+
