@@ -127,6 +127,8 @@ pg2tabs.forEach(el => {
 
         currnet_index = 0
         // console.debug(curr_sqid);
+        // console.debug(ANSWER_DICT[curr_qid][currnet_index]);
+        $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
         $pg2change_q.stop().fadeOut(100, ()=> {
           $pg2change_q.html(curr_sqid);
           $pg2change_q.fadeIn(50)
@@ -146,6 +148,7 @@ pg2tabs.forEach(el => {
           if (currnet_index != 0) {
             currnet_index -= 1;
             // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["prv_sq_id"]
+            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
             curr_sqid = Object.keys(itm)[currnet_index]
             // const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
             $pg2change_q.stop().fadeOut(100, ()=> {
@@ -173,6 +176,7 @@ pg2tabs.forEach(el => {
           if (currnet_index != Object.keys(itm).length-1) {
             currnet_index += 1;
             curr_sqid = Object.keys(itm)[currnet_index]
+            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
             // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["nxt_sq_id"]
             // curr_sqid = new_sq_id
             // const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
@@ -198,15 +202,19 @@ pg2tabs.forEach(el => {
         // if (!("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVright.classList.add("disabled")
         // else tabMVright.classList.remove("disabled")
 
-      } else {
-        tabMVleft.onclick = null
-        tabMVright.onclick = null
-        // if (tabMVleft.classList.contains("show")) tabMVleft.classList.remove("show")
-        // if (tabMVright.classList.contains("show")) tabMVright.classList.remove("show")
+      } 
+      else {
+
+        tabMVleft.onclick = null;
+        tabMVright.onclick = null;
+        // console.debug(ANSWER_DICT[curr_qid]);
+
+        // !  Set Answer for current Tab
+        $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid]);
+        
         curr_sqid = -1;
-        // console.debug($pg2change_q);
+        
         $pg2change_q.stop().fadeOut(100, ()=> {
-          // console.debug(Object.keys(itm)[0]);
           $pg2change_q.html(Object.keys(itm)[0]);
           $pg2change_q.fadeIn(50)
           if (tabMVleft.classList.contains("show")) tabMVleft.classList.remove("show")
@@ -240,8 +248,11 @@ btnNext_UpdateProject.onclick = () => {
   // TODO : get the current active tab id
   // TODO : compare if number of tabs is equal to (current active tab+1), Submit Form
   if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)+1){
-    formInp_upd.value = projUpd;
+    // formInp_upd.value = projUpd;
+    $("#projFormInp-upd").val(JSON.stringify(ANSWER_DICT));
+    // console.debug((ANSWER_DICT));
     pageCleanup();
+    // console.debug($("#projFormInp-upd").val());
     form_projectUpdate.submit();
   }
   else{
@@ -284,6 +295,9 @@ btnNext_UpdateProject.onclick = () => {
       currnet_index = 0
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
+      // ANSWER_DICT[parseInt(curr_qid)+1][currnet_index] = $("#pg1_field_updproj").val();
+      // console.debug(ANSWER_DICT);
+      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][currnet_index]);
       
       // TODO : Left Angle Sub-Question Button Handler
       tabMVleft.onclick = () => {
@@ -291,6 +305,7 @@ btnNext_UpdateProject.onclick = () => {
         $("#contentDoneButton").hide();
         if (currnet_index != 0) {
           currnet_index -= 1;
+          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][currnet_index]);
           curr_sqid = Object.keys(itm)[currnet_index];
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid);
@@ -310,6 +325,7 @@ btnNext_UpdateProject.onclick = () => {
         $("#contentDoneButton").hide();
         if (currnet_index != Object.keys(itm).length-1) {
           currnet_index += 1;
+          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][currnet_index]);
           curr_sqid = Object.keys(itm)[currnet_index]
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid)
@@ -327,6 +343,7 @@ btnNext_UpdateProject.onclick = () => {
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
       curr_sqid = -1;
+      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1]);
       tabMVleft.classList.remove("show");
       tabMVright.classList.remove("show");
       $pg2change_q.html(Object.keys(itm)[0]);

@@ -33,6 +33,15 @@ class Project(models.Model):
     stage = models.CharField(max_length=25, choices=PROJ_STAGE_CHOICES, default=PROJ_STAGE_DEFAULT)
     status = models.CharField(max_length=25, choices=PROJ_STATUS_CHOICES, default=PROJ_STATUS_DEFAULT)
 
+    # ! Script Generated Questions to save...
+    generatedQuestions = models.TextField(verbose_name="Project Questions", blank = True, null=True, default= "")
+
+    # ! Script Generated Questions Leading Text to save...
+    generatedQuestionsLeadingText = models.TextField(verbose_name="Project Questions Leading Text", blank = True, null=True, default= "")
+
+    # ! Script Generated Questions Leading Text to save...
+    generatedAnswers = models.TextField(verbose_name="Project Answers", blank = True, null=True, default= "")
+
     # metadata    
     slug = models.SlugField(max_length = 250, null = True, blank = True)
     dt_create = models.DateTimeField(default=timezone.now)
@@ -49,6 +58,18 @@ class Project(models.Model):
 
     def get_slug(self):
         return f'{self.id}-{slugify(self.title)}'
+
+    # ! Get Answers
+    def getAnswers(self):
+        return self.generatedAnswers
+
+    # ! Get Questions Leading Text
+    def getQuestionsLeadingText(self):
+        return self.generatedQuestionsLeadingText
+
+    # ! Get Questions
+    def getQuestoins(self):
+        return self.generatedQuestions
 
     def get_possible_subtypes(self):
         return PROJ_SUBTYPE_CHOICES_SEL[self.doc_type]

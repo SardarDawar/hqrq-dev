@@ -665,10 +665,18 @@ def PROJECTSEDITQUESTIONAJAX(request):
         updatedQuestions = heirarchydummy.updatedExistingQuestion(userDefinedSubject, userDefinedProspect, Tense , Orientation)
         # display_print(updatedQuestions)
         (filteredQuestionList, leadingText, postQuestionMessage) = updatedQuestions
-        display_print((filteredQuestionList, leadingText, postQuestionMessage))
+        # display_print((filteredQuestionList, leadingText, postQuestionMessage))
         for index in range(len(filteredQuestionList)) :
             questionsDict[index] = filteredQuestionList[index]
             questionLeadingText[index] = leadingText[index]
+
+        # ! Save script generated questions and questions leading text to the database
+        project.generatedQuestions = questionsDict
+        project.generatedQuestionsLeadingText = questionLeadingText
+        project.save()
+        # display_print(project.getQuestoins())
+
+
 
         return JsonResponse(json.loads( json.dumps( {"QUESTIONS_DICT_AJAX" : questionsDict, "QUESTION_LEADING_TEXT_AJAX":  questionLeadingText})), status=200)
 
@@ -685,12 +693,19 @@ def projectSubquestions(request, slug):
 
     # Question Leading Text..
     questionLeadingText = {}
+
+    # Answer for the Questions
+
+    answersDict = {}
     try:
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         raise Http404("Project does not exist")
     
     if request.method == 'POST':
+        # display_print(request.POST)
+        project.generatedAnswers = json.loads(request.POST["answer_dict"])
+        project.save()
         return redirect('project-topics', project.slug)
 
 
@@ -703,24 +718,48 @@ def projectSubquestions(request, slug):
     docLengthOptions = {"PDS_1" : 2, "PDS_UPTO_5" : 3, "PDS_UPTO_20" : 4, "PDS_UNLIMITED" : 5}
 
 
-    # Question for the Script...
-    (filteredQuestionList, leadingText, postQuestionMessage) =  question(
-        firstName = request.user.email,
-        projectName = project.title,
-        masterDocTypeIndex = doc_list_1.index(project.doc_type),
-        detailedDoctype = sub_type_list.index(project.doc_subtype),
-        targetReader = project.getPROP_TARGET_READER_RESPONSE(),
-        subjectType = subject_type_list.index(project.doc_topic),
-        subjectName = project.getPROP_TOPIC_NAME(),
-        affectedBy =  project.getPROP_TOPIC_IMPACT(),
-        actionOrImpression = project.getPROP_TOPIC_CAUSE(),
-        affectingOn = project.getPROP_TARGET_IMPRESSION(),
-        docLengthChoice = docLengthOptions[project.doc_len]
-    )
-    for index in range(len(filteredQuestionList)) :
-        questionsDict[index] = filteredQuestionList[index]
-        questionLeadingText[index] = leadingText[index]
+    # ! Check if the questions for the current project exists or not...
+    # ! Check if the question leading text exists for the proejct
+    if(len(project.getQuestoins()) == 0 or  project.getQuestoins().strip() == "" or len(project.getQuestionsLeadingText()) == 0 or  project.getQuestionsLeadingText().strip() == ""):
+        # Question for the Script...
+        (filteredQuestionList, leadingText, postQuestionMessage) =  question(
+            firstName = request.user.email,
+            projectName = project.title,
+            masterDocTypeIndex = doc_list_1.index(project.doc_type),
+            detailedDoctype = sub_type_list.index(project.doc_subtype),
+            targetReader = project.getPROP_TARGET_READER_RESPONSE(),
+            subjectType = subject_type_list.index(project.doc_topic),
+            subjectName = project.getPROP_TOPIC_NAME(),
+            affectedBy =  project.getPROP_TOPIC_IMPACT(),
+            actionOrImpression = project.getPROP_TOPIC_CAUSE(),
+            affectingOn = project.getPROP_TARGET_IMPRESSION(),
+            docLengthChoice = docLengthOptions[project.doc_len]
+        )
+        for index in range(len(filteredQuestionList)) :
+            questionsDict[index] = filteredQuestionList[index]
+            questionLeadingText[index] = leadingText[index]
 
+        # display_print((filteredQuestionList, leadingText, postQuestionMessage))
+
+        # ! Save script generated questions and questions leading text to the database
+        project.generatedQuestions = questionsDict
+        project.generatedQuestionsLeadingText = questionLeadingText
+        # display_print(project.getAnswers())
+        project.save()
+
+    # ! Create and Save an Answer Object when asnwrs are not provided
+    if(len(project.getAnswers()) == 0 or project.getAnswers().strip() == ""):
+        project.generatedAnswers = project.generatedQuestionsLeadingText
+        A = eval(str(project.generatedAnswers))
+        for i in A:
+            if(len(A[i])!=0):
+                for j in range(0, len(A[i])):
+                    A[i][j] = ""
+            else:
+                A[i] = ""
+        project.generatedAnswers = A
+        project.save()
+    # display_print(project.getAnswers())
 
     # GET
     burl, battr = getFlowBackUrlAttr(None)
@@ -744,14 +783,16 @@ def projectSubquestions(request, slug):
         'FORM_URL_ATTR': "project-subq",
         'BACK_URL': burl,
         'BACK_URL_ATTR': battr,
-
         "PROJECT_TOPIC_NAME": prop_topic_name_response,
 
-        # "QUESTIONS_DICT": getQuestionsDict(project),
-        "QUESTIONS_DICT":questionsDict, 
+        # ! Question
+        "QUESTIONS_DICT": eval(project.generatedQuestions), 
 
-        # Question Leading Text
-        "QUESTION_LEADING_TEXT" : questionLeadingText
+        # ! Question Leading Text
+        "QUESTION_LEADING_TEXT" : eval(str(project.getQuestionsLeadingText())),
+
+        # ! Answer 
+        "ANSWER_DICT" : eval(project.getAnswers())
     }
 
     return render(request, "projects/struct.pages/subquestions.html", context)
@@ -787,3 +828,9 @@ def projectTopics(request, slug):
     }
 
     return render(request, "projects/struct.pages/topics.html", context)
+
+
+# ! AJAX CALL TO SAVE ANSWERS
+def PROJECT_ANSWER_SAVE(request):
+    display_print("ANSWER AJAX CALL WORKING")
+    return JsonResponse(json.loads( json.dumps( {"instace": "success"})), status=200)

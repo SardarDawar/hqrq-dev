@@ -2,7 +2,7 @@
 from django.urls import path, re_path
 from .views import (projectCreate, project, projectUpdateView, projectPropertyUpdateView, 
                     projectPropertyUpdate_AJAX, projectPropertyExpUpdate_AJAX,
-                    projectSubquestions, projectTopics, PROJECTSEDITQUESTIONAJAX)
+                    projectSubquestions, projectTopics, PROJECTSEDITQUESTIONAJAX, PROJECT_ANSWER_SAVE)
 
 # url patterns under ('p/')
 urlpatterns = [
@@ -21,6 +21,9 @@ urlpatterns = [
 
     # ! AJAX CALL FOR EDIT QUESTION
     path("u/ajax/", PROJECTSEDITQUESTIONAJAX, name="PROJECTSEDITQUESTIONAJAX_URL"),
+
+    # ! AJAX CALL FOR ANSWER
+    path("u/ajax/answers/", PROJECT_ANSWER_SAVE, name = "PROJECT_ANSWER_SAVE_URL"),
 
     # api urls (projects)
     path('api/update/prop', projectPropertyUpdate_AJAX, name='api-project-prop-update'),
