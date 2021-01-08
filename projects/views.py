@@ -52,7 +52,7 @@ def breakSentence(q):
     for i in q:
         if i== " " or i == "":
             q.remove(i)
-    q = q[:-1]
+    # q = q[:-1]
     wQuestions = ['what', 'when', 'where', 'how', 'why']
     vWords= ['should', 'will', 'can', 'does', 'is', 'could', 'present' , 'past', "future"]
     articles = ["a","the"]
@@ -61,6 +61,7 @@ def breakSentence(q):
     userDefinedSubject = ""
     updatedPWOIndex = ""
     userDefinedProspect = ""
+    dummyWord = ""
 
     # ! Remove Questions Words
     for i in q:
@@ -79,44 +80,60 @@ def breakSentence(q):
             q.remove(i)
             break
 
-    # display_print(updatedTense)
     # ! User Defined Subject
     for index in range(0, len(q)):
         # ? With Articles
         if q[index].strip().lower() in articles:
             userDefinedSubject = ""
-            userDefinedSubject = q[index] + " " + q[index+1]
-            q.remove(q[index])
-            q.remove(q[index])
+            for i in range(index, len(q)):
+                if(q[index].strip().lower() in mWords or q[index].strip() == '?'):
+                    break
+                else:
+                    dummyWord += q[index] + " "
+                    q.remove(q[index])
+                    i = i-1
+            userDefinedSubject = dummyWord.strip()
             break
         else:
             # ? Without Articles
-            userDefinedSubject = ""
-            userDefinedSubject = q[index]
-            q.remove(q[index])
+            for i in range(index, len(q)):
+                if(q[index].strip().lower() in mWords or q[index].strip() == '?'):
+                    break
+                else:
+                    dummyWord += q[index] + " "
+                    q.remove(q[index])
+                    i = i-1
+            userDefinedSubject = dummyWord.strip()
             break
+
+    dummyWord = ""
     
+    # ! Check if it is last element
+    # ! if it is "?"
+    if(len(q) == 1):
+        if q[0] == "?":
+            q.remove(q[0]) 
+
+
     # ! Orientation
-    for i in q:
-        if i.strip().lower() in mWords:
-            updatedPWOIndex = i
-            q.remove(i)
+    if(len(q) != 0):
+        if q[0].strip().lower() in mWords:
+            updatedPWOIndex = q[0]
+            q.remove(q[0])
     
-    # ! User Defined Prospect
-    for index in range(0, len(q)):
-        # ? With Articles
-        if q[index].strip().lower() in articles:
-            userDefinedProspect = ""
-            userDefinedProspect = q[index] + " " +  q[index+1]
-            q.remove(q[index])
-            q.remove(q[index])
-            break
-        else:
-            # ? Without Articles
-            userDefinedProspect = ""
-            userDefinedProspect = q[index]
-            q.remove(q[index])
-            break
+
+    display_print(q)
+
+    if(len(q) != 0):
+        userDefinedProspect=""
+        for index in range(0, len(q)):
+            if(q[index].strip() == "?"):
+                userDefinedProspect = dummyWord.strip()
+                break
+            else:
+                dummyWord += q[index] + " "
+            
+        dummyWord = ""
         
     return (updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect)
 
@@ -619,7 +636,7 @@ def PROJECTSEDITQUESTIONAJAX(request):
         # project.getPROP_TOPIC_NAME()
         
         # display_print(project.setPROP_TOPIC_NAME(userDefinedSubject)
-        # display_print((updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect))
+        display_print((updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect))
         # display_print(updatedTense)
         # )
         
@@ -632,6 +649,7 @@ def PROJECTSEDITQUESTIONAJAX(request):
             
             # display_print(project.getPROP_TOPIC_IMPACT())
             userDefinedProspect = project.getPROP_TOPIC_IMPACT()
+        else:
             project.setPROP_TOPIC_IMPACT(userDefinedProspect)
 
 
