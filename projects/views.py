@@ -786,13 +786,13 @@ def projectSubquestions(request, slug):
         "PROJECT_TOPIC_NAME": prop_topic_name_response,
 
         # ! Question
-        "QUESTIONS_DICT": eval(project.generatedQuestions), 
+        "QUESTIONS_DICT": eval(str(project.generatedQuestions)), 
 
         # ! Question Leading Text
         "QUESTION_LEADING_TEXT" : eval(str(project.getQuestionsLeadingText())),
 
         # ! Answer 
-        "ANSWER_DICT" : eval(project.getAnswers())
+        "ANSWER_DICT" : eval(str(project.getAnswers()))
     }
 
     return render(request, "projects/struct.pages/subquestions.html", context)
