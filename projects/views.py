@@ -792,7 +792,313 @@ def projectSubquestions(request, slug):
         "QUESTION_LEADING_TEXT" : eval(str(project.getQuestionsLeadingText())),
 
         # ! Answer 
-        "ANSWER_DICT" : eval(str(project.getAnswers()))
+        "ANSWER_DICT" : eval(str(project.getAnswers())),
+        "PAGE_TIP":["""
+<p>
+    <strong>WHAT</strong>
+    : A <em>definitive</em> question.
+</p>
+<p>
+    Clearly and succinctly define your topic and select ‘Next’ to move to the
+    next question.
+</p>
+<p>
+    Your answer should follow on from the lead-in text below (no need to repeat
+    the lead-in text in your answer).
+</p>
+<p>
+    Use ‘Answer for me’ to try to find a result on the web (works for most
+    simple topics).
+</p>
+<p>
+    You can edit the web result to tailor it to your document.
+</p>
+<p>
+    Some topics are specific to you and may require more thought or research to
+    prepare the best answer.
+</p>"""
+, """<p>
+    <strong>WHERE</strong>
+    : A <em>location</em> question - relates to a destination, aspect, place in
+    time, division, space or place.
+</p>
+<p>
+    Your answer should follow on from the lead-in text (do not repeat the
+    lead-in text). This understanding of context is used by the HyperQuestions
+    AI Engine.
+</p>
+<p>
+    <u> </u>
+</p>
+<p>
+    <u>Example</u>
+    :
+</p>
+<p>
+    <strong>Question</strong>
+    :
+    <em>
+        Where could a poodle enhance the life of elderly nursing home
+        residents?
+    </em>
+</p>
+<p>
+    <strong>Lead-in</strong>
+    :
+    <em>
+        A poodle could enhance the life of elderly nursing home residents in …
+    </em>
+</p>
+<p>
+    <strong>Answer</strong>
+    :
+    <em>
+        … low-care nursing homes that offer independent living and allow
+        residents to keep pets.
+    </em>
+</p>
+<p>
+    <em> </em>
+</p>
+<p>
+    <u>Not sure this is the perfect question for you? </u>
+</p>
+<p>
+    Use grey arrows to see alternate versions of the question – you may use any
+    one of these.
+</p>
+<p>
+    Your selection will be locked-in once you enter an answer and click ‘Next’.
+</p>
+<p>
+    The ‘Edit’ button will edit all questions across this topic and can only be
+    undertaken before a response is entered and saved (by hitting ‘Next’).
+</p>
+<p>
+    <u>Edit options include</u>
+    : Changing the tense of the question, changing the expression of the
+    subject or object and changing the relationship between subject and object
+    (positive relationship, negative or neutral).
+</p>
+<p>
+    On hitting ‘Done’ all questions will be refreshed for this topic.
+</p>
+<p>
+    If none of the above offers a question you feel is workable, you can go
+    back and change the topic, or skip this question by typing the answer as
+    ‘Skip’.
+</p>
+<p>
+    Enter an answer (by voice or typing) and click ‘Next’ to save your response
+    and proceed to the next question or topic selection process.
+</p>""","""<p>
+    <strong>WHEN</strong>
+    : A <em>time-related</em> question - relates to defining a point in time.
+</p>
+<p>
+    For example, next month, next year, in January, in the next decade, in 30
+    seconds, during his youth, in the Jurassic period etc.
+</p>
+<p>
+    Your answer should follow on from the lead-in text (not repeat the lead-in
+    text). This understanding of context is used by the HyperQuestions Ai
+    Engine.
+</p>
+<p>
+    <u>Example</u>
+    :
+</p>
+<p>
+    <strong>Question</strong>
+    :
+    <em>
+        When could a poodle enhance the life of elderly nursing home residents?
+    </em>
+</p>
+<p>
+    <strong>Lead-in</strong>
+    :
+    <em>
+        A poodle could enhance the life of elderly nursing home residents when
+        …
+    </em>
+</p>
+<p>
+    <strong>Answer</strong>
+    :
+    <em>
+        … they have been able to experience the companionship associated with
+        caring for and receiving affection from an animal. Residents have
+        noticed an improvement in their outlook, attitude and zest for life
+        within 6 months of receiving a poodle to care for.
+    </em>
+</p>
+<p>
+    <em><u>Not sure this is the perfect question for you?</u> </em>
+</p>
+<p>
+    Use grey arrows to see alternate versions of the question – you may use any
+    one of these. Your selection will be locked in once you enter an answer and
+    click next.
+</p>
+<p>
+    The edit button will edit all questions across this topic and can only be
+    undertaken before a response is entered and saved (by hitting next). Edit
+    options include: changing the tense of the question, changing the
+    expression of the subject or object and changing the relationship between
+    subject and object (positive relationship, negative or neutral). On hitting
+    “done” all questions will be re-loaded for this topic.
+</p>
+<p>
+    If none of the above offers a question you feel is workable, you can go
+    back and change the topic, or skip this question by typing the answer as
+    “skip”.
+</p>
+<p>
+    Enter an answer (voice or typing) and click next to save your response and
+    proceed to the next question or topic selection process.
+</p>""", """<p>
+    <strong>How</strong>
+    : a method or functional question - this question relates to defining the
+    approach by which a result will be achieved.
+</p>
+<p>
+    For example, by using XYZ resources, deploying the ABC methodology, using
+    the XYZ approach, doing A) then B) then C).
+</p>
+<p>
+    An answer should follow on from the lead-in text (not repeat the lead-in
+    text). This understanding of context is used by the HyperQuestions Ai
+    Engine.
+</p>
+<p>
+    <strong> </strong>
+</p>
+<p>
+    <u>Example</u>
+    :
+</p>
+<p>
+    <strong>Question</strong>
+    :
+    <em>
+        How can a poodle enhance the life of elderly nursing home residents?
+    </em>
+</p>
+<p>
+    <strong>Lead-in</strong>
+    :
+    <em>
+        A poodle can enhance the life of elderly nursing home residents by …
+    </em>
+</p>
+<p>
+    <strong>Answer</strong>
+    :
+    <em>
+        … providing a reason for living. Through the need to feed and provide
+        water to the dog each day, residents experience a level of purpose,
+        they have often not had for many years. These efforts are rewarded
+        through the love and affection provided by the dog, sitting on their
+        lap each evening.
+    </em>
+</p>
+<p>
+    <strong> </strong>
+</p>
+<p>
+    <u>Not sure this is the perfect question for you? </u>
+</p>
+<p>
+    Use grey arrows to see alternate versions of the question – you may use any
+    one of these. Your selection will be locked in once you enter an answer and
+    click next.
+</p>
+<p>
+    The edit button will edit all questions across this topic and can only be
+    undertaken before a response is entered and saved (by hitting next). Edit
+    options include: changing the tense of the question, changing the
+    expression of the subject or object and changing the relationship between
+    subject and object (positive relationship, negative or neutral). On hitting
+    “done” all questions will be re-loaded for this topic.
+</p>
+<p>
+    If none of the above offers a question you feel is workable, you can go
+    back and change the topic, or skip this question by typing the answer as
+    “skip”.
+</p>
+<p>
+    Enter an answer (voice or typing) and click next to save your response and
+    proceed to the next question or topic selection process.
+</p>""", """<p>
+    <strong>WHY</strong>
+    : a <em>reasoning</em> question - this question relates to outlining a
+    rationale or reason to explain what makes this important.
+</p>
+<p>
+    For example, provides XYZ benefits, informs ABC, offers advanages to XYZ
+    group, enables XYZ process.
+</p>
+<p>
+    An answer should follow on from the lead-in text (not including the lead-in
+    text). This understanding of context is used by the HyperQuestions Ai
+    Engine.
+</p>
+<p>
+    <strong>Example:</strong>
+</p>
+<p>
+    <strong>Question</strong>
+    :
+    <em>
+        How can a poodle enhance the life of elderly nursing home residents?
+    </em>
+</p>
+<p>
+    <strong>Lead-in</strong>
+    :
+    <em>
+        A poodle can enhance the life of elderly nursing home residents because
+        …
+    </em>
+</p>
+<p>
+    <strong>Answer</strong>
+    :
+    <em>
+        … is can provide love and support beyond that which is provided by
+        family and friends. They offer a 24/7 bedside companion that responds
+        to touch and provides new meaning to the lives of the elderly.
+    </em>
+</p>
+<p>
+    <strong> </strong>
+</p>
+<p>
+    <u>Not sure this is the perfect question for you? </u>
+</p>
+<p>
+    Use grey arrows to see alternate versions of the question – you may use any
+    one of these. Your selection will be locked in once you enter an answer and
+    click next.
+</p>
+<p>
+    The edit button will edit all questions across this topic and can only be
+    undertaken before a response is entered and saved (by hitting next). Edit
+    options include: changing the tense of the question, changing the
+    expression of the subject or object and changing the relationship between
+    subject and object (positive relationship, negative or neutral). On hitting
+    “done” all questions will be re-loaded for this topic.
+</p>
+<p>
+    If none of the above offers a question you feel is workable, you can go
+    back and change the topic, or skip this question by typing the answer as
+    “skip”.
+</p>
+<p>
+    Enter an answer (voice or typing) and click next to save your response and
+    proceed to the next question or topic selection process.
+</p>"""]
     }
 
     return render(request, "projects/struct.pages/subquestions.html", context)

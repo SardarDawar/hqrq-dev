@@ -102,14 +102,14 @@ pg2tabs.forEach(el => {
       else{
         $(".auto-answer").hide();
       }
-      // console.debug(pg2_tabs_leading_dict[qid]);
       var itm_leading = pg2_tabs_leading_dict[qid];
-      // console.debug(JSON.stringify(itm_leading));
-      // JSON.stringify(itm_leading);
       curr_qid = qid;
-      // console.debug(curr_qid);
-      // console.debug(qid);
-      // console.debug(itm);
+      $("button.acc-help").attr("data-helptext", TIP_DICT[parseInt(curr_qid)]);
+      
+      $("button.acc-help").on("click", function(){
+        $("#infoModalContent-text").html( TIP_DICT[parseInt(curr_qid)]);
+      });
+      
       if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)+1){
         $("#btn_next_updproj").html("Submit");
       }
