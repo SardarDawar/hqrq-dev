@@ -119,7 +119,7 @@
                   {% if BACK_URL %}
                   <button type="button" class="btn btn-dark cust-button" id="btn_back_updproj" onclick="event.preventDefault(); pageCleanup(); window.location.href='{% url BACK_URL project.slug BACK_URL_ATTR %}'">Back</button>
                   {% endif %}
-                  <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_updproj">Next</button>
+                  <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_updproj" data-url="{% url  'PROJECT_ANSWER_SAVE_URL' %}">Next</button>
               </div>
               
               <div class="noshow" style="opacity: 0; position: absolute; top: 0; z-index: -100;">

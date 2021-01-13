@@ -1138,5 +1138,12 @@ def projectTopics(request, slug):
 
 # ! AJAX CALL TO SAVE ANSWERS
 def PROJECT_ANSWER_SAVE(request):
-    display_print("ANSWER AJAX CALL WORKING")
-    return JsonResponse(json.loads( json.dumps( {"instace": "success"})), status=200)
+    # display_print("ANSWER AJAX CALL WORKING")
+    # display_print(request.GET)
+    try:
+        project = Project.objects.get(id=int(request.GET['project_id']))
+        project.generatedAnswers = request.GET['answer']
+        project.save()
+        return JsonResponse(json.loads( json.dumps( {"instance": eval(str(project.getAnswers()))})), status=200)
+    except Exception:
+        return JsonResponse(json.loads( json.dumps( {"instance": "error"})), status=400)

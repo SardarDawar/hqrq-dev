@@ -273,6 +273,27 @@ pg2tabs.forEach(el => {
         })
       }
     }
+
+    const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
+    $.ajax({
+      
+      method: "GET",
+      url: $("#btn_next_updproj").attr("data-url"),
+      data: { 
+          project_id : project_id,
+          // name: "AJAx", 
+          answer : JSON.stringify(ANSWER_DICT),
+      }
+  }).done(function(response){
+      // console.debug(response);
+      // ANSWER_DICT = response["instance"];
+      for(var index=0; index < Object.keys(response["instance"]).length; index++){
+        // console.debug(response["instance"][index]);
+        ANSWER_DICT[index] = response["instance"][index];
+      }
+  });
+
+
   }
 })
 
@@ -282,6 +303,30 @@ pg2tabs[0].click()
 // TODO : Next Button Form Submission Handler
 btnNext_UpdateProject.onclick = () => {
   const projUpd = field_updproj.value.trim();
+  // console.debug("NEXT BUTTON IS PRESSED");
+  
+  // Save Answer to the database through AJAX Call
+  // console.debug(ANSWER_DICT);
+  const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
+  $.ajax({
+    
+    method: "GET",
+    url: $("#btn_next_updproj").attr("data-url"),
+    data: { 
+        project_id : project_id,
+        // name: "AJAx", 
+        answer : JSON.stringify(ANSWER_DICT),
+    }
+}).done(function(response){
+    // console.debug(response["instance"]);
+    // ANSWER_DICT = response["instance"];
+    for(var index=0; index < Object.keys(response["instance"]).length; index++){
+      // console.debug(response["instance"][index]);
+      ANSWER_DICT[index] = response["instance"][index];
+    }
+});
+
+
   if (!projUpd || projUpd.length === 0) {
       btnNext_UpdateProject.disabled = true;
       return;
