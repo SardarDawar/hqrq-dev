@@ -117,6 +117,17 @@ pg2tabs.forEach(el => {
         $("#btn_next_updproj").html("Next");
       }
 
+
+      // if($("#pg1_field_updproj").val().trim() != ""){
+      //   $("#contentEditButton").attr("disabled", true);
+      // }
+      // else{
+      //   $("#contentEditButton").attr("disabled", false);
+      // }
+
+      // console.debug($("#pg1_field_updproj").val());
+
+
       pg2tabs.forEach(el2 => { 
         if (el2 !== el && el2.classList.contains("active")) el2.classList.remove("active")
       })
@@ -129,6 +140,17 @@ pg2tabs.forEach(el => {
         // console.debug(curr_sqid);
         // console.debug(ANSWER_DICT[curr_qid][currnet_index]);
         $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+
+        // TODO : Disabled Edit Button on current value of input field
+        if($("#pg1_field_updproj").val().trim() != ""){
+          $("#contentEditButton").attr("disabled", true);
+        }
+        else{
+          $("#contentEditButton").attr("disabled", false);
+        }
+
+
+
         $pg2change_q.stop().fadeOut(100, ()=> {
           $pg2change_q.html(curr_sqid);
           $pg2change_q.fadeIn(50)
@@ -149,6 +171,16 @@ pg2tabs.forEach(el => {
             currnet_index -= 1;
             // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["prv_sq_id"]
             $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+
+
+            // TODO : Disabled Edit Button on current value of input field
+        if($("#pg1_field_updproj").val().trim() != ""){
+          $("#contentEditButton").attr("disabled", true);
+        }
+        else{
+          $("#contentEditButton").attr("disabled", false);
+        }
+
             curr_sqid = Object.keys(itm)[currnet_index]
             // const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
             $pg2change_q.stop().fadeOut(100, ()=> {
@@ -177,6 +209,16 @@ pg2tabs.forEach(el => {
             currnet_index += 1;
             curr_sqid = Object.keys(itm)[currnet_index]
             $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+
+            // TODO : Disabled Edit Button on current value of input field
+        if($("#pg1_field_updproj").val().trim() != ""){
+          $("#contentEditButton").attr("disabled", true);
+        }
+        else{
+          $("#contentEditButton").attr("disabled", false);
+        }
+
+
             // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["nxt_sq_id"]
             // curr_sqid = new_sq_id
             // const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
@@ -197,20 +239,22 @@ pg2tabs.forEach(el => {
           // else tabMVright.classList.remove("disabled")
         }
 
-        // if (!("prv_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVleft.classList.add("disabled")
-        // else tabMVleft.classList.remove("disabled")
-        // if (!("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVright.classList.add("disabled")
-        // else tabMVright.classList.remove("disabled")
-
       } 
       else {
-
         tabMVleft.onclick = null;
         tabMVright.onclick = null;
-        // console.debug(ANSWER_DICT[curr_qid]);
-
         // !  Set Answer for current Tab
         $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid]);
+
+
+        // TODO : Disabled Edit Button on current value of input field
+        if($("#pg1_field_updproj").val().trim() != ""){
+          $("#contentEditButton").attr("disabled", true);
+        }
+        else{
+          $("#contentEditButton").attr("disabled", false);
+        }
+
         
         curr_sqid = -1;
         
@@ -361,7 +405,18 @@ btnNext_UpdateProject.onclick = () => {
       $("#btn_next_updproj").html("Next");
     }
 
+    // console.debug($(this));
+
   }
+  // console.debug($(this));
 }
 
 
+// ! Case Test for Edit Button
+// TODO : edit button should be there but blocked (possibly with small error message) - remove answers on this topic first.
+if($("#pg1_field_updproj").val().trim() != ""){
+  $("#contentEditButton").attr("disabled", true);
+}
+else{
+  $("#contentEditButton").attr("disabled", false);
+}

@@ -64,18 +64,19 @@
                   {% endfor %}
                 </div>
               </div>
-              <div class="top-text full" id="pg1-acc-speak-field" value="{{ QUESTION_TEXT }}">
+              
+              <div class="top-text full" >
                   <div class="row">
-                    <div class="tx5 text-muted ml-auto mr-0" id="contentEditButton" style="margin-top: -30px;" >
+                    <button class="tx5 text-muted ml-auto mr-3 btn btn-link text-decoration-none" id="contentEditButton" style="margin-top: -30px;" >
                         Edit
-                    </div>
-                    <div class="tx5 text-muted ml-auto mr-4" id="contentDoneButton" style="margin-top: -30px;" >
+                    </button>
+                    <div class="tx5 text-muted ml-auto mr-4 pr-2" id="contentDoneButton" style="margin-top: -30px;" >
                         Done
                     </div>
                   </div>
 				<span style="display: flex;" >
                         <img class="tab-mover tb-mv-left {% if QUESTIONS_DICT|first|length > 1 %} show{% endif %}" src="/static/common/icons/logo-min.svg" alt="Logo">
-                        <span class="text-jq-anim" style="min-width: 80%;" id="pg2-change-question" data-action="{% url 'PROJECTSEDITQUESTIONAJAX_URL' %}">
+                        <span class="text-jq-anim" style="min-width: 80%;" id="pg2-change-question" data-action="{% url 'PROJECTSEDITQUESTIONAJAX_URL' %}" >
                             {% with QUESTIONS_DICT|first|first as r %}
                                 {{  r }}
                             {% endwith  %}

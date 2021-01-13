@@ -5,13 +5,60 @@ setVoiceToTextFieldCallback = (func) => {
     voiceToTextFieldCallback = func;
 }
 
+// $(document).ready(function(){
+// $.each($("div#pg1-acc-speak-field"), function(){
+//         console.debug($(this));
+//     });
+// });
+
 accSpeakers.forEach(el => {
     const field = document.getElementById(el.dataset.fieldid);
+    var textRead = ""
+
     el.onclick = () => {
-        if (field.hasAttribute("value")) TextToVoice(field.getAttribute("value"), true);
-        else TextToVoice(field.innerHTML, true);        
-    }
+        // if (field.hasAttribute("value")) TextToVoice(textRead, true);
+        // else TextToVoice(field.innerHTML, true);        
+        // $.each($("div#pg1-acc-speak-field, span#pg2-change-question"), function(){
+        //     textRead = ""
+        //     if($(this).attr("value")){
+        //         textRead = $(this).attr("value");
+        //     }
+        //     // new SpeechSynthesisUtterance object
+                
+
+        let utter = new SpeechSynthesisUtterance();
+        utter.lang = 'en-US';
+        utter.text = $("div#pg1-acc-speak-field").attr("value");
+        utter.volume = 1;
+        window.speechSynthesis.speak(utter);
+
+        // Second
+        utter = new SpeechSynthesisUtterance();
+        utter.lang = 'en-US';
+        utter.text = $("span#pg2-change-question").html().trim();
+        utter.volume = 1;
+        window.speechSynthesis.speak(utter);
+
+        // Third
+        utter = new SpeechSynthesisUtterance();
+        utter.lang = 'en-US';
+        utter.text = $("div#pg2-change-questionlead").html().trim();
+        utter.volume = 1;
+        
+        window.speechSynthesis.speak(utter);
+
+        }
+
+
+
+
+
+        
 });
+
+
+
+
 
 // const accMics = document.querySelectorAll(".accessibility .acc-mic")
 const accMics = new Set([

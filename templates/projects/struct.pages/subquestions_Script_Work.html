@@ -308,7 +308,7 @@
                             originText += (" " + $(this).val());
                             
                         });
-                        console.debug(originText);
+                        
 
                 $.ajax({
                     method: "GET",
@@ -436,12 +436,22 @@
                 if(curr_sqid == -1){
                     ANSWER_DICT[curr_qid] = [$(this).val()];
                     $("#projFormInp-upd").val(ANSWER_DICT);
+                    if($(this).val().trim()!= ""){
+                        $("#contentEditButton").attr("disabled", true);
+                    }
+                    else{
+                        $("#contentEditButton").attr("disabled", false);
+                    }
                 }
                 else{
-                    // console.debug(ANSWER_DICT);
                     ANSWER_DICT[curr_qid][currnet_index] = $(this).val();
                     $("#projFormInp-upd").val(ANSWER_DICT);
-
+                    if($(this).val().trim()!= ""){
+                        $("#contentEditButton").attr("disabled", true);
+                    }
+                    else{
+                        $("#contentEditButton").attr("disabled", false);
+                    }
                 }
                 
         });
