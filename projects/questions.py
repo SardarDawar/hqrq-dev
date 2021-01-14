@@ -48,7 +48,9 @@ def question(
     # ! SUB-TYPE OF DOCUMENT
     q3 = "What sort of " + question[1] + ", would you like to start creating?  Select from the dropdown list."
     docOptions = (vl.doc_list2[masterDocTypeIndex])
+    # print(masterDocTypeIndex,detailedDoctype)
     detailedDoctypeDesc = vl.doc_list2_1[masterDocTypeIndex][detailedDoctype]
+    # print(detailedDoctypeDesc)
 
     # ! DOCUMENT SUBTYPE EXPRESSION
     detailedDoctypeSelected = vl.doc_list2[masterDocTypeIndex][detailedDoctype]

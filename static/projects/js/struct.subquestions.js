@@ -80,6 +80,7 @@ var curr_sqid = -1;
 var currnet_index = 0;
 var itm = pg2_tabs_dict[0];
 var itm_leading = pg2_tabs_leading_dict[0];
+var $backButton = $("#btn_back_updproj");
 
 pg2tabs.forEach(el => {    
   // console.debug(el);
@@ -117,16 +118,16 @@ pg2tabs.forEach(el => {
         $("#btn_next_updproj").html("Next");
       }
 
-
-      // if($("#pg1_field_updproj").val().trim() != ""){
-      //   $("#contentEditButton").attr("disabled", true);
-      // }
-      // else{
-      //   $("#contentEditButton").attr("disabled", false);
-      // }
-
-      // console.debug($("#pg1_field_updproj").val());
-
+      // !  Back Button Functionality
+      if(parseInt(curr_qid) == 0){
+        // $backButton.prop("disabled",false);
+        $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+      }
+      else{
+        // console.debug($backButton);
+        // $backButton.prop("disabled",true);
+        $backButton.attr("onclick", "null");
+      }
 
       pg2tabs.forEach(el2 => { 
         if (el2 !== el && el2.classList.contains("active")) el2.classList.remove("active")
@@ -170,7 +171,7 @@ pg2tabs.forEach(el => {
           if (currnet_index != 0) {
             currnet_index -= 1;
             // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["prv_sq_id"]
-            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
 
 
             // TODO : Disabled Edit Button on current value of input field
@@ -208,7 +209,7 @@ pg2tabs.forEach(el => {
           if (currnet_index != Object.keys(itm).length-1) {
             currnet_index += 1;
             curr_sqid = Object.keys(itm)[currnet_index]
-            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
 
             // TODO : Disabled Edit Button on current value of input field
         if($("#pg1_field_updproj").val().trim() != ""){
@@ -394,7 +395,7 @@ btnNext_UpdateProject.onclick = () => {
         $("#contentDoneButton").hide();
         if (currnet_index != 0) {
           currnet_index -= 1;
-          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][currnet_index]);
+          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][0]);
           curr_sqid = Object.keys(itm)[currnet_index];
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid);
@@ -414,7 +415,7 @@ btnNext_UpdateProject.onclick = () => {
         $("#contentDoneButton").hide();
         if (currnet_index != Object.keys(itm).length-1) {
           currnet_index += 1;
-          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][currnet_index]);
+          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][0]);
           curr_sqid = Object.keys(itm)[currnet_index]
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid)
@@ -449,13 +450,8 @@ btnNext_UpdateProject.onclick = () => {
     else{
       $("#btn_next_updproj").html("Next");
     }
-
-    // console.debug($(this));
-
   }
-  // console.debug($(this));
 }
-
 
 // ! Case Test for Edit Button
 // TODO : edit button should be there but blocked (possibly with small error message) - remove answers on this topic first.
@@ -465,3 +461,126 @@ if($("#pg1_field_updproj").val().trim() != ""){
 else{
   $("#contentEditButton").attr("disabled", false);
 }
+
+
+
+// !  Back Button Click Handler
+$backButton.on("click", function(event){
+  event.preventDefault();
+  event.stopPropagation();
+  
+  // !  Check if current tab is ZERO 
+  if((parseInt(curr_qid)) == 0){
+    $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+  }
+  else{
+    $backButton.attr("onclick", "null");
+    // TODO : Remove All Active Tabs 
+    $.each($(pg2tabs), function(){
+      $(this).removeClass("active");
+    });
+
+    // TODO : Active Next Tab
+    $(pg2tabs[parseInt(curr_qid)-1]).addClass("active");
+    
+    // TODO : Get Next Tab Question Object
+    itm = pg2_tabs_dict[parseInt(curr_qid)-1];
+
+    // TODO : Get Next Tab Question Leading Object
+    itm_leading = pg2_tabs_leading_dict[parseInt(curr_qid)-1]
+
+    // TODO : Check Number of Questions for Next Tab
+    numberOfQuestions = Object.keys(itm).length;
+
+    // TODO : Check Number of Question is equal to 1 or greater than 1
+    if(numberOfQuestions > 1){
+
+      // TODO : Show Main Question
+      $pg2change_q.html(Object.keys(itm)[0]);
+      $pg2change_q.fadeIn(50);
+
+      // TODO : Show Main Question Leading Text
+      // console.debug(itm_leading);
+      $pg2change_ql.html((itm_leading[0]).charAt(0).toUpperCase() + 
+      itm_leading[0].slice(1));
+      $pg2change_ql.fadeIn(50);
+
+      // TODO : Show Left Angle Sub-Question Button
+      tabMVleft.classList.add("show");
+
+      // TODO : Show Right Angle Sub-Question Button
+      tabMVright.classList.add("show"); 
+      curr_sqid = Object.keys(itm)[0];
+      currnet_index = 0
+      tabMVleft.onclick = null;
+      tabMVright.onclick = null;
+      // ANSWER_DICT[parseInt(curr_qid)+1][currnet_index] = $("#pg1_field_updproj").val();
+      // console.debug(ANSWER_DICT);
+      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][currnet_index]);
+      
+      // TODO : Left Angle Sub-Question Button Handler
+      tabMVleft.onclick = () => {
+        $("#contentEditButton").show();
+        $("#contentDoneButton").hide();
+        if (currnet_index != 0) {
+          currnet_index -= 1;
+          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][0]);
+          curr_sqid = Object.keys(itm)[currnet_index];
+          $pg2change_q.stop().fadeOut(100, ()=> {
+            $pg2change_q.html(curr_sqid);
+            $pg2change_q.fadeIn(50);
+          });
+          $pg2change_ql.stop().fadeOut(100, ()=> {
+            $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+            itm_leading[currnet_index].slice(1));
+            $pg2change_ql.fadeIn(50);
+          });
+        }
+      }
+
+      // TODO : Right Angle Sub-Question Button Handler
+      tabMVright.onclick = () => {
+        $("#contentEditButton").show();
+        $("#contentDoneButton").hide();
+        if (currnet_index != Object.keys(itm).length-1) {
+          currnet_index += 1;
+          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][0]);
+          curr_sqid = Object.keys(itm)[currnet_index]
+          $pg2change_q.stop().fadeOut(100, ()=> {
+            $pg2change_q.html(curr_sqid)
+            $pg2change_q.fadeIn(50);
+          });
+          $pg2change_ql.stop().fadeOut(100, ()=> {
+            $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+            itm_leading[currnet_index].slice(1));
+            $pg2change_ql.fadeIn(50);
+          });
+        }
+      }
+    }
+    else{
+      tabMVleft.onclick = null;
+      tabMVright.onclick = null;
+      curr_sqid = -1;
+      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1]);
+      tabMVleft.classList.remove("show");
+      tabMVright.classList.remove("show");
+      $pg2change_q.html(Object.keys(itm)[0]);
+      $pg2change_q.fadeIn(50);
+      $pg2change_ql.html((itm_leading[0]).charAt(0).toUpperCase() + 
+      itm_leading[0].slice(1));
+      $pg2change_ql.fadeIn(50);
+    }
+    
+    curr_qid = $(pg2tabs[parseInt(curr_qid)-1]).attr("data-qid");
+    if((parseInt(curr_qid)) == 0){
+      $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+    }
+    else{
+      $backButton.attr("onclick","null");
+    }
+    
+  }
+
+
+})

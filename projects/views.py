@@ -722,11 +722,13 @@ def projectSubquestions(request, slug):
     # ! Check if the question leading text exists for the proejct
     if(len(project.getQuestoins()) == 0 or  project.getQuestoins().strip() == "" or len(project.getQuestionsLeadingText()) == 0 or  project.getQuestionsLeadingText().strip() == ""):
         # Question for the Script...
+        display_print(vl_sub_type_list[6].index(project.doc_subtype))
         (filteredQuestionList, leadingText, postQuestionMessage) =  question(
             firstName = request.user.email,
             projectName = project.title,
             masterDocTypeIndex = doc_list_1.index(project.doc_type),
             detailedDoctype = sub_type_list.index(project.doc_subtype),
+            # detailedDoctype = int(vl_sub_type_list[int(doc_list_1.index(project.doc_type))].index(project.doc_subtype),
             targetReader = project.getPROP_TARGET_READER_RESPONSE(),
             subjectType = subject_type_list.index(project.doc_topic),
             subjectName = project.getPROP_TOPIC_NAME(),

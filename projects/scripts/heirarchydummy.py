@@ -17,7 +17,7 @@ proposalWordOutcome = 'impact'
 
 def questionGenerator(userDefinedSubject,userDefinedProspect) :
 
-
+    print(userDefinedSubject)
     # ! WHAT QUESTION LIST
     whatQuestion = [
         "What is " + userDefinedSubject + " ?",

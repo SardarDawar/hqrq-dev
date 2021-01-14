@@ -377,7 +377,7 @@
                                 $("#pg2-change-question").html(curr_sqid);
                                 $("#pg2-change-questionlead").html((itm_leading[currnet_index]).charAt(0).toUpperCase() + 
                                 itm_leading[currnet_index].slice(1));
-                                $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+                                $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
 
                                 // GO TO LEFT SIDE
                                 tabMVleft.onclick = () => {
@@ -402,7 +402,7 @@
                                 tabMVright.onclick = () => {
                                             if (currnet_index != Object.keys(itm).length-1) {
                                                 currnet_index += 1;
-                                                $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+                                                $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
                                                 curr_sqid = Object.keys(itm)[currnet_index]
                                                 $pg2change_q.stop().fadeOut(100, ()=> {
                                                 $pg2change_q.html(curr_sqid)
