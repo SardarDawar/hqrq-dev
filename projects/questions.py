@@ -22,24 +22,19 @@ def question(
         affectingOn = "HQRQ",
         docLengthChoice = 1
     ):
+
     # ! FIRST NAME
-    firstName = firstName[0].upper() + firstName[1 : ]
-    if firstName[-1] == " " :
-        firstName = firstName[:-1]
-    if firstName[-1] == "." :
-        firstName = firstName[:-1]
-    if firstName[-1] == "," :
-        firstName = firstName[:-1]
-    vl.fname = firstName
+    vl.fname = firstName.capitalize()
 
     # ! PROJECT NAME
+    q1 = "\nGreat, thanks " + firstName + ".  What would you like to call your new project?"
     vl.projectName = projectName
 
     # !  TYPE OF DOCUMENT
     q2 = "So what type of document is your " + projectName + "? Select box below."
     vl.masterDocTypeSelection = masterDocTypeIndex
-    chosenDoctype = vl.doc_list1[masterDocTypeIndex]
-    chosenDoctype = chosenDoctype.lower()
+    chosenDoctype = vl.doc_list1[masterDocTypeIndex].lower()
+    # chosenDoctype = chosenDoctype
     question = te.q_what(chosenDoctype)
     listofsubtypes = " ,".join(vl.doc_list2[masterDocTypeIndex])
     masterDocTypeDetail = vl.doc_list1_1[masterDocTypeIndex] 
@@ -55,10 +50,15 @@ def question(
     # ! DOCUMENT SUBTYPE EXPRESSION
     detailedDoctypeSelected = vl.doc_list2[masterDocTypeIndex][detailedDoctype]
     detailedDoctypeExpression = te.q_what(detailedDoctypeSelected)
-    try:
-        dde = detailedDoctypeExpression[-1]
-    except:
-        dde = detailedDoctypeExpression
+    print("="*70)
+    print(detailedDoctypeSelected, "line Number 54")
+    print("="*70)
+    # try:
+    #     dde = detailedDoctypeExpression[-1]
+    # except:
+    #     dde = detailedDoctypeExpression
+
+    dde = detailedDoctypeExpression[-1]
 
     # ! WHO IS TARGET READER
     q4 = firstName + ", who (what individual or group) will be reading your " + detailedDoctypeSelected + "?"
@@ -71,21 +71,38 @@ def question(
     # ! WHAT IS THE CATEGORY OF SUBJECT
     q5 = "What is the main subject or topic you would like to cover in this " + detailedDoctypeSelected + " for " + tRE + "?"
     q5leadin = "The main subject or topic for this " + detailedDoctypeSelected + " will be a..."
-    subjectType = subjectType
+    subjectType = int(subjectType)
     subjectTypeName = vl.userDefinedSubjectTypeOptions[subjectType]
 
     # ! QUESTION 6
     q6 = "What is the name of the " + subjectTypeName + " you would like to cover in this " + detailedDoctypeSelected + "?"
     q6leadin = "The name of the " + subjectTypeName + " to be covered in this document is..."
     subjectName = subjectName
-    subjectExpression = te.q_what(subjectName)
-    subjectExpressionJoin = subjectExpression[-1]
+    # subjectExpression = te.q_what(subjectName)
+    # subjectExpressionJoin = subjectExpression[-1]
+    # subjectExpressionWhat = subjectExpression[2]
+    # subjectExpressionJoinLI = ""
+    # if (len(subjectExpression[4]) > 1)  :
+    #     subjectExpressionJoinLI = subjectExpression[4]
+    # else:
+    #     subjectExpressionJoinLI = subjectExpressionJoin
+
+    if subjectName != "person" :
+        subjectExpression = te.q_what(subjectName)
+        subjectExpressionJoin = subjectExpression[-1]
+    else :
+        subjectExpression = subjectName
+        subjectExpressionJoin = subjectName
+
     subjectExpressionWhat = subjectExpression[2]
+
     subjectExpressionJoinLI = ""
     if (len(subjectExpression[4]) > 1)  :
         subjectExpressionJoinLI = subjectExpression[4]
     else:
         subjectExpressionJoinLI = subjectExpressionJoin
+
+
     test = subjectExpressionJoin[0].upper()
     test1 = subjectExpressionJoin[1:]
     subjectExpressonStartSentence = test + test1
@@ -94,8 +111,10 @@ def question(
     q8 = "Who or what is most " + "impacted by the " + vl.userDefinedSubjectTypeOptions[subjectType] + " - '" + subjectName + "'?"
     q8leadin = subjectExpressonStartSentence + " will have the greatest " + "impact on..."
     affectedBy = affectedBy
-    affectedBy = te.q_what(affectedBy)
-    affectedByExpression = affectedBy[-1]
+    # affectedBy = te.q_what(affectedBy)
+    # affectedByExpression = affectedBy[-1]
+    affectedBy1 = te.q_what(affectedBy)
+    affectedByExpression = affectedBy1[-1]
 
     # ! QUESTION 10
     q10 = "What action or impression do you want " + tRE + " to have as a result of reading this " + detailedDoctypeSelected +" on " + subjectExpressionJoin + "?"
@@ -113,7 +132,8 @@ def question(
 
     # ! QUESTION 11 - DOC LENGTH
     q11 = "Thanks " + firstName + ",I now have a much better understanding of what you are looking to do.  \nHow long (approximately) would you like your " + chosenDoctype + " to be?"
-    docLengthChoice = docLengthChoice
+    typeCount = 0
+    docLengthChoice = int(docLengthChoice)
     endingLevel = vl.docOptionsIndex[docLengthChoice]
 
     # ! CHECKPOINT
@@ -125,8 +145,12 @@ def question(
     autoTense = vl.doc_list3_2[masterDocTypeIndex][0]
     vl.masterDocTypeIndex = autoTense
     selectedTense = autoTense
+    # autoOrientation = vl.doc_list3_2[masterDocTypeIndex][1]
     autoOrientation = vl.doc_list3_2[masterDocTypeIndex][1]
-    vl.proposalWordsOutcome = vl.pwoLists[vl.selectedOrientation]
+    #word
+    orientationIndex = vl.primaryOrientation.index(autoOrientation)
+    vl.orienationIndex = orientationIndex
+    vl.proposalWordsOutcome = vl.pwoLists[orientationIndex]
     for el in vl.proposalWordsOutcome :
         vl.proposalWordsOutcomesPossibilities[el] = []
         for i in range(3):

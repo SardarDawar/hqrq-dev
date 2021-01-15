@@ -68,7 +68,7 @@ def questionGenerator(userDefinedSubject,userDefinedProspect) :
 
 
 
-def heirarchyDummy( userDefinedProspect ,userDefinedSubject, firstName=None, tenseChoice=None, docLengthChoice=None, endingLevel=None) :
+def heirarchyDummy( userDefinedProspect=None,userDefinedSubject=None, firstName=None, tenseChoice=None, docLengthChoice=None, endingLevel=None) :
     activeQuestions = [0,1,2,3,4]
     vl.activeQuestions = activeQuestions
     leadingTextIndex = []

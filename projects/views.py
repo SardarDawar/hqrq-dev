@@ -41,6 +41,15 @@ pwoListsViews = [
     'neutral'
 ]
 
+
+# ? Use to define doc length
+docLengthOptions = {
+    "PDS_1" : 2, 
+    "PDS_UPTO_5" : 3, 
+    "PDS_UPTO_20" : 4, 
+    "PDS_UNLIMITED" : 5
+}
+
 def display_print(msg):
     print("="*70)
     print(msg)
@@ -688,47 +697,39 @@ def PROJECTSEDITQUESTIONAJAX(request):
 
 @login_required
 def projectSubquestions(request, slug):
-    # !Question Dictionary ... 
+    # ! Question Dictionary ... 
     questionsDict = {}
 
-    # Question Leading Text..
+    # ! Question Leading Text..
     questionLeadingText = {}
-
-    # Answer for the Questions
-
+    # ! Answer for the Questions
     answersDict = {}
+    
+    # TODO  :   Retrieve Project Object 
+    # TODO  :   else show Http 404 page...
     try:
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         raise Http404("Project does not exist")
     
+    # TODO  :   Answer has been updated through Ajax post request
     if request.method == 'POST':
-        # display_print(request.POST)
         project.generatedAnswers = json.loads(request.POST["answer_dict"])
         project.save()
         return redirect('project-topics', project.slug)
-
-
-
-    # ! Find Index for 'masterDocTypeIndex
-    # print("="*70)
-    # print(subject_type_list.index(project.doc_topic))
-    # print(project.getPROP_TARGET_READER_RESPONSE())
-    # print("="*70)
-    docLengthOptions = {"PDS_1" : 2, "PDS_UPTO_5" : 3, "PDS_UPTO_20" : 4, "PDS_UNLIMITED" : 5}
 
 
     # ! Check if the questions for the current project exists or not...
     # ! Check if the question leading text exists for the proejct
     if(len(project.getQuestoins()) == 0 or  project.getQuestoins().strip() == "" or len(project.getQuestionsLeadingText()) == 0 or  project.getQuestionsLeadingText().strip() == ""):
         # Question for the Script...
-        display_print(vl_sub_type_list[6].index(project.doc_subtype))
+        # display_print(int(vl_sub_type_list[int(doc_list_1.index(project.doc_type))].index(project.doc_subtype)))
         (filteredQuestionList, leadingText, postQuestionMessage) =  question(
             firstName = request.user.email,
             projectName = project.title,
-            masterDocTypeIndex = doc_list_1.index(project.doc_type),
-            detailedDoctype = sub_type_list.index(project.doc_subtype),
-            # detailedDoctype = int(vl_sub_type_list[int(doc_list_1.index(project.doc_type))].index(project.doc_subtype),
+            masterDocTypeIndex = int(doc_list_1.index(project.doc_type))+1,
+            # detailedDoctype = sub_type_list.index(project.doc_subtype),
+            detailedDoctype = int(vl_sub_type_list[int(doc_list_1.index(project.doc_type))].index(project.doc_subtype)),
             targetReader = project.getPROP_TARGET_READER_RESPONSE(),
             subjectType = subject_type_list.index(project.doc_topic),
             subjectName = project.getPROP_TOPIC_NAME(),
