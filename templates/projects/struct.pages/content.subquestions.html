@@ -4,6 +4,10 @@
 const sdbrR_header_fixed = false;
 const ANSWER_DICT = JSON.parse(document.getElementById('ANSWER_DICT').textContent);
 const TIP_DICT = JSON.parse(document.getElementById('PAGE_TIP').textContent);
+var QUESTIONS_DICT_SCRIPT = JSON.parse(document.getElementById("QUESTIONS_DICT_SCRIPT").textContent);
+var activeMainTab = 1;
+var activeSabTab = {}; 
+
 
 pg1_sdbrR_header = `
     <span class="side-header-icon">

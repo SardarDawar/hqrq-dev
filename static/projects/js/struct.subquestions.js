@@ -82,11 +82,13 @@ var itm = pg2_tabs_dict[0];
 var itm_leading = pg2_tabs_leading_dict[0];
 var $backButton = $("#btn_back_updproj");
 
+
 pg2tabs.forEach(el => {    
   // console.debug(el);
+  
   el.onclick = () => {
 
-    
+    // console.debug(activeSabTab);  
 
     $("#contentEditButton").show();
     $("#contentDoneButton").hide();
@@ -105,6 +107,9 @@ pg2tabs.forEach(el => {
       }
       var itm_leading = pg2_tabs_leading_dict[qid];
       curr_qid = qid;
+
+      
+
       $("button.acc-help").attr("data-helptext", TIP_DICT[parseInt(curr_qid)]);
       
       $("button.acc-help").on("click", function(){
@@ -135,9 +140,15 @@ pg2tabs.forEach(el => {
       if (!el.classList.contains("active")) el.classList.add("active")
       // console.debug(Object.keys(itm).length);
       if (Object.keys(itm).length>1) {
-        curr_sqid = Object.keys(itm)[0];
+        currnet_index = activeSabTab[parseInt(curr_qid)];
+        curr_sqid = Object.keys(itm)[currnet_index];
+        
+// !  Change the value for activeTab
+// activeSabTab[parseInt(curr_qid)] = 1;
+// console.debug(itm_leading[currnet_index]);
 
-        currnet_index = 0
+        // currnet_index = 0;
+        
         // console.debug(curr_sqid);
         // console.debug(ANSWER_DICT[curr_qid][currnet_index]);
         $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
@@ -170,6 +181,7 @@ pg2tabs.forEach(el => {
     $("#contentDoneButton").hide();
           if (currnet_index != 0) {
             currnet_index -= 1;
+            activeSabTab[parseInt(curr_qid)] = currnet_index;
             // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["prv_sq_id"]
             $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
 
@@ -208,6 +220,7 @@ pg2tabs.forEach(el => {
           // console.debug(index);
           if (currnet_index != Object.keys(itm).length-1) {
             currnet_index += 1;
+            activeSabTab[parseInt(curr_qid)] = currnet_index;
             curr_sqid = Object.keys(itm)[currnet_index]
             $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
 
@@ -242,6 +255,9 @@ pg2tabs.forEach(el => {
 
       } 
       else {
+        // !  Change the value for activeTab
+          activeSabTab[parseInt(curr_qid)] = 0;
+          // console.debug(activeSabTab);
         tabMVleft.onclick = null;
         tabMVright.onclick = null;
         // !  Set Answer for current Tab
@@ -382,7 +398,8 @@ btnNext_UpdateProject.onclick = () => {
       // TODO : Show Right Angle Sub-Question Button
       tabMVright.classList.add("show"); 
       curr_sqid = Object.keys(itm)[0];
-      currnet_index = 0
+      // currnet_index = 0;
+      currnet_index = activeSabTab[parseInt(curr_qid)];
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
       // ANSWER_DICT[parseInt(curr_qid)+1][currnet_index] = $("#pg1_field_updproj").val();
@@ -395,6 +412,7 @@ btnNext_UpdateProject.onclick = () => {
         $("#contentDoneButton").hide();
         if (currnet_index != 0) {
           currnet_index -= 1;
+          activeSabTab[parseInt(curr_qid)] = currnet_index;
           $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][0]);
           curr_sqid = Object.keys(itm)[currnet_index];
           $pg2change_q.stop().fadeOut(100, ()=> {
@@ -415,6 +433,7 @@ btnNext_UpdateProject.onclick = () => {
         $("#contentDoneButton").hide();
         if (currnet_index != Object.keys(itm).length-1) {
           currnet_index += 1;
+          activeSabTab[parseInt(curr_qid)] = currnet_index;
           $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][0]);
           curr_sqid = Object.keys(itm)[currnet_index]
           $pg2change_q.stop().fadeOut(100, ()=> {
@@ -433,6 +452,7 @@ btnNext_UpdateProject.onclick = () => {
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
       curr_sqid = -1;
+      activeSabTab[parseInt(curr_qid)] = 0;
       $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1]);
       tabMVleft.classList.remove("show");
       tabMVright.classList.remove("show");
@@ -511,7 +531,8 @@ $backButton.on("click", function(event){
       // TODO : Show Right Angle Sub-Question Button
       tabMVright.classList.add("show"); 
       curr_sqid = Object.keys(itm)[0];
-      currnet_index = 0
+      currnet_index = activeSabTab[parseInt(curr_qid)] ;
+      // activeSabTab[parseInt(curr_qid)] = currnet_index;
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
       // ANSWER_DICT[parseInt(curr_qid)+1][currnet_index] = $("#pg1_field_updproj").val();
@@ -524,6 +545,7 @@ $backButton.on("click", function(event){
         $("#contentDoneButton").hide();
         if (currnet_index != 0) {
           currnet_index -= 1;
+          activeSabTab[parseInt(curr_qid)] = currnet_index;
           $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][0]);
           curr_sqid = Object.keys(itm)[currnet_index];
           $pg2change_q.stop().fadeOut(100, ()=> {
@@ -544,6 +566,7 @@ $backButton.on("click", function(event){
         $("#contentDoneButton").hide();
         if (currnet_index != Object.keys(itm).length-1) {
           currnet_index += 1;
+          activeSabTab[parseInt(curr_qid)] = currnet_index;
           $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][0]);
           curr_sqid = Object.keys(itm)[currnet_index]
           $pg2change_q.stop().fadeOut(100, ()=> {
@@ -562,6 +585,7 @@ $backButton.on("click", function(event){
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
       curr_sqid = -1;
+      activeSabTab[parseInt(curr_qid)] = 0;
       $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1]);
       tabMVleft.classList.remove("show");
       tabMVright.classList.remove("show");

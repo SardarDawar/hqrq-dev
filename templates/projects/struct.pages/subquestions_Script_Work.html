@@ -1,9 +1,12 @@
-
 <script>
-    
-    
     $(document).ready(function(){
-        
+    
+        // Set Values for the Active SabQuestion Tab Index
+        for(var activeindex= 0; activeindex < Object.keys(QUESTIONS_DICT_SCRIPT).length; activeindex++){
+            activeSabTab[activeindex] = 0;
+        }
+        console.debug(QUESTIONS_DICT_SCRIPT);
+
         $("#pg2-change-questionlead").html( $("#pg2-change-questionlead").html().trim().charAt(0).toUpperCase() + $("#pg2-change-questionlead").html().trim().slice(1));
         const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
         $("#contentDoneButton").hide();
@@ -25,6 +28,8 @@
 
             // articles words
             var $articles = ["the", "a", "an"];
+
+            var $vowelletters=["a", "e", "i", "o", "u"];
 
             // verb words
             var $willVerb = ["will","would", "are", "shall", "must", "was", "may", "might", "were", "do", "does", "should", "could", "can", "is",  "are"];
@@ -90,7 +95,22 @@
                     }
                     $w = $w.trim();
                     if($words[i].trim() == "a"){
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($w[i].trim().toLowerCase()[0])){
+                            $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
+                        var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
+                        var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
+                        $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
+                        $w = "";
+                        $words.splice(0, 1);
+                        break;
+                    }
+                    else if($words[i].trim() == "an"){
+                        var $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
@@ -99,8 +119,17 @@
                         break;
                     }
                     else if( $words[i].trim() == "the"){
+                        var $option2 = "";
+                        // console.debug($w.trim().toLowerCase());
+                        // console.debug($vowelletters.includes($words[i+1].trim().toLowerCase()[0]));
+                        if($vowelletters.includes($w[i].trim().toLowerCase()[0])){
+                            $option2 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option2 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
                         var $option1 = "<option value='the " + $w + "'>" + "the " +  $w +  "</option>";
-                        var $option2 = "<option value='a "+  $w   + "'>" + "a " + $w +  "</option>";
+                        
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
                         $w = "";
@@ -108,7 +137,14 @@
                         break;
                     }
                     else{
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($w[i].trim().toLowerCase()[0])){
+                             $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
+                        
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option3 + $option1  + $option2 + "</select>";
@@ -117,7 +153,7 @@
                         break;
                     }
                 }
-                // don't start with articles
+                // don't start with articles............................
                 else{
                     $w = $words[i];
                     // console.debug("ssubject without articles", $words[i]);
@@ -138,8 +174,16 @@
                     }
                     // console.debug("asdasd", $words);
                     $w = $w.trim();
+                    // console.debug($words[i].trim().toLowerCase()[0]);
                     if($words[i].trim() == "a"){
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($words[i].trim().toLowerCase()[0])){
+                            $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
+                        
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
@@ -148,8 +192,15 @@
                         break;
                     }
                     else if( $words[i].trim() == "the"){
+                        var $option2 = "";
+                        if($vowelletters.includes($words[i].trim().toLowerCase()[0])){
+                            $option2 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option2 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
                         var $option1 = "<option value='the " + $w + "'>" + "the " +  $w +  "</option>";
-                        var $option2 = "<option value='a "+  $w   + "'>" + "a " + $w +  "</option>";
+                        
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
                         $w = "";
@@ -157,7 +208,14 @@
                         break;
                     }
                     else{
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($words[i].trim().toLowerCase()[0])){
+                            $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
+                        
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option3 + $option1  + $option2 + "</select>";
@@ -209,7 +267,14 @@
                     }
                     $w = $w.trim();
                     if($words[i].trim() == "a"){
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($w[i].trim().toLowerCase()[0])){
+                            $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
+                        
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
@@ -218,8 +283,15 @@
                         break;
                     }
                     else if( $words[i].trim() == "the"){
+                        var $option2 = "";
+                        if($vowelletters.includes($w[i].trim().toLowerCase()[0])){
+                            $option2 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option2 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
                         var $option1 = "<option value='the " + $w + "'>" + "the " +  $w +  "</option>";
-                        var $option2 = "<option value='a "+  $w   + "'>" + "a " + $w +  "</option>";
+                        
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
                         $w = "";
@@ -227,7 +299,14 @@
                         break;
                     }
                     else{
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($w[i].trim().toLowerCase()[0])){
+                            $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
+                        
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option3 + $option1  + $option2 + "</select>";
@@ -256,7 +335,14 @@
                     }
                     $w = $w.trim();
                     if($words[i].trim() == "a"){
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($words[i].trim().toLowerCase()[0])){
+                            $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
+                        
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
@@ -265,8 +351,15 @@
                         break;
                     }
                     else if( $words[i].trim() == "the"){
+                        var $option2 = "";
+                        if($vowelletters.includes($words[i].trim().toLowerCase()[0])){
+                            $option2 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option2 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
                         var $option1 = "<option value='the " + $w + "'>" + "the " +  $w +  "</option>";
-                        var $option2 = "<option value='a "+  $w   + "'>" + "a " + $w +  "</option>";
+                        
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option1 + $option2  + $option3 + "</select>";
                         $w = "";
@@ -275,7 +368,13 @@
                     }
                     else{
                         // console.debug("ASdasdasd");
-                        var $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        var $option1 = "";
+                        if($vowelletters.includes($words[i].trim().toLowerCase()[0])){
+                            $option1 = "<option value='an " + $w   + "'>" + "an " +  $w +  "</option>";
+                        }
+                        else{
+                            $option1 = "<option value='a " + $w   + "'>" + "a " +  $w +  "</option>";
+                        }
                         var $option2 = "<option value='the "+  $w   + "'>" + "the " + $w +  "</option>";
                         var $option3 = "<option value='"+  $w   + "'>" + $w +  "</option>";
                         $rephrase += "<select class=' select_edit'>"  + $option3 + $option1  + $option2 + "</select>";
@@ -374,6 +473,7 @@
                             if(Object.keys(itm).length > 1 ){
                                 // itm = Object.keys(itm);
                                 curr_sqid = Object.keys(itm)[currnet_index];
+                                activeSabTab[parseInt(curr_qid)] = currnet_index;
                                 $("#pg2-change-question").html(curr_sqid);
                                 $("#pg2-change-questionlead").html((itm_leading[currnet_index]).charAt(0).toUpperCase() + 
                                 itm_leading[currnet_index].slice(1));
@@ -383,6 +483,7 @@
                                 tabMVleft.onclick = () => {
                                         if (currnet_index != 0) {
                                             currnet_index -= 1;
+                                            activeSabTab[parseInt(curr_qid)] = currnet_index;
                                             $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
                                             curr_sqid = Object.keys(itm)[currnet_index]
                                             $pg2change_q.stop().fadeOut(100, ()=> {
@@ -402,6 +503,7 @@
                                 tabMVright.onclick = () => {
                                             if (currnet_index != Object.keys(itm).length-1) {
                                                 currnet_index += 1;
+                                                activeSabTab[parseInt(curr_qid)] = currnet_index;
                                                 $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
                                                 curr_sqid = Object.keys(itm)[currnet_index]
                                                 $pg2change_q.stop().fadeOut(100, ()=> {
@@ -422,6 +524,7 @@
                                 $("#pg2-change-question").html(Object.keys(itm));
                                 $("#pg2-change-questionlead").html(itm_leading[0].charAt(0).toUpperCase() + 
                                 itm_leading[0].slice(1));
+                                activeSabTab[parseInt(curr_qid)] = 0;
                                 $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid]);
                             }
                             
