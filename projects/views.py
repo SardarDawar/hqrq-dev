@@ -682,12 +682,13 @@ def PROJECTSEDITQUESTIONAJAX(request):
         # ! Save script generated questions and questions leading text to the database
         project.generatedQuestions = questionsDict
         project.generatedQuestionsLeadingText = questionLeadingText
+        project.generatedAnswers = request.GET['answer']
         project.save()
         # display_print(project.getQuestoins())
 
 
 
-        return JsonResponse(json.loads( json.dumps( {"QUESTIONS_DICT_AJAX" : questionsDict, "QUESTION_LEADING_TEXT_AJAX":  questionLeadingText})), status=200)
+        return JsonResponse(json.loads( json.dumps( {"QUESTIONS_DICT_AJAX" : questionsDict, "QUESTION_LEADING_TEXT_AJAX":  questionLeadingText, "ANSWER_DICT" : eval(str(project.getAnswers()))})), status=200)
 
     except Exception as e:
         display_print(e)

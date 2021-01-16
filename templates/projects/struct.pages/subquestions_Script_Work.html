@@ -5,7 +5,7 @@
         for(var activeindex= 0; activeindex < Object.keys(QUESTIONS_DICT_SCRIPT).length; activeindex++){
             activeSabTab[activeindex] = 0;
         }
-        console.debug(QUESTIONS_DICT_SCRIPT);
+        // console.debug(QUESTIONS_DICT_SCRIPT);
 
         $("#pg2-change-questionlead").html( $("#pg2-change-questionlead").html().trim().charAt(0).toUpperCase() + $("#pg2-change-questionlead").html().trim().slice(1));
         const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
@@ -401,90 +401,104 @@
         
         // Question Done Button Handler
         $("#contentDoneButton").on("click", function(){
-                var originText = "";
-                $.each($("#pg2-change-question select"), function(){
-                            // console.info($(this).val())
-                            originText += (" " + $(this).val());
-                            
-                        });
-                        
+            var originText = "";
+            
+            // TODO :   Re-Construct the questions from current select options for the current Questoin or Sub-Question 
+            $.each($("#pg2-change-question select"), function(){
+                originText += (" " + $(this).val());        
+            });
 
-                $.ajax({
-                    method: "GET",
-                    url: $("#pg2-change-question").attr("data-action"),
-                    data: { 
-                        project_id : project_id,
-                        name: originText.trim(), 
-                    }
-                }).done(function( html ) 
-                    {
-                         originText = ""
-                        // console.debug(html["instance"]);
-                        // console.debug($("#pg2-change-question ").html());
-                        // $.each($("#pg2-change-question select"), function(){
-                        //     // console.info($(this).val())
-                        //     originText += (" " + $(this).val());
-                            
-                        // });
-                        $("#pg2-change-question").html(originText);
-                        // console.debug(curr_qid);
+            // CALL THE AJAX TO SAFE EDIT QUESTIONS TO THE DADTABSE...
+            $.ajax({
+                method: "GET",
+                url: $("#pg2-change-question").attr("data-action"),
+                data: { 
+                    project_id : project_id,
+                    name: originText.trim(), 
+                    answer : JSON.stringify(ANSWER_DICT),
+                }
+            }).done(function( html ) 
+                {
+                    originText = ""
+                    $("#pg2-change-question").html(originText);
+                    $("#contentDoneButton").hide();
+                    $("#contentEditButton").show();
+                    // ANSWER_DICT = 
+                }).always(function(response) {
+                        var dictA = response["QUESTIONS_DICT_AJAX"];
+                        pg2_tabs_leading_dict = response["QUESTION_LEADING_TEXT_AJAX"]
+                        pg2_tabs_dict={};
+                        for(var answerIndex = 0; answerIndex <  Object.keys(ANSWER_DICT).length ; answerIndex++){
+                            ANSWER_DICT[answerIndex] = response["ANSWER_DICT"][answerIndex];
+                        }
                         
-                        $("#contentDoneButton").hide();
-                        $("#contentEditButton").show();
-                        // alert( "Data Saved: "  );
-                    }).always(function(response) {
-                            var dictA = response["QUESTIONS_DICT_AJAX"];
-                            pg2_tabs_leading_dict = response["QUESTION_LEADING_TEXT_AJAX"]
-                            pg2_tabs_dict={};
-                            Object.size = function(obj) {
-                                var size = 0, key;
-                                for (key in obj) {
-                                    if (obj.hasOwnProperty(key)) size++;
-                                }
-                                return size;
-                            };
-                            const myObj = dictA
-                            var size = Object.size(myObj);
-                            var dummyArray = [];
-                            for(var index = 0; index < size; index++){
-                                pg2_tabs_dict[index] = {};
+                        Object.size = function(obj) {
+                            var size = 0, key;
+                            for (key in obj) {
+                                if (obj.hasOwnProperty(key)) size++;
                             }
-                            var subindex = 0;
-                            for(var index = 0; index < size; index++)
-                            {
-                                if(dictA[index].length > 1){
-                                    for(var sub =0; sub < dictA[index].length; sub++){
-                                        dummyArray = dictA[index][sub];
-                                        pg2_tabs_dict[index][dummyArray] = "None" ;
-                                    }
-                                }
-                                else{
-                                    dummyArray = dictA[index];
+                            return size;
+                        };
+                        const myObj = dictA
+                        var size = Object.size(myObj);
+                        var dummyArray = [];
+                        for(var index = 0; index < size; index++){
+                            pg2_tabs_dict[index] = {};
+                        }
+                        var subindex = 0;
+                        for(var index = 0; index < size; index++)
+                        {
+                            if(dictA[index].length > 1){
+                                for(var sub =0; sub < dictA[index].length; sub++){
+                                    dummyArray = dictA[index][sub];
                                     pg2_tabs_dict[index][dummyArray] = "None" ;
                                 }
                             }
-                            // console.debug(pg2_tabs_dict, pg2_tabs_leading_dict);
-                            
-                            itm = pg2_tabs_dict[curr_qid];
-                            itm_leading = pg2_tabs_leading_dict[curr_qid];
-                            // console.debug(Object.keys(itm), currnet_index);
-                            
-                            // console.debug(Object.keys(pg2_tabs_dict));
-                            if(Object.keys(itm).length > 1 ){
-                                // itm = Object.keys(itm);
-                                curr_sqid = Object.keys(itm)[currnet_index];
-                                activeSabTab[parseInt(curr_qid)] = currnet_index;
-                                $("#pg2-change-question").html(curr_sqid);
-                                $("#pg2-change-questionlead").html((itm_leading[currnet_index]).charAt(0).toUpperCase() + 
-                                itm_leading[currnet_index].slice(1));
-                                $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
+                            else{
+                                dummyArray = dictA[index];
+                                pg2_tabs_dict[index][dummyArray] = "None" ;
+                            }
+                        }
+                        
+                        
+                        currnet_index = activeSabTab[parseInt(curr_qid)];
+                        // console.debug(currnet_index);
+                        itm = pg2_tabs_dict[curr_qid];
+                        itm_leading = pg2_tabs_leading_dict[curr_qid];
+                        if(Object.keys(itm).length > 1 ){
+                            curr_sqid = Object.keys(itm)[currnet_index];
+                            activeSabTab[parseInt(curr_qid)] = currnet_index;
+                            $("#pg2-change-question").html(curr_sqid);
+                            $("#pg2-change-questionlead").html((itm_leading[currnet_index]).charAt(0).toUpperCase() + 
+                            itm_leading[currnet_index].slice(1));
+                            $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid][0]).trim());
 
-                                // GO TO LEFT SIDE
-                                tabMVleft.onclick = () => {
-                                        if (currnet_index != 0) {
-                                            currnet_index -= 1;
+                            // GO TO LEFT SIDE
+                            tabMVleft.onclick = () => {
+                                    if (currnet_index != 0) {
+                                        currnet_index -= 1;
+                                        activeSabTab[parseInt(curr_qid)] = currnet_index;
+                                        $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid][0]).trim());
+                                        curr_sqid = Object.keys(itm)[currnet_index]
+                                        $pg2change_q.stop().fadeOut(100, ()=> {
+                                        $pg2change_q.html(curr_sqid)
+                                        $pg2change_q.fadeIn(50)
+                                        })
+                                        $pg2change_ql.stop().fadeOut(100, ()=> {
+                                        $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
+                            itm_leading[currnet_index].slice(1));
+                                        $pg2change_ql.fadeIn(50)
+                                        })
+                                    }
+                            }
+                        
+
+                            //  GO TO THE RIGHT SIDE
+                            tabMVright.onclick = () => {
+                                        if (currnet_index != Object.keys(itm).length-1) {
+                                            currnet_index += 1;
                                             activeSabTab[parseInt(curr_qid)] = currnet_index;
-                                            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
+                                            $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)][0]).trim());
                                             curr_sqid = Object.keys(itm)[currnet_index]
                                             $pg2change_q.stop().fadeOut(100, ()=> {
                                             $pg2change_q.html(curr_sqid)
@@ -492,46 +506,26 @@
                                             })
                                             $pg2change_ql.stop().fadeOut(100, ()=> {
                                             $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
-                                itm_leading[currnet_index].slice(1));
+                            itm_leading[currnet_index].slice(1));
                                             $pg2change_ql.fadeIn(50)
                                             })
                                         }
-                                }
-                            
+                                        }
+                        }
 
-                                //  GO TO THE RIGHT SIDE
-                                tabMVright.onclick = () => {
-                                            if (currnet_index != Object.keys(itm).length-1) {
-                                                currnet_index += 1;
-                                                activeSabTab[parseInt(curr_qid)] = currnet_index;
-                                                $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
-                                                curr_sqid = Object.keys(itm)[currnet_index]
-                                                $pg2change_q.stop().fadeOut(100, ()=> {
-                                                $pg2change_q.html(curr_sqid)
-                                                $pg2change_q.fadeIn(50)
-                                                })
-                                                $pg2change_ql.stop().fadeOut(100, ()=> {
-                                                $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
-                                itm_leading[currnet_index].slice(1));
-                                                $pg2change_ql.fadeIn(50)
-                                                })
-                                            }
-                                            }
-                            }
-
-                            else{
-                                // console.debug((itm_leading));
-                                $("#pg2-change-question").html(Object.keys(itm));
-                                $("#pg2-change-questionlead").html(itm_leading[0].charAt(0).toUpperCase() + 
-                                itm_leading[0].slice(1));
-                                activeSabTab[parseInt(curr_qid)] = 0;
-                                $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid]);
-                            }
-                            
+                        else{
+                            // console.debug((itm_leading));
+                            $("#pg2-change-question").html(Object.keys(itm));
+                            $("#pg2-change-questionlead").html(itm_leading[0].charAt(0).toUpperCase() + 
+                            itm_leading[0].slice(1));
+                            activeSabTab[parseInt(curr_qid)] = 0;
+                            $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid]).trim());
+                        }
+                        
 
 
 
-                    });
+                });
             });
 
             $("#pg1_field_updproj").on("keyup", function(){

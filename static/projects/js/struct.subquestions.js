@@ -1,5 +1,3 @@
-
-
 // ####################################
 //
 // page 0
@@ -82,40 +80,52 @@ var itm = pg2_tabs_dict[0];
 var itm_leading = pg2_tabs_leading_dict[0];
 var $backButton = $("#btn_back_updproj");
 
-
+// ***************************************************************************
+// TODO : TOP UPPER TAB HANDLER
+// ***************************************************************************
 pg2tabs.forEach(el => {    
-  // console.debug(el);
-  
   el.onclick = () => {
 
-    // console.debug(activeSabTab);  
-
+    // TODO : Show Edit Button
     $("#contentEditButton").show();
+
+    // TODO : Hide Done Button
     $("#contentDoneButton").hide();
+
+    // TODO : Get Current Question ID (qid)...
     if (el.dataset.qid && !el.classList.contains("active")) {
+      // console.debug(ANSWER_DICT);
       const qid = el.dataset.qid;
-      if (qid === curr_qid) return;
+      if (qid === curr_qid) {
+        return;
+      }
+
+      // TODO : Get Question Dictionary...
       var itm = pg2_tabs_dict[qid]
 
-      // if
-      // console.debug($(".accessibility"));
+      // TODO : Show Answer Me Option Only On The First Tab, Otherwise Hide It...
       if(qid == 0){
         $(".auto-answer").show();
       }
       else{
         $(".auto-answer").hide();
       }
+
+      // TODO : Get Questions Leading Text
       var itm_leading = pg2_tabs_leading_dict[qid];
+
+      // ?  Currente Value of Question-ID
       curr_qid = qid;
 
-      
-
+      // TODO : Set Current Question Help TextValue
       $("button.acc-help").attr("data-helptext", TIP_DICT[parseInt(curr_qid)]);
       
+      // TODO : Click Event Handler for Button Help Text
       $("button.acc-help").on("click", function(){
         $("#infoModalContent-text").html( TIP_DICT[parseInt(curr_qid)]);
       });
       
+      //  ! Change text of NEXT button to SUBMIT, if this the last tab...
       if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)+1){
         $("#btn_next_updproj").html("Submit");
       }
@@ -123,37 +133,42 @@ pg2tabs.forEach(el => {
         $("#btn_next_updproj").html("Next");
       }
 
-      // !  Back Button Functionality
+      // !  Change the value of onclick event handler, if it is the first tab...
       if(parseInt(curr_qid) == 0){
-        // $backButton.prop("disabled",false);
         $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
       }
       else{
-        // console.debug($backButton);
-        // $backButton.prop("disabled",true);
         $backButton.attr("onclick", "null");
       }
 
+      // TODO : remove "active" class from all other Tabs except for the current one.
       pg2tabs.forEach(el2 => { 
-        if (el2 !== el && el2.classList.contains("active")) el2.classList.remove("active")
-      })
-      if (!el.classList.contains("active")) el.classList.add("active")
-      // console.debug(Object.keys(itm).length);
+        if (el2 !== el && el2.classList.contains("active")){
+          el2.classList.remove("active");
+        }
+      });
+
+      // TODO : Set the value of current tab to "active", if "active" class is not present in it class attribute. 
+      if (!el.classList.contains("active")){
+        el.classList.add("active");
+      }
+
+      // !  If current tab has sub-questions....
       if (Object.keys(itm).length>1) {
+
+        // TODO : save the current sab-question tab value.
         currnet_index = activeSabTab[parseInt(curr_qid)];
+
+        // TODO : Show the current sab-question.
         curr_sqid = Object.keys(itm)[currnet_index];
         
-// !  Change the value for activeTab
-// activeSabTab[parseInt(curr_qid)] = 1;
-// console.debug(itm_leading[currnet_index]);
+        // !  Change the value for the answer according to the current sab-question...
+        // !  Always show Answer of first sab-question on all sub-versions of  the questoin
+        // !  For this purpose
+        // !  Set currnet_index = 0
+        $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid][0]).trim());
 
-        // currnet_index = 0;
-        
-        // console.debug(curr_sqid);
-        // console.debug(ANSWER_DICT[curr_qid][currnet_index]);
-        $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][currnet_index]);
-
-        // TODO : Disabled Edit Button on current value of input field
+        // TODO : Disabled Edit Button on current value of answer input field
         if($("#pg1_field_updproj").val().trim() != ""){
           $("#contentEditButton").attr("disabled", true);
         }
@@ -161,96 +176,116 @@ pg2tabs.forEach(el => {
           $("#contentEditButton").attr("disabled", false);
         }
 
+        // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+        if($("#pg1_field_updproj").val().trim() == ""){
+          $("#btn_next_updproj").prop("disabled", true);
+        }
+        else{
+          $("#btn_next_updproj").prop("disabled", false);
+        }
 
-
+        // !  Show Current Tab Sab-Question
         $pg2change_q.stop().fadeOut(100, ()=> {
-          $pg2change_q.html(curr_sqid);
-          $pg2change_q.fadeIn(50)
-          if (!tabMVleft.classList.contains("show")) tabMVleft.classList.add("show")
-          if (!tabMVright.classList.contains("show")) tabMVright.classList.add("show")
+          $pg2change_q.html(curr_sqid).fadeIn(50);
+          if (!tabMVleft.classList.contains("show")){
+            tabMVleft.classList.add("show");
+          }
+          if (!tabMVright.classList.contains("show")){
+            tabMVright.classList.add("show");
+          }
         });
+
+        // !  Change Current Tab Sab-Question Leading Text...
         $pg2change_ql.stop().fadeOut(100, ()=> {
           $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
-          itm_leading[currnet_index].slice(1));
-          $pg2change_ql.fadeIn(50)
+          itm_leading[currnet_index].slice(1)).fadeIn(50);
         });
         tabMVleft.onclick = null
         tabMVright.onclick = null
+
+        // !  Left Button Click Event Handler
         tabMVleft.onclick = () => {
+          
+          // TODO : Show Edit Button
           $("#contentEditButton").show();
-    $("#contentDoneButton").hide();
+
+          // TODO : Hide Done Button
+          $("#contentDoneButton").hide();
+
+          // !  Condition if this is not the first sab-question tab....
+          // !  If it is so
+          // !  Decrease "currnet_index" value by 1
+          // !  Set Active Sub Tab value...
+          // !  Update the answer input current value
           if (currnet_index != 0) {
             currnet_index -= 1;
             activeSabTab[parseInt(curr_qid)] = currnet_index;
-            // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["prv_sq_id"]
-            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
+            $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid][0]).trim());
 
+            // TODO : Disabled Edit Button on current value of answer input field
+            if($("#pg1_field_updproj").val().trim() != ""){
+              $("#contentEditButton").attr("disabled", true);
+            }
+            else{
+              $("#contentEditButton").attr("disabled", false);
+            }
 
-            // TODO : Disabled Edit Button on current value of input field
-        if($("#pg1_field_updproj").val().trim() != ""){
-          $("#contentEditButton").attr("disabled", true);
-        }
-        else{
-          $("#contentEditButton").attr("disabled", false);
-        }
+            // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+            if($("#pg1_field_updproj").val().trim() == ""){
+              $("#btn_next_updproj").prop("disabled", true);
+            }
+            else{
+              $("#btn_next_updproj").prop("disabled", false);
+            }
 
+            // !  Get Current Sub-Question...
             curr_sqid = Object.keys(itm)[currnet_index]
-            // const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
+
             $pg2change_q.stop().fadeOut(100, ()=> {
-              $pg2change_q.html(curr_sqid)
-              $pg2change_q.fadeIn(50)
-            })
+              $pg2change_q.html(curr_sqid).fadeIn(50);
+            });
             $pg2change_ql.stop().fadeOut(100, ()=> {
               $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
-              itm_leading[currnet_index].slice(1));
-              $pg2change_ql.fadeIn(50)
+              itm_leading[currnet_index].slice(1)).fadeIn(50);
             })
           }
-
-          // if (!("prv_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVleft.classList.add("disabled")
-          // else tabMVleft.classList.remove("disabled")
-          // if (!("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVright.classList.add("disabled")
-          // else tabMVright.classList.remove("disabled")
         }
+        // !  Right Angled Button
         tabMVright.onclick = () => {
+          // console.debug("JS FILE : 255 : ", ANSWER_DICT);
           $("#contentEditButton").show();
-    $("#contentDoneButton").hide();
-          // var index = itm.map(function(o) { return o.attr1; }).indexOf(curr_sqid);
-          // var index = itm.findIndex(p => p.attr1 == curr_sqid)
-          // console.debug(index);
+          $("#contentDoneButton").hide();
           if (currnet_index != Object.keys(itm).length-1) {
             currnet_index += 1;
             activeSabTab[parseInt(curr_qid)] = currnet_index;
             curr_sqid = Object.keys(itm)[currnet_index]
-            $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid][0]);
+            $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid][0]).trim());
 
             // TODO : Disabled Edit Button on current value of input field
-        if($("#pg1_field_updproj").val().trim() != ""){
-          $("#contentEditButton").attr("disabled", true);
-        }
-        else{
-          $("#contentEditButton").attr("disabled", false);
-        }
+            if($("#pg1_field_updproj").val().trim() != ""){
+              $("#contentEditButton").attr("disabled", true);
+            }
+            else{
+              $("#contentEditButton").attr("disabled", false);
+            }
+
+            // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+            if($("#pg1_field_updproj").val().trim() == ""){
+              $("#btn_next_updproj").prop("disabled", true);
+            }
+            else{
+              $("#btn_next_updproj").prop("disabled", false);
+            }
 
 
-            // const new_sq_id = pg2_tabs_dict[qid]['subq'][curr_sqid]["nxt_sq_id"]
-            // curr_sqid = new_sq_id
-            // const new_sq = pg2_tabs_dict[qid]['subq'][new_sq_id]
             $pg2change_q.stop().fadeOut(100, ()=> {
-              $pg2change_q.html(curr_sqid)
-              $pg2change_q.fadeIn(50)
-            })
+              $pg2change_q.html(curr_sqid).fadeIn(50);
+            });
             $pg2change_ql.stop().fadeOut(100, ()=> {
               $pg2change_ql.html(itm_leading[currnet_index].charAt(0).toUpperCase() + 
-              itm_leading[currnet_index].slice(1));
-              $pg2change_ql.fadeIn(50)
-            })
+              itm_leading[currnet_index].slice(1)).fadeIn(50);
+            });
           }
-
-          // if (!("prv_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVleft.classList.add("disabled")
-          // else tabMVleft.classList.remove("disabled")
-          // if (!("nxt_sq_id" in pg2_tabs_dict[qid]['subq'][curr_sqid])) tabMVright.classList.add("disabled")
-          // else tabMVright.classList.remove("disabled")
         }
 
       } 
@@ -261,7 +296,7 @@ pg2tabs.forEach(el => {
         tabMVleft.onclick = null;
         tabMVright.onclick = null;
         // !  Set Answer for current Tab
-        $("#pg1_field_updproj").val(ANSWER_DICT[curr_qid]);
+        $("#pg1_field_updproj").val( String(ANSWER_DICT[(curr_qid)]).trim());
 
 
         // TODO : Disabled Edit Button on current value of input field
@@ -270,6 +305,14 @@ pg2tabs.forEach(el => {
         }
         else{
           $("#contentEditButton").attr("disabled", false);
+        }
+
+        // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+        if($("#pg1_field_updproj").val().trim() == ""){
+          $("#btn_next_updproj").prop("disabled", true);
+        }
+        else{
+          $("#btn_next_updproj").prop("disabled", false);
         }
 
         
@@ -317,37 +360,40 @@ pg2tabs.forEach(el => {
 pg2tabs[0].click()
 
 
+// ***************************************************************************************
+//  TODO  : Next Button Handler
+// ***************************************************************************************
 // TODO : Next Button Form Submission Handler
 btnNext_UpdateProject.onclick = () => {
-  const projUpd = field_updproj.value.trim();
-  // console.debug("NEXT BUTTON IS PRESSED");
+
+  // console.debug(pg2_tabs_dict);
+
+
+  // TODO : Get the value of current tab answer...
+  var projUpd = $("#pg1_field_updproj").val().trim();
   
-  // Save Answer to the database through AJAX Call
-  // console.debug(ANSWER_DICT);
+  // !  AJAX GET METHOD TO SAVE ANSWER TO THE DATABASE
   const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
   $.ajax({
-    
     method: "GET",
     url: $("#btn_next_updproj").attr("data-url"),
     data: { 
         project_id : project_id,
-        // name: "AJAx", 
         answer : JSON.stringify(ANSWER_DICT),
     }
-}).done(function(response){
-    // console.debug(response["instance"]);
-    // ANSWER_DICT = response["instance"];
+  }).done(function(response){
     for(var index=0; index < Object.keys(response["instance"]).length; index++){
-      // console.debug(response["instance"][index]);
       ANSWER_DICT[index] = response["instance"][index];
     }
-});
+  });
 
 
-  if (!projUpd || projUpd.length === 0) {
+  if (!projUpd || projUpd.length === 0 ) {
       btnNext_UpdateProject.disabled = true;
       return;
   }
+
+  // console.debug("JS FILE : 393",ANSWER_DICT);
 
 
   // TODO : calculate the Number of tabs
@@ -366,6 +412,13 @@ btnNext_UpdateProject.onclick = () => {
     $.each($(pg2tabs), function(){
       $(this).removeClass("active");
     });
+
+
+    // console.debug("Nexxt Button Event", curr_qid);
+    // !  Behavour of the Back  Button....
+    // !  Change the value of onclick event handler, if it is the first tab...
+    
+
 
     // TODO : Active Next Tab
     $(pg2tabs[parseInt(curr_qid)+1]).addClass("active");
@@ -398,22 +451,51 @@ btnNext_UpdateProject.onclick = () => {
       // TODO : Show Right Angle Sub-Question Button
       tabMVright.classList.add("show"); 
       curr_sqid = Object.keys(itm)[0];
-      // currnet_index = 0;
-      currnet_index = activeSabTab[parseInt(curr_qid)];
+      currnet_index = activeSabTab[parseInt(curr_qid)+1];
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
-      // ANSWER_DICT[parseInt(curr_qid)+1][currnet_index] = $("#pg1_field_updproj").val();
-      // console.debug(ANSWER_DICT);
-      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][currnet_index]);
+
+      // !  Set currnet_index = 0 for current answer of the sab-question
+      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)+1][0]).trim());
+      if(String(ANSWER_DICT[parseInt(curr_qid)+1][0]).trim() == ""){
+        
+        // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+        if($("#pg1_field_updproj").val().trim() == ""){
+          $("#btn_next_updproj").prop("disabled", true);
+        }
+        else{
+          $("#btn_next_updproj").prop("disabled", false);
+        }
+      }
       
       // TODO : Left Angle Sub-Question Button Handler
       tabMVleft.onclick = () => {
+        // console.debug("LEFT  ANGLE : ", ANSWER_DICT);
         $("#contentEditButton").show();
         $("#contentDoneButton").hide();
         if (currnet_index != 0) {
           currnet_index -= 1;
           activeSabTab[parseInt(curr_qid)] = currnet_index;
-          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][0]);
+          $("#pg1_field_updproj").val(String(ANSWER_DICT[(curr_qid)][0]).trim());
+
+          // TODO : Disabled Edit Button on current value of answer input field
+          if($("#pg1_field_updproj").val().trim() != ""){
+            $("#contentEditButton").attr("disabled", true);
+          }
+          else{
+            $("#contentEditButton").attr("disabled", false);
+          }
+
+          // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+          if($("#pg1_field_updproj").val().trim() == ""){
+            $("#btn_next_updproj").prop("disabled", true);
+          }
+          else{
+            $("#btn_next_updproj").prop("disabled", false);
+          }
+
+
+
           curr_sqid = Object.keys(itm)[currnet_index];
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid);
@@ -429,12 +511,32 @@ btnNext_UpdateProject.onclick = () => {
 
       // TODO : Right Angle Sub-Question Button Handler
       tabMVright.onclick = () => {
+        // console.debug("RIGHT  ANGLE : ", pg2_tabs_dict);
         $("#contentEditButton").show();
         $("#contentDoneButton").hide();
         if (currnet_index != Object.keys(itm).length-1) {
           currnet_index += 1;
           activeSabTab[parseInt(curr_qid)] = currnet_index;
-          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1][0]);
+          $("#pg1_field_updproj").val(String(ANSWER_DICT[(curr_qid)][0]).trim());
+
+
+          // TODO : Disabled Edit Button on current value of answer input field
+          if($("#pg1_field_updproj").val().trim() != ""){
+            $("#contentEditButton").attr("disabled", true);
+          }
+          else{
+            $("#contentEditButton").attr("disabled", false);
+          }
+
+          // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+          if($("#pg1_field_updproj").val().trim() == ""){
+            $("#btn_next_updproj").prop("disabled", true);
+          }
+          else{
+            $("#btn_next_updproj").prop("disabled", false);
+          }
+
+
           curr_sqid = Object.keys(itm)[currnet_index]
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid)
@@ -453,7 +555,26 @@ btnNext_UpdateProject.onclick = () => {
       tabMVright.onclick = null;
       curr_sqid = -1;
       activeSabTab[parseInt(curr_qid)] = 0;
-      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)+1]);
+      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)+1]).trim());
+
+
+      // TODO : Disabled Edit Button on current value of answer input field
+      if($("#pg1_field_updproj").val().trim() != ""){
+        $("#contentEditButton").attr("disabled", true);
+      }
+      else{
+        $("#contentEditButton").attr("disabled", false);
+      }
+
+      // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+      if($("#pg1_field_updproj").val().trim() == ""){
+        $("#btn_next_updproj").prop("disabled", true);
+      }
+      else{
+        $("#btn_next_updproj").prop("disabled", false);
+      }
+
+
       tabMVleft.classList.remove("show");
       tabMVright.classList.remove("show");
       $pg2change_q.html(Object.keys(itm)[0]);
@@ -464,6 +585,12 @@ btnNext_UpdateProject.onclick = () => {
     }
     
     curr_qid = $(pg2tabs[parseInt(curr_qid)+1]).attr("data-qid");
+    if(parseInt(curr_qid) == 0){
+      $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+    }
+    else{
+      $backButton.attr("onclick", "null");
+    }
     if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)+1){
       $("#btn_next_updproj").html("Submit");
     }
@@ -472,6 +599,18 @@ btnNext_UpdateProject.onclick = () => {
     }
   }
 }
+
+
+// ***********************************************************************
+// TODO : END OF "NEXT BUTTON" HANDLER....
+// ***********************************************************************
+
+
+
+// ***********************************************************************
+// TODO :  "BACK BUTTON" HANDLER....
+// ***********************************************************************
+
 
 // ! Case Test for Edit Button
 // TODO : edit button should be there but blocked (possibly with small error message) - remove answers on this topic first.
@@ -488,10 +627,19 @@ else{
 $backButton.on("click", function(event){
   event.preventDefault();
   event.stopPropagation();
+
+  // console.debug(pg2_tabs_dict, ANSWER_DICT,  parseInt(curr_qid)-1, activeSabTab);
   
+  
+  currnet_index = activeSabTab[parseInt(curr_qid)-1];
+
+  // console.debug(currnet_index);
+  // console.debug(currnet_index, pg2_tabs_dict);
+
   // !  Check if current tab is ZERO 
   if((parseInt(curr_qid)) == 0){
     $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+    // console.debug("BACK BUTTON ZERO TAB CONDITION");
   }
   else{
     $backButton.attr("onclick", "null");
@@ -499,6 +647,22 @@ $backButton.on("click", function(event){
     $.each($(pg2tabs), function(){
       $(this).removeClass("active");
     });
+
+
+
+// !  Check if this is not the last tab 
+//  ! Change text of NEXT button to SUBMIT, if this the last tab...
+if(Object.keys(pg2_tabs_dict).length == parseInt(curr_qid)){
+  $("#btn_next_updproj").html("Submit");
+}
+else{
+  $("#btn_next_updproj").html("Next");
+}
+
+
+
+
+
 
     // TODO : Active Next Tab
     $(pg2tabs[parseInt(curr_qid)-1]).addClass("active");
@@ -515,8 +679,12 @@ $backButton.on("click", function(event){
     // TODO : Check Number of Question is equal to 1 or greater than 1
     if(numberOfQuestions > 1){
 
+      // currnet_index = activeSabTab[parseInt(curr_qid)-1] ;
+
+      // console.debug(Object.keys(itm)[pg2_tabs_dict]);
+
       // TODO : Show Main Question
-      $pg2change_q.html(Object.keys(itm)[0]);
+      $pg2change_q.html(Object.keys(itm)[currnet_index]);
       $pg2change_q.fadeIn(50);
 
       // TODO : Show Main Question Leading Text
@@ -530,14 +698,12 @@ $backButton.on("click", function(event){
 
       // TODO : Show Right Angle Sub-Question Button
       tabMVright.classList.add("show"); 
-      curr_sqid = Object.keys(itm)[0];
-      currnet_index = activeSabTab[parseInt(curr_qid)] ;
-      // activeSabTab[parseInt(curr_qid)] = currnet_index;
+      curr_sqid = Object.keys(itm)[currnet_index];
       tabMVleft.onclick = null;
       tabMVright.onclick = null;
       // ANSWER_DICT[parseInt(curr_qid)+1][currnet_index] = $("#pg1_field_updproj").val();
       // console.debug(ANSWER_DICT);
-      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][currnet_index]);
+      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1][0]).trim());
       
       // TODO : Left Angle Sub-Question Button Handler
       tabMVleft.onclick = () => {
@@ -546,7 +712,7 @@ $backButton.on("click", function(event){
         if (currnet_index != 0) {
           currnet_index -= 1;
           activeSabTab[parseInt(curr_qid)] = currnet_index;
-          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][0]);
+          $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1][0]).trim());
           curr_sqid = Object.keys(itm)[currnet_index];
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid);
@@ -562,12 +728,13 @@ $backButton.on("click", function(event){
 
       // TODO : Right Angle Sub-Question Button Handler
       tabMVright.onclick = () => {
+        // console.debug(Object.keys(itm), currnet_index);
         $("#contentEditButton").show();
         $("#contentDoneButton").hide();
         if (currnet_index != Object.keys(itm).length-1) {
           currnet_index += 1;
           activeSabTab[parseInt(curr_qid)] = currnet_index;
-          $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1][0]);
+          $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1][0]).trim());
           curr_sqid = Object.keys(itm)[currnet_index]
           $pg2change_q.stop().fadeOut(100, ()=> {
             $pg2change_q.html(curr_sqid)
@@ -586,7 +753,27 @@ $backButton.on("click", function(event){
       tabMVright.onclick = null;
       curr_sqid = -1;
       activeSabTab[parseInt(curr_qid)] = 0;
-      $("#pg1_field_updproj").val(ANSWER_DICT[parseInt(curr_qid)-1]);
+      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1]).trim());
+
+
+// TODO : Disabled Edit Button on current value of input field
+        if($("#pg1_field_updproj").val().trim() != ""){
+          $("#contentEditButton").attr("disabled", true);
+        }
+        else{
+          $("#contentEditButton").attr("disabled", false);
+        }
+
+        // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
+        if($("#pg1_field_updproj").val().trim() == ""){
+          $("#btn_next_updproj").prop("disabled", true);
+        }
+        else{
+          $("#btn_next_updproj").prop("disabled", false);
+        }
+
+
+
       tabMVleft.classList.remove("show");
       tabMVright.classList.remove("show");
       $pg2change_q.html(Object.keys(itm)[0]);

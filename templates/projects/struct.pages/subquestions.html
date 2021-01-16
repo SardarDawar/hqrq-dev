@@ -138,7 +138,7 @@ btn-link.disabled, .btn-link:disabled {
                         
                     </div>
                     <div class="pg1-fields">
-                        <textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   >{{ ANSWER_DICT.0.0 }}</textarea>
+                        <textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   >{{ ANSWER_DICT.0.0.strip }}</textarea>
                     </div>
                 </div>
                 <hr class="sep">
@@ -186,7 +186,7 @@ btn-link.disabled, .btn-link:disabled {
     const user_fullName = "{{ request.user.get_full_name }}";
 	const user_email = "{{ request.user.email }}";
 	const url_projCreate = "{% url 'project-create' %}";
-    const proj_choice_curr_value = "{{ ANSWER_DICT.0.0 }}";
+    const proj_choice_curr_value = $("#pg1_field_updproj").val().trim();
 </script>
 {% include CONTENT_PAGE_PATH %}
 <script src="{% static 'common/js/accessibility.js' %}" type="text/javascript" defer></script>
