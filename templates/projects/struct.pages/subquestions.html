@@ -59,8 +59,8 @@ textarea.form-control{
     /* overflow-y: auto; */
     /* height: auto; */
     /* overflow: hidden; */
-    /* overflow: auto; */
-    overflow: hidden;
+    overflow: auto;
+    /* overflow: hidden; */
     word-wrap:break-word;
     min-height: 60px;
     border-radius: 0;
@@ -144,7 +144,7 @@ btn-link.disabled, .btn-link:disabled {
                 <hr class="sep">
               <div class="pg1-buttons">
                   {% if BACK_URL %}
-                  <button type="button" class="btn btn-dark cust-button" id="btn_back_updproj" onclick="event.preventDefault(); pageCleanup(); window.location.href='{% url BACK_URL project.slug BACK_URL_ATTR %}'">Back</button>
+                  <button type="button" class="btn btn-dark cust-button" data-url="event.preventDefault(); pageCleanup(); window.location.href='{% url BACK_URL project.slug BACK_URL_ATTR %}'"  id="btn_back_updproj" onclick="event.preventDefault(); pageCleanup(); window.location.href='{% url BACK_URL project.slug BACK_URL_ATTR %}'">Back</button>
                   {% endif %}
                   <button type="button" class="btn btn-dark cust-button align-right" id="btn_next_updproj" data-url="{% url  'PROJECT_ANSWER_SAVE_URL' %}">Next</button>
               </div>

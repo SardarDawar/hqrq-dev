@@ -92,6 +92,11 @@ tenseChoice = []
 docOptionsList = []
 docOptionsIndex = []
 
+for k,v in docLengthOptions.items():
+    docOptionsList.append(k)
+    docOptionsIndex.append(v)
+
+
 doc_list2 = [
              ['assessment', 'review', 'report', 'comparison'],
              ['policy document', 'proceedures document'],

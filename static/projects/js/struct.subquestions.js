@@ -135,7 +135,7 @@ pg2tabs.forEach(el => {
 
       // !  Change the value of onclick event handler, if it is the first tab...
       if(parseInt(curr_qid) == 0){
-        $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+        $backButton.attr("onclick", $backButton.attr("data-url"));
       }
       else{
         $backButton.attr("onclick", "null");
@@ -586,7 +586,7 @@ btnNext_UpdateProject.onclick = () => {
     
     curr_qid = $(pg2tabs[parseInt(curr_qid)+1]).attr("data-qid");
     if(parseInt(curr_qid) == 0){
-      $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+      $backButton.attr("onclick", $backButton.attr("data-url"));
     }
     else{
       $backButton.attr("onclick", "null");
@@ -638,7 +638,7 @@ $backButton.on("click", function(event){
 
   // !  Check if current tab is ZERO 
   if((parseInt(curr_qid)) == 0){
-    $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+    $backButton.attr("onclick", $backButton.attr("data-url"));
     // console.debug("BACK BUTTON ZERO TAB CONDITION");
   }
   else{
@@ -785,7 +785,7 @@ else{
     
     curr_qid = $(pg2tabs[parseInt(curr_qid)-1]).attr("data-qid");
     if((parseInt(curr_qid)) == 0){
-      $backButton.attr("onclick", "event.preventDefault(); pageCleanup(); window.location.href='/p/u/10-tesing-project-multiple-words/doc_len'");
+      $backButton.attr("onclick", $backButton.attr("data-url"));
     }
     else{
       $backButton.attr("onclick","null");

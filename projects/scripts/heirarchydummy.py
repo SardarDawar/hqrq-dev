@@ -15,9 +15,9 @@ lv = 1
 selectedOrientation = -1 # selects positive, negative neutral
 proposalWordOutcome = 'impact'
 
-def questionGenerator(userDefinedSubject,userDefinedProspect) :
+def questionGenerator(userDefinedSubject,userDefinedProspect, activeQuestions=[0, 1, 2, 3, 4]) :
 
-    print(userDefinedSubject)
+    # print(activeQuestions, "Active Questions")
     # ! WHAT QUESTION LIST
     whatQuestion = [
         "What is " + userDefinedSubject + " ?",
@@ -50,10 +50,7 @@ def questionGenerator(userDefinedSubject,userDefinedProspect) :
         "Why does " + userDefinedSubject + " change " + userDefinedProspect + " ?", 
         "Why can " + userDefinedSubject + " alter " + userDefinedProspect + " ?"
     ]
-
     filteredQuestionList = [whatQuestion,whereQuestion, whenQuestion, howQuestion, whyQuestion]
-
-
     whatLeadin = [userDefinedSubject + " is"]
     whereLeadin = [userDefinedSubject + " will impact " + userDefinedProspect + " in", userDefinedSubject + " could alter " + userDefinedProspect + " in ", userDefinedSubject + " will change " + userDefinedProspect + " in "]
     whenLeadin = [userDefinedSubject + " should change " + userDefinedProspect + " when", userDefinedSubject + " will form " + userDefinedProspect + " when", userDefinedSubject + " can alter " + userDefinedProspect + " when"]
@@ -61,9 +58,18 @@ def questionGenerator(userDefinedSubject,userDefinedProspect) :
     whyLeadin = [userDefinedSubject + " can change " + userDefinedProspect + " because ", userDefinedSubject + " does change " + userDefinedProspect + " because ", userDefinedSubject + " can alter " + userDefinedProspect  + " because"]
 
     leadingText = [whatLeadin, whereLeadin, whenLeadin, howLeadin, whyLeadin]
-    # print("Question Indexes to display in Front End", vl.activeQuestions)
-    # print("Number of Answers to take by question index", vl.answerModifier)
-    return (filteredQuestionList, leadingText, vl.postQuestionMessage)
+
+
+    # Return Questions only for those that are actively selected....
+    # for index in activeQuestions:
+    #     # filteredQuestionList[int(index)]
+    #     if int(index) not  in activeQuestions:
+    #         filteredQuestionList.pop(int(index))
+    #         leadingText.pop(int(leadingText))
+
+    # print(filteredQuestionList, leadingText)
+
+    return (filteredQuestionList, leadingText, vl.postQuestionMessage, activeQuestions)
 
 
 
@@ -96,12 +102,13 @@ def heirarchyDummy( userDefinedProspect=None,userDefinedSubject=None, firstName=
     #         print("Message is empty - No message")
             # return "Message is empty - No message" 
 
-    return questionGenerator(userDefinedSubject,userDefinedProspect)
+    return questionGenerator(userDefinedSubject,userDefinedProspect, activeQuestions)
         #leadingText = leadingTextGenerator.RuleMapper(question)
     # print(" first presented questions above ")
 
 
-def updatedExistingQuestion(userDefinedSubject, userDefinedProspect, updatedTense, updatedPWOIndex):
+def updatedExistingQuestion(userDefinedSubject, userDefinedProspect, updatedTense, updatedPWOIndex, activeQuestions=[0,1, 2, 3, 4]):
+    # print(activeQuestions, "Active Questoins in updatedExistingQuestion")
     if userDefinedSubject.find("a ") != 0 and userDefinedSubject.find("the ") != 0:
         vl.passThroughExpressorUDS = False
     else :
@@ -116,7 +123,8 @@ def updatedExistingQuestion(userDefinedSubject, userDefinedProspect, updatedTens
     questionGenerator(userDefinedSubject, userDefinedProspect)
     vl.passThroughExpressor = True
     vl.proposalWordsOutcome = vl.pwoLists[int(updatedPWOIndex)]
-    return questionGenerator(userDefinedSubject, userDefinedProspect)
+    vl.activeQuestions = activeQuestions
+    return questionGenerator(userDefinedSubject, userDefinedProspect, activeQuestions)
     node = userDefinedSubject
 
     Heirarchy.append({userDefinedSubject: [userDefinedSubject]})

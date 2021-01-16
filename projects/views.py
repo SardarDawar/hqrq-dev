@@ -131,7 +131,7 @@ def breakSentence(q):
             q.remove(q[0])
     
 
-    display_print(q)
+    # display_print(q)
 
     if(len(q) != 0):
         userDefinedProspect=""
@@ -645,7 +645,7 @@ def PROJECTSEDITQUESTIONAJAX(request):
         # project.getPROP_TOPIC_NAME()
         
         # display_print(project.setPROP_TOPIC_NAME(userDefinedSubject)
-        display_print((updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect))
+        # display_print((updatedTense, userDefinedSubject, updatedPWOIndex, userDefinedProspect))
         # display_print(updatedTense)
         # )
         
@@ -671,9 +671,15 @@ def PROJECTSEDITQUESTIONAJAX(request):
         if  updatedPWOIndex.strip().lower() in pwoListsViews:
             Orientation = pwoListsViews.index(updatedPWOIndex.strip().lower())
 
-        updatedQuestions = heirarchydummy.updatedExistingQuestion(userDefinedSubject, userDefinedProspect, Tense , Orientation)
+        # if activeQuestionListIndex is not definded for the current project
+
+        # display_print(project.activeQuestionIndexList)
+        if len(project.activeQuestionIndexList.strip()) == 0 or project.activeQuestionIndexList.strip() == "" :
+            project.activeQuestionIndexList = [0, 1, 2, 3, 4]
+            project.save()
+        updatedQuestions = heirarchydummy.updatedExistingQuestion(userDefinedSubject, userDefinedProspect, Tense , Orientation , project.activeQuestionIndexList)
         # display_print(updatedQuestions)
-        (filteredQuestionList, leadingText, postQuestionMessage) = updatedQuestions
+        (filteredQuestionList, leadingText, postQuestionMessage, activeQuestions) = updatedQuestions
         # display_print((filteredQuestionList, leadingText, postQuestionMessage))
         for index in range(len(filteredQuestionList)) :
             questionsDict[index] = filteredQuestionList[index]
@@ -683,6 +689,7 @@ def PROJECTSEDITQUESTIONAJAX(request):
         project.generatedQuestions = questionsDict
         project.generatedQuestionsLeadingText = questionLeadingText
         project.generatedAnswers = request.GET['answer']
+        project.activeQuestionIndexList = activeQuestions
         project.save()
         # display_print(project.getQuestoins())
 
@@ -691,7 +698,7 @@ def PROJECTSEDITQUESTIONAJAX(request):
         return JsonResponse(json.loads( json.dumps( {"QUESTIONS_DICT_AJAX" : questionsDict, "QUESTION_LEADING_TEXT_AJAX":  questionLeadingText, "ANSWER_DICT" : eval(str(project.getAnswers()))})), status=200)
 
     except Exception as e:
-        display_print(e)
+        # display_print(e)
         return JsonResponse(json.loads( json.dumps( {"instance": 'error'})), status=400)
     
 
@@ -705,6 +712,9 @@ def projectSubquestions(request, slug):
     questionLeadingText = {}
     # ! Answer for the Questions
     answersDict = {}
+
+    # ! Current Active Question Index List
+    activeQuestions = []
     
     # TODO  :   Retrieve Project Object 
     # TODO  :   else show Http 404 page...
@@ -723,9 +733,8 @@ def projectSubquestions(request, slug):
     # ! Check if the questions for the current project exists or not...
     # ! Check if the question leading text exists for the proejct
     if(len(project.getQuestoins()) == 0 or  project.getQuestoins().strip() == "" or len(project.getQuestionsLeadingText()) == 0 or  project.getQuestionsLeadingText().strip() == ""):
-        # Question for the Script...
-        # display_print(int(vl_sub_type_list[int(doc_list_1.index(project.doc_type))].index(project.doc_subtype)))
-        (filteredQuestionList, leadingText, postQuestionMessage) =  question(
+        # TODO  :   Question for the Script...
+        (filteredQuestionList, leadingText, postQuestionMessage, activeQuestions) =  question(
             firstName = request.user.email,
             projectName = project.title,
             masterDocTypeIndex = int(doc_list_1.index(project.doc_type))+1,
@@ -748,8 +757,15 @@ def projectSubquestions(request, slug):
         # ! Save script generated questions and questions leading text to the database
         project.generatedQuestions = questionsDict
         project.generatedQuestionsLeadingText = questionLeadingText
-        # display_print(project.getAnswers())
         project.save()
+
+
+
+    # ! Current Active Questions Indext List
+    if (project.activeQuestionIndexList.strip() == "" or len(project.activeQuestionIndexList.strip()) == 0 ):
+        project.activeQuestionIndexList = [0, 1, 2, 3, 4]
+        project.save()
+
 
     # ! Create and Save an Answer Object when asnwrs are not provided
     if(len(project.getAnswers()) == 0 or project.getAnswers().strip() == ""):
@@ -764,6 +780,14 @@ def projectSubquestions(request, slug):
         project.generatedAnswers = A
         project.save()
     # display_print(project.getAnswers())
+
+
+    # Select Question according to the active Tab Question Index List
+    # for index in activeQuestions:
+    #     # filteredQuestionList[int(index)]
+    #     if int(index) not  in activeQuestions:
+    #         filteredQuestionList.pop(int(index))
+    #         leadingText.pop(int(leadingText))
 
     # GET
     burl, battr = getFlowBackUrlAttr(None)

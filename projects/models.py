@@ -29,6 +29,9 @@ class Project(models.Model):
     # ! Subject Type of the document...
     doc_topic = models.CharField(max_length=25, choices=PROJ_TOPIC_CHOICES, null=True)
 
+    # ! Current Active Question Index List
+    activeQuestionIndexList = models.CharField(max_length = 100, blank=True, null=True, default="")
+
     # project state
     stage = models.CharField(max_length=25, choices=PROJ_STAGE_CHOICES, default=PROJ_STAGE_DEFAULT)
     status = models.CharField(max_length=25, choices=PROJ_STATUS_CHOICES, default=PROJ_STATUS_DEFAULT)
