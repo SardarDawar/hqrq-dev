@@ -1,12 +1,9 @@
 <script>
     $(document).ready(function(){
-    
-        // Set Values for the Active SabQuestion Tab Index
+        $("#pg2-change-postMessage").html(String(POST_QUESTION_MESSAGE_DICT[0]));
         for(var activeindex= 0; activeindex < Object.keys(QUESTIONS_DICT_SCRIPT).length; activeindex++){
             activeSabTab[activeindex] = 0;
         }
-        // console.debug(QUESTIONS_DICT_SCRIPT);
-
         $("#pg2-change-questionlead").html( $("#pg2-change-questionlead").html().trim().charAt(0).toUpperCase() + $("#pg2-change-questionlead").html().trim().slice(1));
         const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
         $("#contentDoneButton").hide();

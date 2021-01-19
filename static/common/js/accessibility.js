@@ -1,59 +1,61 @@
-const accSpeakers = document.querySelectorAll(".accessibility .acc-speak")
+const accSpeakers = document.querySelectorAll('button.acc-speak[data-fieldid="pg1-acc-speak-field"]');
 var voiceToTextFieldCallback = null;
 
 setVoiceToTextFieldCallback = (func) => {
     voiceToTextFieldCallback = func;
 }
 
-// $(document).ready(function(){
-// $.each($("div#pg1-acc-speak-field"), function(){
-//         console.debug($(this));
-//     });
-// });
+
+
+function speakSentence(msg){
+    let utter = new SpeechSynthesisUtterance();
+    utter.lang = 'en-US';
+    utter.text = msg;
+    utter.volume = 1;
+    window.speechSynthesis.speak(utter);
+}
+
+
+$('button.acc-opt.acc-speak[data-fieldid="pg0-acc-speak-field"]').on("click", function(){
+    if($(this).attr("data-fieldid")){
+        if($(this).attr("data-fieldid") == "pg0-acc-speak-field"){
+            if($("div.page-wrap.pg0-wrap div.top-text").length != 0){
+                speakSentence(String($("div.page-wrap.pg0-wrap div.top-text").html().trim()));
+            }
+            if($("div.pg0-question-text.along-access-text").length != 0){
+                speakSentence(String($("div.pg0-question-text.along-access-text").html().trim()));
+            }
+            if($("div#pg0-acc-speak-field.pg0-instr").length !=0){
+                speakSentence(String($("div#pg0-acc-speak-field.pg0-instr").html().trim()));
+            }
+            
+        }
+    }
+});
+
+
+$('button.acc-opt.acc-speak[data-fieldid="pg2-acc-speak-field"]').on("click",function(){
+    if($("div#pg2-acc-speak-field.top-text").length != 0){
+        speakSentence($("div#pg2-acc-speak-field.top-text").attr("value").trim());
+    }
+});
 
 accSpeakers.forEach(el => {
     const field = document.getElementById(el.dataset.fieldid);
-    var textRead = ""
-
     el.onclick = () => {
-        // if (field.hasAttribute("value")) TextToVoice(textRead, true);
-        // else TextToVoice(field.innerHTML, true);        
-        // $.each($("div#pg1-acc-speak-field, span#pg2-change-question"), function(){
-        //     textRead = ""
-        //     if($(this).attr("value")){
-        //         textRead = $(this).attr("value");
-        //     }
-        //     // new SpeechSynthesisUtterance object
-                
-
-        let utter = new SpeechSynthesisUtterance();
-        utter.lang = 'en-US';
-        utter.text = $("div#pg1-acc-speak-field").attr("value");
-        utter.volume = 1;
-        window.speechSynthesis.speak(utter);
-
-        // Second
-        utter = new SpeechSynthesisUtterance();
-        utter.lang = 'en-US';
-        utter.text = $("span#pg2-change-question").html().trim();
-        utter.volume = 1;
-        window.speechSynthesis.speak(utter);
-
-        // Third
-        utter = new SpeechSynthesisUtterance();
-        utter.lang = 'en-US';
-        utter.text = $("div#pg2-change-questionlead").html().trim();
-        utter.volume = 1;
-        
-        window.speechSynthesis.speak(utter);
-
+        if($("div#pg1-acc-speak-field")){
+            speakSentence($("div#pg1-acc-speak-field").attr("value"));
         }
-
-
-
-
-
-        
+        if($("span#pg2-change-question").length != 0){
+            speakSentence($("span#pg2-change-question").html().trim());
+        }
+        if($("div#pg2-change-questionlead").length != 0){
+            speakSentence($("div#pg2-change-questionlead").html().trim());
+        }
+        if($("div.pg1-question-text").length != 0){
+            speakSentence($("div.pg1-question-text").html().trim());
+        }
+    }  
 });
 
 

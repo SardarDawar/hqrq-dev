@@ -219,24 +219,4 @@ def question(
     # Document Length and Document Level
     vl.docLengthChoice = docLengthChoice                                              # selected choice by user (index)
     vl.endingLevel = endingLevel                                                  # level at which to terminate heirarchy
-
-    #heirarchy1 = hmv.heirarchyMaster(firstName, masterDocTypeIndex,docLengthChoice, endingLevel, affectedByExpression, subjectExpressionJoin )
-
-
-    # hmv.heirarchyMaster(firstName,masterDocTypeIndex,docLengthChoice,endingLevel,affectedByExpression, subjectExpressionJoin)
-    # print("="*70)
-    # print("Script is in running state")
-    # print("selected orientationtext",vl.selectedOrientationText)
-    #  hmd.heirarchyDummy(firstName,masterDocTypeIndex,docLengthChoice,endingLevel,affectedByExpression, subjectExpressionJoin)
     return hmd.heirarchyDummy(firstName = firstName, tenseChoice = masterDocTypeIndex, docLengthChoice = docLengthChoice,endingLevel = endingLevel, userDefinedProspect = affectedByExpression, userDefinedSubject = subjectExpressionJoin)
-    # print((filteredQuestionList, leadingText, postQuestionMessage))
-    # for index in range(len(filteredQuestionList)) :
-    #     print(filteredQuestionList[index])
-    #     print(leadingText[index])
-    #     if(not postQuestionMessage.get(index) == "") :
-    #         print(postQuestionMessage.get(index))
-    #         # return vl.postQuestionMessage.get(index)
-    #     else :
-    #         print("Message is empty - No message")
-    # print(response)
-    # print("="*70)

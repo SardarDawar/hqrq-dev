@@ -45,6 +45,12 @@ class Project(models.Model):
     # ! Script Generated Questions Leading Text to save...
     generatedAnswers = models.TextField(verbose_name="Project Answers", blank = True, null=True, default= "")
 
+    # ! Answer Modifier Index List
+    answerModifier = models.CharField(max_length = 100, verbose_name= "Answer Modifier Index List", blank=True, null=True,default="")
+
+    # ! Post Question Message Index List
+    postQuestionMessage = models.TextField( verbose_name="Post Question Message Index List", blank=True, null=True, default='')
+
     # metadata    
     slug = models.SlugField(max_length = 250, null = True, blank = True)
     dt_create = models.DateTimeField(default=timezone.now)
@@ -61,6 +67,18 @@ class Project(models.Model):
 
     def get_slug(self):
         return f'{self.id}-{slugify(self.title)}'
+
+    # TODO  :   Retrieve Answer Modifier Index List
+    def getAnswerModifier(self):
+        return self.answerModifier
+
+    # TODO  :   Retrieve Post Question Message Index List
+    def getPostQuestionMessage(self):
+        return self.postQuestionMessage
+
+    # ! get Active Question Index List
+    def getActiveQuestionIndexList(self):
+        return self.activeQuestionIndexList
 
     # ! Get Answers
     def getAnswers(self):

@@ -79,6 +79,7 @@ var currnet_index = 0;
 var itm = pg2_tabs_dict[0];
 var itm_leading = pg2_tabs_leading_dict[0];
 var $backButton = $("#btn_back_updproj");
+var $postQuestionMessage  = $("#pg2-change-postMessage");
 
 // ***************************************************************************
 // TODO : TOP UPPER TAB HANDLER
@@ -100,6 +101,13 @@ pg2tabs.forEach(el => {
         return;
       }
 
+      // ?  Currente Value of Question-ID
+      curr_qid = qid;
+
+
+      // TODO : Show Current Post Question Message
+      $postQuestionMessage.html(String(POST_QUESTION_MESSAGE_DICT[parseInt(curr_qid)]));
+
       // TODO : Get Question Dictionary...
       var itm = pg2_tabs_dict[qid]
 
@@ -114,8 +122,7 @@ pg2tabs.forEach(el => {
       // TODO : Get Questions Leading Text
       var itm_leading = pg2_tabs_leading_dict[qid];
 
-      // ?  Currente Value of Question-ID
-      curr_qid = qid;
+      
 
       // TODO : Set Current Question Help TextValue
       $("button.acc-help").attr("data-helptext", TIP_DICT[parseInt(curr_qid)]);
@@ -432,6 +439,9 @@ btnNext_UpdateProject.onclick = () => {
     // TODO : Check Number of Questions for Next Tab
     numberOfQuestions = Object.keys(itm).length;
 
+    // TODO : Show Current Post Question Message
+    $postQuestionMessage.html(String(POST_QUESTION_MESSAGE_DICT[parseInt(curr_qid)+1]));
+
     // TODO : Check Number of Question is equal to 1 or greater than 1
     if(numberOfQuestions > 1){
 
@@ -675,6 +685,9 @@ else{
 
     // TODO : Check Number of Questions for Next Tab
     numberOfQuestions = Object.keys(itm).length;
+
+    // TODO : Show Current Post Question Message
+    $postQuestionMessage.html(String(POST_QUESTION_MESSAGE_DICT[parseInt(curr_qid)-1]));
 
     // TODO : Check Number of Question is equal to 1 or greater than 1
     if(numberOfQuestions > 1){

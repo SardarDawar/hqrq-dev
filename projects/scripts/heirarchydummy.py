@@ -15,7 +15,7 @@ lv = 1
 selectedOrientation = -1 # selects positive, negative neutral
 proposalWordOutcome = 'impact'
 
-def questionGenerator(userDefinedSubject,userDefinedProspect, activeQuestions=[0, 1, 2, 3, 4]) :
+def questionGenerator(userDefinedSubject,userDefinedProspect) :
 
     # print(activeQuestions, "Active Questions")
     # ! WHAT QUESTION LIST
@@ -69,7 +69,7 @@ def questionGenerator(userDefinedSubject,userDefinedProspect, activeQuestions=[0
 
     # print(filteredQuestionList, leadingText)
 
-    return (filteredQuestionList, leadingText, vl.postQuestionMessage, activeQuestions)
+    return (filteredQuestionList, leadingText, vl.postQuestionMessage)
 
 
 
@@ -102,12 +102,12 @@ def heirarchyDummy( userDefinedProspect=None,userDefinedSubject=None, firstName=
     #         print("Message is empty - No message")
             # return "Message is empty - No message" 
 
-    return questionGenerator(userDefinedSubject,userDefinedProspect, activeQuestions)
+    return questionGenerator(userDefinedSubject,userDefinedProspect)
         #leadingText = leadingTextGenerator.RuleMapper(question)
     # print(" first presented questions above ")
 
 
-def updatedExistingQuestion(userDefinedSubject, userDefinedProspect, updatedTense, updatedPWOIndex, activeQuestions=[0,1, 2, 3, 4]):
+def updatedExistingQuestion(userDefinedSubject, userDefinedProspect, updatedTense, updatedPWOIndex):
     # print(activeQuestions, "Active Questoins in updatedExistingQuestion")
     if userDefinedSubject.find("a ") != 0 and userDefinedSubject.find("the ") != 0:
         vl.passThroughExpressorUDS = False
@@ -123,8 +123,8 @@ def updatedExistingQuestion(userDefinedSubject, userDefinedProspect, updatedTens
     questionGenerator(userDefinedSubject, userDefinedProspect)
     vl.passThroughExpressor = True
     vl.proposalWordsOutcome = vl.pwoLists[int(updatedPWOIndex)]
-    vl.activeQuestions = activeQuestions
-    return questionGenerator(userDefinedSubject, userDefinedProspect, activeQuestions)
+    vl.activeQuestions = vl.activeQuestions
+    return questionGenerator(userDefinedSubject, userDefinedProspect)
     node = userDefinedSubject
 
     Heirarchy.append({userDefinedSubject: [userDefinedSubject]})

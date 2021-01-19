@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404, JsonResponse
 from django.core.exceptions import SuspiciousOperation, PermissionDenied
@@ -7,23 +7,14 @@ from .notifications import *
 from .forms import ProjectCreationForm
 from common.views import notificationView
 from .vars import *
-from .content import (  PROJ_SUBTYPE_DESCRIPTIONS, PROJ_TYPE_LIST, PROJ_SUBTYPE_CHOICES_SEL_LIST,
-                        PROJ_TOPIC_DESCRIPTIONS, PROJ_DOCSIZE_DESCRIPTIONS,
-                        PROJ_TYPE_SVGS, PROJ_TYPE_SUBTYPES, PROJ_TYPE_DESCRIPTIONS, PROJ_TYPE_OUTPUT_DETAILS,
-                        getChoiceHeading_doc_subtype, getChoiceHeading_doc_topic, getChoiceHeading_doc_len,
-                        getPropQuestionText, getPropQuestionLeadIn,
-                        getDocBasecampTopText, getDocBasecampSubText, getDocBasecampResponsesList,
-                        getFlowBackUrlAttr, getFlowNextUrlAttr, getAttrName,
-                        getTip_title, getTip_doc_type, getTip_doc_sutype, getTip_doc_topic, getTip_doc_len,
-                        getTip_basecamp, getTip_prop,
-                        getQuestionsDict, getChoiceHeading_topics, getTopicsChoiceList)
+from .content import *
 from .utils import defaultProjectSubtype
 from .models import Project, Property
-import json
 from django.db import transaction
 from .questions import *
 from .scripts import heirarchydummy
-# from  .scripts import variableLibrary as vl
+from  .scripts import variableLibrary as vl
+import traceback
 
 
 # Past, Present, Future
@@ -587,6 +578,10 @@ def projectUpdateView(request, slug, attr):
         if project.stage == PROJ_STAGE_BASECAMP:
             project.stage = PROJ_STAGE_INIT_QUESTIONS
             project.save()
+        if project.stage == PROJ_STAGE_STRUCTURING:
+            project.stage = PROJ_STAGE_BASECAMP
+            project.save()
+            return redirect(reverse("project", args=[project.slug]))
         return getFlowRender(request, project, getAttrName(attr))
 
     raise SuspiciousOperation
@@ -677,9 +672,9 @@ def PROJECTSEDITQUESTIONAJAX(request):
         if len(project.activeQuestionIndexList.strip()) == 0 or project.activeQuestionIndexList.strip() == "" :
             project.activeQuestionIndexList = [0, 1, 2, 3, 4]
             project.save()
-        updatedQuestions = heirarchydummy.updatedExistingQuestion(userDefinedSubject, userDefinedProspect, Tense , Orientation , project.activeQuestionIndexList)
+        updatedQuestions = heirarchydummy.updatedExistingQuestion(userDefinedSubject, userDefinedProspect, Tense , Orientation )
         # display_print(updatedQuestions)
-        (filteredQuestionList, leadingText, postQuestionMessage, activeQuestions) = updatedQuestions
+        (filteredQuestionList, leadingText, postQuestionMessage) = updatedQuestions
         # display_print((filteredQuestionList, leadingText, postQuestionMessage))
         for index in range(len(filteredQuestionList)) :
             questionsDict[index] = filteredQuestionList[index]
@@ -689,16 +684,36 @@ def PROJECTSEDITQUESTIONAJAX(request):
         project.generatedQuestions = questionsDict
         project.generatedQuestionsLeadingText = questionLeadingText
         project.generatedAnswers = request.GET['answer']
-        project.activeQuestionIndexList = activeQuestions
         project.save()
         # display_print(project.getQuestoins())
 
+        # TODO  :   Questions
+        dummyQuestions = eval(str(project.generatedQuestions))
+        # for i in range(0, len(eval(str(project.generatedQuestions)))):
+        #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+        #         del dummyQuestions[int(i)]
+        
 
 
-        return JsonResponse(json.loads( json.dumps( {"QUESTIONS_DICT_AJAX" : questionsDict, "QUESTION_LEADING_TEXT_AJAX":  questionLeadingText, "ANSWER_DICT" : eval(str(project.getAnswers()))})), status=200)
+        # TODO  :   Question Leading Text
+        dummyLeading = eval(str(project.getQuestionsLeadingText()))
+        # for i in range(0, len(eval(str(project.getQuestionsLeadingText())))):
+        #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+        #         del dummyLeading[int(i)]
+
+
+        # TODO  :   Answer
+        dummyAnswers = eval(str(project.getAnswers()))
+        # for i in range(0, len(eval(str(project.getAnswers())))):
+        #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+        #         del dummyAnswers[str(i)]
+
+        return JsonResponse(json.loads( json.dumps( {"QUESTIONS_DICT_AJAX" : dummyQuestions, "QUESTION_LEADING_TEXT_AJAX":  dummyLeading, "ANSWER_DICT" : eval(str(dummyAnswers))})), status=200)
 
     except Exception as e:
         # display_print(e)
+        # traceback.print_tb(err.__traceback__)
+        traceback.print_exc()
         return JsonResponse(json.loads( json.dumps( {"instance": 'error'})), status=400)
     
 
@@ -734,7 +749,7 @@ def projectSubquestions(request, slug):
     # ! Check if the question leading text exists for the proejct
     if(len(project.getQuestoins()) == 0 or  project.getQuestoins().strip() == "" or len(project.getQuestionsLeadingText()) == 0 or  project.getQuestionsLeadingText().strip() == ""):
         # TODO  :   Question for the Script...
-        (filteredQuestionList, leadingText, postQuestionMessage, activeQuestions) =  question(
+        (filteredQuestionList, leadingText, postQuestionMessage) =  question(
             firstName = request.user.email,
             projectName = project.title,
             masterDocTypeIndex = int(doc_list_1.index(project.doc_type))+1,
@@ -766,9 +781,37 @@ def projectSubquestions(request, slug):
         project.activeQuestionIndexList = [0, 1, 2, 3, 4]
         project.save()
 
+    # TODO  :   Check if the "postQuestionMessage" field is empty or null for the current project
+    if(project.getPostQuestionMessage() is None):
+        project.postQuestionMessage = '{0: "", 1: "", 2: "", 3: "", 4: ""}'
+        project.save()
+    elif(project.getPostQuestionMessage().strip() == "" or len(project.getPostQuestionMessage().strip()) == 0):
+        project.postQuestionMessage = '{0: "", 1: "", 2: "", 3: "", 4: ""}'
+        project.save()
+
+    # TODO  :   Check if the "answerModifier" fieldis empty or null for the current project
+    if(project.getAnswerModifier() is None):
+        project.answerModifier = "{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}"
+        project.save()
+    elif(project.getAnswerModifier().strip() == "" or len(project.getAnswerModifier().strip()) == 0):
+        project.answerModifier = "{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}"
+        project.save()
+
 
     # ! Create and Save an Answer Object when asnwrs are not provided
-    if(len(project.getAnswers()) == 0 or project.getAnswers().strip() == ""):
+    if(project.getAnswers() is not None):
+        if(len(project.getAnswers()) == 0 or project.getAnswers().strip() == ""):
+            project.generatedAnswers = project.generatedQuestionsLeadingText
+            A = eval(str(project.generatedAnswers))
+            for i in A:
+                if(len(A[i])!=0):
+                    for j in range(0, len(A[i])):
+                        A[i][j] = ""
+                else:
+                    A[i] = ""
+            project.generatedAnswers = A
+            project.save()
+    else:
         project.generatedAnswers = project.generatedQuestionsLeadingText
         A = eval(str(project.generatedAnswers))
         for i in A:
@@ -779,19 +822,40 @@ def projectSubquestions(request, slug):
                 A[i] = ""
         project.generatedAnswers = A
         project.save()
-    # display_print(project.getAnswers())
 
-
-    # Select Question according to the active Tab Question Index List
-    # for index in activeQuestions:
-    #     # filteredQuestionList[int(index)]
-    #     if int(index) not  in activeQuestions:
-    #         filteredQuestionList.pop(int(index))
-    #         leadingText.pop(int(leadingText))
+    # display_print(vl.activeQuestions)
 
     # GET
     burl, battr = getFlowBackUrlAttr(None)
+    if project.stage == "STRUCTURING":
+        # burl = "project"
+        battr = "stage"
     prop_topic_name_response = project.getPROP_TOPIC_NAME()
+
+    
+
+    # TODO  :   Questions
+    dummyQuestions = eval(str(project.generatedQuestions))
+    # for i in range(0, len(eval(str(project.generatedQuestions)))):
+    #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+    #         del dummyQuestions[int(i)]
+    
+
+
+    # TODO  :   Question Leading Text
+    dummyLeading = eval(str(project.getQuestionsLeadingText()))
+    # for i in range(0, len(eval(str(project.getQuestionsLeadingText())))):
+    #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+    #         del dummyLeading[int(i)]
+
+
+    # TODO  :   Answer
+    dummyAnswers = eval(str(project.getAnswers()))
+    # for i in range(0, len(eval(str(project.getAnswers())))):
+    #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+    #         del dummyAnswers[int(i)]
+
+
     context = {
         'project': project,
         'page_project': True,
@@ -814,319 +878,19 @@ def projectSubquestions(request, slug):
         "PROJECT_TOPIC_NAME": prop_topic_name_response,
 
         # ! Question
-        "QUESTIONS_DICT": eval(str(project.generatedQuestions)), 
+        "QUESTIONS_DICT": eval(str(dummyQuestions)), 
 
         # ! Question Leading Text
-        "QUESTION_LEADING_TEXT" : eval(str(project.getQuestionsLeadingText())),
+        "QUESTION_LEADING_TEXT" : eval(str(dummyLeading)),
 
         # ! Answer 
-        "ANSWER_DICT" : eval(str(project.getAnswers())),
-        "PAGE_TIP":["""
-<p>
-    <strong>WHAT</strong>
-    : A <em>definitive</em> question.
-</p>
-<p>
-    Clearly and succinctly define your topic and select ‘Next’ to move to the
-    next question.
-</p>
-<p>
-    Your answer should follow on from the lead-in text below (no need to repeat
-    the lead-in text in your answer).
-</p>
-<p>
-    Use ‘Answer for me’ to try to find a result on the web (works for most
-    simple topics).
-</p>
-<p>
-    You can edit the web result to tailor it to your document.
-</p>
-<p>
-    Some topics are specific to you and may require more thought or research to
-    prepare the best answer.
-</p>"""
-, """<p>
-    <strong>WHERE</strong>
-    : A <em>location</em> question - relates to a destination, aspect, place in
-    time, division, space or place.
-</p>
-<p>
-    Your answer should follow on from the lead-in text (do not repeat the
-    lead-in text). This understanding of context is used by the HyperQuestions
-    AI Engine.
-</p>
-<p>
-    <u> </u>
-</p>
-<p>
-    <u>Example</u>
-    :
-</p>
-<p>
-    <strong>Question</strong>
-    :
-    <em>
-        Where could a poodle enhance the life of elderly nursing home
-        residents?
-    </em>
-</p>
-<p>
-    <strong>Lead-in</strong>
-    :
-    <em>
-        A poodle could enhance the life of elderly nursing home residents in …
-    </em>
-</p>
-<p>
-    <strong>Answer</strong>
-    :
-    <em>
-        … low-care nursing homes that offer independent living and allow
-        residents to keep pets.
-    </em>
-</p>
-<p>
-    <em> </em>
-</p>
-<p>
-    <u>Not sure this is the perfect question for you? </u>
-</p>
-<p>
-    Use grey arrows to see alternate versions of the question – you may use any
-    one of these.
-</p>
-<p>
-    Your selection will be locked-in once you enter an answer and click ‘Next’.
-</p>
-<p>
-    The ‘Edit’ button will edit all questions across this topic and can only be
-    undertaken before a response is entered and saved (by hitting ‘Next’).
-</p>
-<p>
-    <u>Edit options include</u>
-    : Changing the tense of the question, changing the expression of the
-    subject or object and changing the relationship between subject and object
-    (positive relationship, negative or neutral).
-</p>
-<p>
-    On hitting ‘Done’ all questions will be refreshed for this topic.
-</p>
-<p>
-    If none of the above offers a question you feel is workable, you can go
-    back and change the topic, or skip this question by typing the answer as
-    ‘Skip’.
-</p>
-<p>
-    Enter an answer (by voice or typing) and click ‘Next’ to save your response
-    and proceed to the next question or topic selection process.
-</p>""","""<p>
-    <strong>WHEN</strong>
-    : A <em>time-related</em> question - relates to defining a point in time.
-</p>
-<p>
-    For example, next month, next year, in January, in the next decade, in 30
-    seconds, during his youth, in the Jurassic period etc.
-</p>
-<p>
-    Your answer should follow on from the lead-in text (not repeat the lead-in
-    text). This understanding of context is used by the HyperQuestions Ai
-    Engine.
-</p>
-<p>
-    <u>Example</u>
-    :
-</p>
-<p>
-    <strong>Question</strong>
-    :
-    <em>
-        When could a poodle enhance the life of elderly nursing home residents?
-    </em>
-</p>
-<p>
-    <strong>Lead-in</strong>
-    :
-    <em>
-        A poodle could enhance the life of elderly nursing home residents when
-        …
-    </em>
-</p>
-<p>
-    <strong>Answer</strong>
-    :
-    <em>
-        … they have been able to experience the companionship associated with
-        caring for and receiving affection from an animal. Residents have
-        noticed an improvement in their outlook, attitude and zest for life
-        within 6 months of receiving a poodle to care for.
-    </em>
-</p>
-<p>
-    <em><u>Not sure this is the perfect question for you?</u> </em>
-</p>
-<p>
-    Use grey arrows to see alternate versions of the question – you may use any
-    one of these. Your selection will be locked in once you enter an answer and
-    click next.
-</p>
-<p>
-    The edit button will edit all questions across this topic and can only be
-    undertaken before a response is entered and saved (by hitting next). Edit
-    options include: changing the tense of the question, changing the
-    expression of the subject or object and changing the relationship between
-    subject and object (positive relationship, negative or neutral). On hitting
-    “done” all questions will be re-loaded for this topic.
-</p>
-<p>
-    If none of the above offers a question you feel is workable, you can go
-    back and change the topic, or skip this question by typing the answer as
-    “skip”.
-</p>
-<p>
-    Enter an answer (voice or typing) and click next to save your response and
-    proceed to the next question or topic selection process.
-</p>""", """<p>
-    <strong>How</strong>
-    : a method or functional question - this question relates to defining the
-    approach by which a result will be achieved.
-</p>
-<p>
-    For example, by using XYZ resources, deploying the ABC methodology, using
-    the XYZ approach, doing A) then B) then C).
-</p>
-<p>
-    An answer should follow on from the lead-in text (not repeat the lead-in
-    text). This understanding of context is used by the HyperQuestions Ai
-    Engine.
-</p>
-<p>
-    <strong> </strong>
-</p>
-<p>
-    <u>Example</u>
-    :
-</p>
-<p>
-    <strong>Question</strong>
-    :
-    <em>
-        How can a poodle enhance the life of elderly nursing home residents?
-    </em>
-</p>
-<p>
-    <strong>Lead-in</strong>
-    :
-    <em>
-        A poodle can enhance the life of elderly nursing home residents by …
-    </em>
-</p>
-<p>
-    <strong>Answer</strong>
-    :
-    <em>
-        … providing a reason for living. Through the need to feed and provide
-        water to the dog each day, residents experience a level of purpose,
-        they have often not had for many years. These efforts are rewarded
-        through the love and affection provided by the dog, sitting on their
-        lap each evening.
-    </em>
-</p>
-<p>
-    <strong> </strong>
-</p>
-<p>
-    <u>Not sure this is the perfect question for you? </u>
-</p>
-<p>
-    Use grey arrows to see alternate versions of the question – you may use any
-    one of these. Your selection will be locked in once you enter an answer and
-    click next.
-</p>
-<p>
-    The edit button will edit all questions across this topic and can only be
-    undertaken before a response is entered and saved (by hitting next). Edit
-    options include: changing the tense of the question, changing the
-    expression of the subject or object and changing the relationship between
-    subject and object (positive relationship, negative or neutral). On hitting
-    “done” all questions will be re-loaded for this topic.
-</p>
-<p>
-    If none of the above offers a question you feel is workable, you can go
-    back and change the topic, or skip this question by typing the answer as
-    “skip”.
-</p>
-<p>
-    Enter an answer (voice or typing) and click next to save your response and
-    proceed to the next question or topic selection process.
-</p>""", """<p>
-    <strong>WHY</strong>
-    : a <em>reasoning</em> question - this question relates to outlining a
-    rationale or reason to explain what makes this important.
-</p>
-<p>
-    For example, provides XYZ benefits, informs ABC, offers advanages to XYZ
-    group, enables XYZ process.
-</p>
-<p>
-    An answer should follow on from the lead-in text (not including the lead-in
-    text). This understanding of context is used by the HyperQuestions Ai
-    Engine.
-</p>
-<p>
-    <strong>Example:</strong>
-</p>
-<p>
-    <strong>Question</strong>
-    :
-    <em>
-        How can a poodle enhance the life of elderly nursing home residents?
-    </em>
-</p>
-<p>
-    <strong>Lead-in</strong>
-    :
-    <em>
-        A poodle can enhance the life of elderly nursing home residents because
-        …
-    </em>
-</p>
-<p>
-    <strong>Answer</strong>
-    :
-    <em>
-        … is can provide love and support beyond that which is provided by
-        family and friends. They offer a 24/7 bedside companion that responds
-        to touch and provides new meaning to the lives of the elderly.
-    </em>
-</p>
-<p>
-    <strong> </strong>
-</p>
-<p>
-    <u>Not sure this is the perfect question for you? </u>
-</p>
-<p>
-    Use grey arrows to see alternate versions of the question – you may use any
-    one of these. Your selection will be locked in once you enter an answer and
-    click next.
-</p>
-<p>
-    The edit button will edit all questions across this topic and can only be
-    undertaken before a response is entered and saved (by hitting next). Edit
-    options include: changing the tense of the question, changing the
-    expression of the subject or object and changing the relationship between
-    subject and object (positive relationship, negative or neutral). On hitting
-    “done” all questions will be re-loaded for this topic.
-</p>
-<p>
-    If none of the above offers a question you feel is workable, you can go
-    back and change the topic, or skip this question by typing the answer as
-    “skip”.
-</p>
-<p>
-    Enter an answer (voice or typing) and click next to save your response and
-    proceed to the next question or topic selection process.
-</p>"""]
+        "ANSWER_DICT" : eval(str(dummyAnswers)),
+
+        # ! POST QUESTION MESSAGE
+        "POST_QUESTION_MESSAGE_DICT" : eval(str(project.postQuestionMessage)),
+
+        # ! PAGE TIP
+        "PAGE_TIP":PAGE_TIP
     }
 
     return render(request, "projects/struct.pages/subquestions.html", context)
@@ -1172,6 +936,26 @@ def PROJECT_ANSWER_SAVE(request):
         project = Project.objects.get(id=int(request.GET['project_id']))
         project.generatedAnswers = request.GET['answer']
         project.save()
-        return JsonResponse(json.loads( json.dumps( {"instance": eval(str(project.getAnswers()))})), status=200)
+        # TODO  :   Questions
+        dummyQuestions = eval(str(project.generatedQuestions))
+        # for i in range(0, len(eval(str(project.generatedQuestions)))):
+        #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+        #         del dummyQuestions[int(i)]
+        
+
+
+        # TODO  :   Question Leading Text
+        dummyLeading = eval(str(project.getQuestionsLeadingText()))
+        # for i in range(0, len(eval(str(project.getQuestionsLeadingText())))):
+        #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+        #         del dummyLeading[int(i)]
+
+
+        # TODO  :   Answer
+        dummyAnswers = eval(str(project.getAnswers()))
+        # for i in range(0, len(eval(str(project.getAnswers())))):
+        #     if int(i) not in eval(str(project.getActiveQuestionIndexList())):
+        #         del dummyAnswers[str(i)]
+        return JsonResponse(json.loads( json.dumps( {"instance": eval(str(dummyAnswers))})), status=200)
     except Exception:
         return JsonResponse(json.loads( json.dumps( {"instance": "error"})), status=400)
