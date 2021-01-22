@@ -1,9 +1,31 @@
 <script>
     $(document).ready(function(){
         $("#pg2-change-postMessage").html(String(POST_QUESTION_MESSAGE_DICT[0]));
+        
+        // console.debug(ANSWER_MODIFIER_DICT,ANSWER_MODIFIER_DICT[0]);
+// console.debug(ANSWER_DICT);
+
+// console.debug(ACTIVE_QUESTION_DICT);
+
+        //  !   Remove any html part of the answer field
+        $("div.pg1-fields").html("");
+        for(var index = 0; index <  (ANSWER_MODIFIER_DICT[0]) ; index++ ){
+            if(ANSWER_DICT[0][index]){
+                let currentAnswer = String(ANSWER_DICT[0][index]).trim();
+                $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+            }
+            else{
+                let currentAnswer = String("").trim();
+                $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+            } 
+        }
+
         for(var activeindex= 0; activeindex < Object.keys(QUESTIONS_DICT_SCRIPT).length; activeindex++){
             activeSabTab[activeindex] = 0;
         }
+
+        
+
         $("#pg2-change-questionlead").html( $("#pg2-change-questionlead").html().trim().charAt(0).toUpperCase() + $("#pg2-change-questionlead").html().trim().slice(1));
         const project_id = JSON.parse(document.getElementById('PROJECT_ID').textContent);
         $("#contentDoneButton").hide();
@@ -525,10 +547,90 @@
                 });
             });
 
-            $("#pg1_field_updproj").on("keyup", function(){
-                // console.debug(curr_qid);
+
+            // =============================================================
+
+            //     $("#pg1_field_updproj").on("keyup", function(){
+            //     console.debug($(this).val());
+            //     if(curr_sqid == -1){
+            //         ANSWER_DICT[curr_qid] = [$(this).val()];
+            //         $("#projFormInp-upd").val(ANSWER_DICT);
+            //         if($(this).val().trim()!= ""){
+            //             $("#contentEditButton").attr("disabled", true);
+            //         }
+            //         else{
+            //             $("#contentEditButton").attr("disabled", false);
+            //         }
+            //     }
+            //     else{
+            //         ANSWER_DICT[curr_qid][currnet_index] = $(this).val();
+            //         $("#projFormInp-upd").val(ANSWER_DICT);
+            //         if($(this).val().trim()!= ""){
+            //             $("#contentEditButton").attr("disabled", true);
+            //         }
+            //         else{
+            //             $("#contentEditButton").attr("disabled", false);
+            //         }
+            //     }
+                
+            // });
+        
+
+            // =============================================================
+
+
+    });
+    $("body").on("DOMNodeInserted", "textarea", function(){
+
+        if($("#pg1_field_updproj").val().trim() == ""){
+          $("#btn_next_updproj").prop("disabled", true);
+        }
+        else{
+          $("#btn_next_updproj").prop("disabled", false);
+        }
+
+
+        $("textarea").on("keyup", function(){
+    //         for(var index = 0; index <  (ANSWER_MODIFIER_DICT[parseInt(curr_qid)]) ; index++ ){
+    //       if(ANSWER_DICT[parseInt(curr_qid)][index]){
+    //           let currentAnswer = String(ANSWER_DICT[parseInt(curr_qid)][index]).trim();
+    //       }
+    //       else{
+    //           let currentAnswer = String("").trim();
+    //       } 
+    //   }
+
+    if($("#pg1_field_updproj").val().trim() == ""){
+          $("#btn_next_updproj").prop("disabled", true);
+        }
+        else{
+          $("#btn_next_updproj").prop("disabled", false);
+        }
+    var savedAnswers = [];
+        // $.each("textarea", function(){
+            
+        //         console.debug($(this).val());
+        // });
+
+        // console.debug($("textarea"));
+        for(var index = 0; index<$("textarea").length ; index++){
+            // console.debug($($("textarea")[index]).val());
+            savedAnswers.push($($("textarea")[index]).val());
+        }
+
+        // console.debug(savedAnswers);
+
+    
+    // console.debug((ANSWER_MODIFIER_DICT[parseInt(curr_qid)]));
+    for(var index = 0; index < ANSWER_MODIFIER_DICT[parseInt(curr_qid)] ; index++){
+        savedAnswers.push();
+    }
+
+    // console.debug(savedAnswers);
+
+
                 if(curr_sqid == -1){
-                    ANSWER_DICT[curr_qid] = [$(this).val()];
+                    ANSWER_DICT[curr_qid] = savedAnswers;
                     $("#projFormInp-upd").val(ANSWER_DICT);
                     if($(this).val().trim()!= ""){
                         $("#contentEditButton").attr("disabled", true);
@@ -538,20 +640,18 @@
                     }
                 }
                 else{
-                    ANSWER_DICT[curr_qid][currnet_index] = $(this).val();
+                    ANSWER_DICT[curr_qid][currnet_index] = savedAnswers;
                     $("#projFormInp-upd").val(ANSWER_DICT);
                     if($(this).val().trim()!= ""){
                         $("#contentEditButton").attr("disabled", true);
+                        // $("#btn_next_updproj").prop("disabled", false);
                     }
                     else{
                         $("#contentEditButton").attr("disabled", false);
+                        // $("#btn_next_updproj").prop("disabled", true);
                     }
                 }
-                
-        });
-        // console.debug(ANSWER_DICT);
-
-
+            });
     });
 </script>
 

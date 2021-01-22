@@ -84,7 +84,7 @@ btn-link.disabled, .btn-link:disabled {
               <div class="pg-top-wrap">
                 <div class="text-muted top-fixed-text" style="font-size:18px" id="pg1-acc-speak-field" value="{{ PROJECT_TOPIC_NAME }}">{{ PROJECT_TOPIC_NAME }} /</div>
                 <div class="pg-tabs" style="display: flex; width: 100%; height: auto;">
-                  {% for q in QUESTIONS_DICT %}
+                  {% for q in ACTIVE_QUESTION_DICT %}
                   <div class="sep-wrap{% if forloop.counter0 == 0 %} active{% endif %} tabselect" id="qtab-{{q}}" data-qid="{{q}}">
                     <hr class="sep">
                   </div>
@@ -162,6 +162,8 @@ btn-link.disabled, .btn-link:disabled {
     {{ PAGE_TIP|json_script:"PAGE_TIP"}}
     {{ QUESTIONS_DICT|json_script:"QUESTIONS_DICT_SCRIPT" }}
     {{  POST_QUESTION_MESSAGE_DICT|json_script:"POST_QUESTION_MESSAGE_DICT" }}
+    {{ ANSWER_MODIFIER_DICT|json_script:"ANSWER_MODIFIER_DICT" }}
+    {{ ACTIVE_QUESTION_DICT|json_script:"ACTIVE_QUESTION_DICT"}}
     <!-- center window end -->
 {% endblock  %}
 

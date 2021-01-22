@@ -105,6 +105,12 @@ pg2tabs.forEach(el => {
       curr_qid = qid;
 
 
+      // Output the answer dictionary
+      // console.debug(ANSWER_DICT);
+
+      // output the current tab answer
+      // console.debug(ANSWER_DICT[parseInt(curr_qid)]);
+
       // TODO : Show Current Post Question Message
       $postQuestionMessage.html(String(POST_QUESTION_MESSAGE_DICT[parseInt(curr_qid)]));
 
@@ -173,7 +179,22 @@ pg2tabs.forEach(el => {
         // !  Always show Answer of first sab-question on all sub-versions of  the questoin
         // !  For this purpose
         // !  Set currnet_index = 0
-        $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid][0]).trim());
+        // $("#pg1_field_updproj").val(String(ANSWER_DICT[curr_qid][0]).trim());
+
+
+        // console.debug(ANSWER_MODIFIER_DICT[curr_qid]);
+        //  !   Remove any html part of the answer field
+        $("div.pg1-fields").html("");
+        for(var index = 0; index <  (ANSWER_MODIFIER_DICT[parseInt(curr_qid)]) ; index++ ){
+            if(ANSWER_DICT[parseInt(curr_qid)][index]){
+                let currentAnswer = String(ANSWER_DICT[parseInt(curr_qid)][index]).trim();
+                $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+            }
+            else{
+                let currentAnswer = String("").trim();
+                $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+            } 
+        }
 
         // TODO : Disabled Edit Button on current value of answer input field
         if($("#pg1_field_updproj").val().trim() != ""){
@@ -303,7 +324,18 @@ pg2tabs.forEach(el => {
         tabMVleft.onclick = null;
         tabMVright.onclick = null;
         // !  Set Answer for current Tab
-        $("#pg1_field_updproj").val( String(ANSWER_DICT[(curr_qid)]).trim());
+        // $("#pg1_field_updproj").val( String(ANSWER_DICT[(curr_qid)]).trim());
+        $("div.pg1-fields").html("");
+        for(var index = 0; index <  (ANSWER_MODIFIER_DICT[parseInt(curr_qid)]) ; index++ ){
+            if(ANSWER_DICT[parseInt(curr_qid)][index]){
+                let currentAnswer = String(ANSWER_DICT[parseInt(curr_qid)][index]).trim();
+                $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+            }
+            else{
+                let currentAnswer = String("").trim();
+                $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+            } 
+        }
 
 
         // TODO : Disabled Edit Button on current value of input field
@@ -466,7 +498,38 @@ btnNext_UpdateProject.onclick = () => {
       tabMVright.onclick = null;
 
       // !  Set currnet_index = 0 for current answer of the sab-question
-      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)+1][0]).trim());
+      // console.debug(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])][0]);
+      // $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])][0]).trim());
+
+      // console.debug(ANSWER_DICT, ANSWER_DICT[parseInt(curr_qid)+1]);
+
+      // console.debug(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1]);
+
+      // console.debug()
+
+      // console.debug( ACTIVE_QUESTION_DICT, ACTIVE_QUESTION_DICT.indexOf(parseInt(curr_qid)))
+
+      // console.debug(parseInt(curr_qid)+1);
+
+      // console.debug(ANSWER_MODIFIER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])], parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1]));
+
+      //  !   Remove any html part of the answer field
+      $("div.pg1-fields").html("");
+      for(var index = 0; index <  (ANSWER_MODIFIER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])]) ; index++ ){
+          if(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])][index]){
+              let currentAnswer = String(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])][index]).trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          }
+          else{
+              let currentAnswer = String("").trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          } 
+      }
+
+
+
+
+      
       if(String(ANSWER_DICT[parseInt(curr_qid)+1][0]).trim() == ""){
         
         // TODO : Disabled "NEXT" Button if current value of answer input field is EMPTY
@@ -565,7 +628,19 @@ btnNext_UpdateProject.onclick = () => {
       tabMVright.onclick = null;
       curr_sqid = -1;
       activeSabTab[parseInt(curr_qid)] = 0;
-      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)+1]).trim());
+      // $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)+1]).trim());
+      $("div.pg1-fields").html("");
+      for(var index = 0; index <  (ANSWER_MODIFIER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])]) ; index++ ){
+          if(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])][index]){
+              let currentAnswer = String(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)+1])][index]).trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          }
+          else{
+              let currentAnswer = String("").trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          } 
+      }
+
 
 
       // TODO : Disabled Edit Button on current value of answer input field
@@ -621,7 +696,6 @@ btnNext_UpdateProject.onclick = () => {
 // TODO :  "BACK BUTTON" HANDLER....
 // ***********************************************************************
 
-
 // ! Case Test for Edit Button
 // TODO : edit button should be there but blocked (possibly with small error message) - remove answers on this topic first.
 if($("#pg1_field_updproj").val().trim() != ""){
@@ -631,21 +705,12 @@ else{
   $("#contentEditButton").attr("disabled", false);
 }
 
-
-
 // !  Back Button Click Handler
 $backButton.on("click", function(event){
   event.preventDefault();
   event.stopPropagation();
-
-  // console.debug(pg2_tabs_dict, ANSWER_DICT,  parseInt(curr_qid)-1, activeSabTab);
-  
-  
+  curr_qid = ACTIVE_QUESTION_DICT.indexOf(parseInt(curr_qid));
   currnet_index = activeSabTab[parseInt(curr_qid)-1];
-
-  // console.debug(currnet_index);
-  // console.debug(currnet_index, pg2_tabs_dict);
-
   // !  Check if current tab is ZERO 
   if((parseInt(curr_qid)) == 0){
     $backButton.attr("onclick", $backButton.attr("data-url"));
@@ -674,10 +739,11 @@ else{
 
 
 
-    // TODO : Active Next Tab
+    // TODO : Active Prevous Tab
+    // console.debug("asdasd");
     $(pg2tabs[parseInt(curr_qid)-1]).addClass("active");
     
-    // TODO : Get Next Tab Question Object
+    // TODO : Get Previous Tab Question Object
     itm = pg2_tabs_dict[parseInt(curr_qid)-1];
 
     // TODO : Get Next Tab Question Leading Object
@@ -716,7 +782,19 @@ else{
       tabMVright.onclick = null;
       // ANSWER_DICT[parseInt(curr_qid)+1][currnet_index] = $("#pg1_field_updproj").val();
       // console.debug(ANSWER_DICT);
-      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1][0]).trim());
+      // $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1][0]).trim());
+      $("div.pg1-fields").html("");
+      for(var index = 0; index <  (ANSWER_MODIFIER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)-1])]) ; index++ ){
+          if(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)-1])][index]){
+              let currentAnswer = String(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)-1])][index]).trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          }
+          else{
+              let currentAnswer = String("").trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          } 
+      }
+
       
       // TODO : Left Angle Sub-Question Button Handler
       tabMVleft.onclick = () => {
@@ -766,7 +844,19 @@ else{
       tabMVright.onclick = null;
       curr_sqid = -1;
       activeSabTab[parseInt(curr_qid)] = 0;
-      $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1]).trim());
+      // $("#pg1_field_updproj").val(String(ANSWER_DICT[parseInt(curr_qid)-1]).trim());
+      $("div.pg1-fields").html("");
+      for(var index = 0; index <  (ANSWER_MODIFIER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)-1])]) ; index++ ){
+          if(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)-1])][index]){
+              let currentAnswer = String(ANSWER_DICT[parseInt(ACTIVE_QUESTION_DICT[parseInt(curr_qid)-1])][index]).trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          }
+          else{
+              let currentAnswer = String("").trim();
+              $("div.pg1-fields").append('<textarea type="text" class="form-control  cust-input" id="pg1_field_updproj" placeholder="Type here..." maxlength="1000"   rows="5">' + currentAnswer  + '</textarea>');
+          } 
+      }
+
 
 
 // TODO : Disabled Edit Button on current value of input field

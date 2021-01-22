@@ -45,7 +45,7 @@ class Project(models.Model):
     # ! Script Generated Questions Leading Text to save...
     generatedAnswers = models.TextField(verbose_name="Project Answers", blank = True, null=True, default= "")
 
-    # ! Answer Modifier Index List
+    # ! Answer Modifier Index List (Number of Question for a question)
     answerModifier = models.CharField(max_length = 100, verbose_name= "Answer Modifier Index List", blank=True, null=True,default="")
 
     # ! Post Question Message Index List

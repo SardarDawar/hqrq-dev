@@ -783,18 +783,18 @@ def projectSubquestions(request, slug):
 
     # TODO  :   Check if the "postQuestionMessage" field is empty or null for the current project
     if(project.getPostQuestionMessage() is None):
-        project.postQuestionMessage = '{0: "", 1: "", 2: "", 3: "", 4: ""}'
+        project.postQuestionMessage = vl.postQuestionMessage
         project.save()
     elif(project.getPostQuestionMessage().strip() == "" or len(project.getPostQuestionMessage().strip()) == 0):
-        project.postQuestionMessage = '{0: "", 1: "", 2: "", 3: "", 4: ""}'
+        project.postQuestionMessage = vl.postQuestionMessage
         project.save()
 
     # TODO  :   Check if the "answerModifier" fieldis empty or null for the current project
     if(project.getAnswerModifier() is None):
-        project.answerModifier = "{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}"
+        project.answerModifier = vl.answerModifier
         project.save()
     elif(project.getAnswerModifier().strip() == "" or len(project.getAnswerModifier().strip()) == 0):
-        project.answerModifier = "{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}"
+        project.answerModifier = vl.answerModifier
         project.save()
 
 
@@ -856,6 +856,9 @@ def projectSubquestions(request, slug):
     #         del dummyAnswers[int(i)]
 
 
+    # TODO  :   Dynamic Number of Answer
+    
+
     context = {
         'project': project,
         'page_project': True,
@@ -885,6 +888,12 @@ def projectSubquestions(request, slug):
 
         # ! Answer 
         "ANSWER_DICT" : eval(str(dummyAnswers)),
+
+        # ! Active Question Index List
+        "ACTIVE_QUESTION_DICT" : eval(str(project.activeQuestionIndexList)),
+
+        # ! Answer Modifier Index List
+        "ANSWER_MODIFIER_DICT" : eval(str(project.answerModifier)),
 
         # ! POST QUESTION MESSAGE
         "POST_QUESTION_MESSAGE_DICT" : eval(str(project.postQuestionMessage)),
